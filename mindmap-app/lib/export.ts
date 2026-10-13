@@ -31,7 +31,11 @@ export function readJSONFile(file: File): Promise<MindMapData> {
   });
 }
 
-export async function exportSvgAsPng(svg: SVGSVGElement, title: string) {
+export async function exportSvgAsPng(
+  svg: SVGSVGElement,
+  title: string,
+  background = "#fafaf9",
+) {
   const bbox = svg.getBBox();
   const padding = 40;
   const clone = svg.cloneNode(true) as SVGSVGElement;
@@ -48,7 +52,7 @@ export async function exportSvgAsPng(svg: SVGSVGElement, title: string) {
   bgRect.setAttribute("y", String(bbox.y - padding));
   bgRect.setAttribute("width", String(bbox.width + padding * 2));
   bgRect.setAttribute("height", String(bbox.height + padding * 2));
-  bgRect.setAttribute("fill", "#fafaf9");
+  bgRect.setAttribute("fill", background);
   clone.insertBefore(bgRect, clone.firstChild);
 
   const serializer = new XMLSerializer();

@@ -7,9 +7,10 @@ export function uid(): NodeId {
 export function createEmptyMap(): MindMapData {
   const rootId = uid();
   return {
-    version: 1,
+    version: 2,
     title: "新しいマインドマップ",
     rootId,
+    themeId: "default",
     nodes: {
       [rootId]: {
         id: rootId,
@@ -17,7 +18,6 @@ export function createEmptyMap(): MindMapData {
         x: 0,
         y: 0,
         parentId: null,
-        color: "#1f2937",
       },
     },
   };
@@ -57,7 +57,7 @@ export function deleteNode(
 }
 
 const CHILD_OFFSET_X = 180;
-const SIBLING_OFFSET_Y = 70;
+const SIBLING_OFFSET_Y = 80;
 
 export function addChild(
   data: MindMapData,
@@ -77,13 +77,14 @@ export function addChild(
       Math.ceil((siblings.length + 1) / 2) *
       SIBLING_OFFSET_Y;
 
+  // Pass through parent's color (branch root nodes get a palette color later).
   const newNode: MindNode = {
     id: newId,
     text: "新しいトピック",
     x: parent.x + CHILD_OFFSET_X * direction,
     y: parent.y + yOffset,
     parentId,
-    color: parent.parentId === null ? "#3b82f6" : parent.color,
+    color: parent.color,
   };
   return {
     data: { ...data, nodes: { ...data.nodes, [newId]: newNode } },
@@ -121,4 +122,28 @@ export function moveNode(
   const node = data.nodes[id];
   if (!node) return data;
   return updateNode(data, id, { x: node.x + dx, y: node.y + dy });
+}
+
+// Return a color for a node derived from its branch (direct child of root).
+// Honors an explicit color override on any ancestor.
+export function resolveNodeColor(
+  data: MindMapData,
+  nodeId: NodeId,
+  branchPalette: string[],
+): string | undefined {
+  const node = data.nodes[nodeId];
+  if (!node) return undefined;
+  if (node.color) return node.color;
+  if (node.id === data.rootId) return undefined;
+
+  let current = node;
+  while (current.parentId && current.parentId !== data.rootId) {
+    current = data.nodes[current.parentId];
+    if (current.color) return current.color;
+  }
+  // current is now a direct child of root.
+  const rootChildren = getChildren(data, data.rootId);
+  const idx = rootChildren.findIndex((n) => n.id === current.id);
+  if (idx < 0) return undefined;
+  return branchPalette[idx % branchPalette.length];
 }

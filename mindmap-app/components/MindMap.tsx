@@ -6,17 +6,23 @@ import {
   addSibling,
   createEmptyMap,
   deleteNode,
-  moveNode,
+  resolveNodeColor,
   updateNode,
 } from "@/lib/mindmap";
 import { downloadJSON, exportSvgAsPng, readJSONFile } from "@/lib/export";
-import type { MindMapData, MindNode, NodeId } from "@/lib/types";
+import { THEMES, getTheme } from "@/lib/themes";
+import type { MindMapData, MindNode, NodeId, ThemeId } from "@/lib/types";
 import { STORAGE_KEY } from "@/lib/types";
+import IconPicker from "./IconPicker";
+import TemplateGallery from "./TemplateGallery";
+import PresentationMode from "./PresentationMode";
 
 type Viewport = { x: number; y: number; scale: number };
 
-const NODE_WIDTH = 140;
-const NODE_HEIGHT = 44;
+const NODE_WIDTH = 160;
+const NODE_HEIGHT_BASE = 46;
+const IMAGE_HEIGHT = 80;
+const IMAGE_PADDING = 8;
 
 export default function MindMap() {
   const [data, setData] = useState<MindMapData>(() => createEmptyMap());
@@ -25,6 +31,11 @@ export default function MindMap() {
   const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, scale: 1 });
   const [isPanning, setIsPanning] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [iconPickerPos, setIconPickerPos] = useState<
+    { x: number; y: number } | null
+  >(null);
+  const [templateOpen, setTemplateOpen] = useState(false);
+  const [presenting, setPresenting] = useState(false);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const panStart = useRef<{ x: number; y: number; vx: number; vy: number } | null>(
@@ -36,8 +47,12 @@ export default function MindMap() {
     startY: number;
     nodeX: number;
     nodeY: number;
+    moved: boolean;
   } | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const jsonInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const theme = getTheme(data.themeId);
 
   // Load from localStorage once on mount.
   useEffect(() => {
@@ -46,7 +61,7 @@ export default function MindMap() {
       if (raw) {
         const parsed = JSON.parse(raw) as MindMapData;
         if (parsed && parsed.nodes && parsed.rootId) {
-          setData(parsed);
+          setData(migrate(parsed));
           setSelectedId(parsed.rootId);
         }
       } else {
@@ -78,6 +93,11 @@ export default function MindMap() {
 
   const nodes = useMemo(() => Object.values(data.nodes), [data]);
 
+  const nodeHeight = useCallback(
+    (n: MindNode) => (n.imageUrl ? NODE_HEIGHT_BASE + IMAGE_HEIGHT + IMAGE_PADDING : NODE_HEIGHT_BASE),
+    [],
+  );
+
   // Keyboard shortcuts.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -85,6 +105,7 @@ export default function MindMap() {
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
         return;
       }
+      if (presenting) return;
       if (!selectedId) return;
       if (e.key === "Tab") {
         e.preventDefault();
@@ -111,9 +132,8 @@ export default function MindMap() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [data, selectedId]);
+  }, [data, selectedId, presenting]);
 
-  // Pan handlers.
   const onBgMouseDown = (e: React.MouseEvent) => {
     if (e.target !== svgRef.current && (e.target as Element).tagName !== "rect") {
       return;
@@ -127,6 +147,7 @@ export default function MindMap() {
     };
     setSelectedId(null);
     setEditingId(null);
+    setIconPickerPos(null);
   };
 
   const onMouseMove = (e: React.MouseEvent) => {
@@ -140,9 +161,14 @@ export default function MindMap() {
       const d = dragStart.current;
       const dx = (e.clientX - d.startX) / viewport.scale;
       const dy = (e.clientY - d.startY) / viewport.scale;
-      setData((prev) =>
-        updateNode(prev, d.id, { x: d.nodeX + dx, y: d.nodeY + dy }),
-      );
+      if (!d.moved && Math.abs(e.clientX - d.startX) + Math.abs(e.clientY - d.startY) > 3) {
+        d.moved = true;
+      }
+      if (d.moved) {
+        setData((prev) =>
+          updateNode(prev, d.id, { x: d.nodeX + dx, y: d.nodeY + dy }),
+        );
+      }
     }
   };
 
@@ -152,7 +178,6 @@ export default function MindMap() {
     dragStart.current = null;
   };
 
-  // Wheel zoom.
   const onWheel = (e: React.WheelEvent) => {
     e.preventDefault();
     const delta = -e.deltaY * 0.001;
@@ -165,16 +190,17 @@ export default function MindMap() {
     setViewport({ x: mx - wx * nextScale, y: my - wy * nextScale, scale: nextScale });
   };
 
-  // Node interactions.
   const onNodeMouseDown = (e: React.MouseEvent, node: MindNode) => {
     e.stopPropagation();
     setSelectedId(node.id);
+    setIconPickerPos(null);
     dragStart.current = {
       id: node.id,
       startX: e.clientX,
       startY: e.clientY,
       nodeX: node.x,
       nodeY: node.y,
+      moved: false,
     };
   };
 
@@ -189,12 +215,21 @@ export default function MindMap() {
 
   const commitEdit = () => setEditingId(null);
 
-  // Actions.
-  const newMap = () => {
+  const newMap = (fromTemplate = false) => {
+    if (fromTemplate) {
+      setTemplateOpen(true);
+      return;
+    }
     if (!confirm("現在のマップを破棄して新規作成しますか?")) return;
     const empty = createEmptyMap();
     setData(empty);
     setSelectedId(empty.rootId);
+  };
+
+  const useTemplateData = (next: MindMapData) => {
+    setData(next);
+    setSelectedId(next.rootId);
+    setTemplateOpen(false);
   };
 
   const exportJson = () => downloadJSON(data);
@@ -202,7 +237,7 @@ export default function MindMap() {
   const importJson = async (file: File) => {
     try {
       const next = await readJSONFile(file);
-      setData(next);
+      setData(migrate(next));
       setSelectedId(next.rootId);
     } catch (err) {
       alert("読み込みに失敗しました: " + (err as Error).message);
@@ -213,13 +248,12 @@ export default function MindMap() {
     if (!svgRef.current) return;
     const inner = svgRef.current.querySelector("g.map-root") as SVGGElement | null;
     if (!inner) return;
-    // Build a temp svg with just the inner content (no viewport transform).
     const tmp = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     tmp.setAttribute("xmlns", "http://www.w3.org/2000/svg");
     tmp.appendChild(inner.cloneNode(true));
     document.body.appendChild(tmp);
     try {
-      await exportSvgAsPng(tmp, data.title);
+      await exportSvgAsPng(tmp, data.title, theme.canvasBg);
     } finally {
       tmp.remove();
     }
@@ -234,28 +268,96 @@ export default function MindMap() {
     setViewport({ x: rect.width / 2, y: rect.height / 2, scale: 1 });
   };
 
+  const changeTheme = (themeId: ThemeId) =>
+    setData((prev) => ({ ...prev, themeId }));
+
+  const openIconPicker = () => {
+    if (!selectedId || !svgRef.current) return;
+    const node = data.nodes[selectedId];
+    if (!node) return;
+    const sx = node.x * viewport.scale + viewport.x;
+    const sy = node.y * viewport.scale + viewport.y;
+    setIconPickerPos({ x: sx + 20, y: sy + 20 });
+  };
+
+  const setIcon = (icon: string | undefined) => {
+    if (!selectedId) return;
+    setData((prev) => updateNode(prev, selectedId, { icon }));
+    setIconPickerPos(null);
+  };
+
+  const attachImage = () => imageInputRef.current?.click();
+
+  const onImageSelected = (file: File) => {
+    if (!selectedId) return;
+    if (file.size > 2 * 1024 * 1024) {
+      alert("画像は2MB以下にしてください");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const dataUrl = reader.result as string;
+      setData((prev) => updateNode(prev, selectedId, { imageUrl: dataUrl }));
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const removeImage = () => {
+    if (!selectedId) return;
+    setData((prev) => updateNode(prev, selectedId, { imageUrl: undefined }));
+  };
+
+  const selectedNode = selectedId ? data.nodes[selectedId] : null;
+
   return (
-    <div className="w-screen h-screen flex flex-col bg-canvas select-none">
+    <div
+      className="w-screen h-screen flex flex-col select-none"
+      style={{ background: theme.canvasBg }}
+    >
       <Toolbar
         title={data.title}
+        theme={theme.id}
+        onThemeChange={changeTheme}
         onTitleChange={(t) => setData({ ...data, title: t })}
-        onNew={newMap}
+        onNewBlank={() => newMap(false)}
+        onNewFromTemplate={() => newMap(true)}
         onExportJson={exportJson}
-        onImport={() => fileInputRef.current?.click()}
+        onImport={() => jsonInputRef.current?.click()}
         onExportPng={exportPng}
+        onPresent={() => setPresenting(true)}
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
         onZoomReset={resetZoom}
         scale={viewport.scale}
       />
+      {selectedNode && (
+        <ContextBar
+          node={selectedNode}
+          themeNodeText={theme.nodeText}
+          onPickIcon={openIconPicker}
+          onAttachImage={attachImage}
+          onRemoveImage={removeImage}
+        />
+      )}
       <input
-        ref={fileInputRef}
+        ref={jsonInputRef}
         type="file"
         accept="application/json"
         className="hidden"
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) importJson(file);
+          e.target.value = "";
+        }}
+      />
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0];
+          if (file) onImageSelected(file);
           e.target.value = "";
         }}
       />
@@ -278,7 +380,7 @@ export default function MindMap() {
               x={viewport.x}
               y={viewport.y}
             >
-              <circle cx={1} cy={1} r={1} fill="#e5e7eb" />
+              <circle cx={1} cy={1} r={1} fill={theme.gridColor} />
             </pattern>
           </defs>
           <rect width="100%" height="100%" fill="url(#grid)" />
@@ -286,56 +388,69 @@ export default function MindMap() {
             className="map-root"
             transform={`translate(${viewport.x} ${viewport.y}) scale(${viewport.scale})`}
           >
-            {/* Edges */}
             {nodes.map((n) => {
               if (!n.parentId) return null;
               const parent = data.nodes[n.parentId];
               if (!parent) return null;
+              const color =
+                resolveNodeColor(data, n.id, theme.branchPalette) ?? theme.edge;
               return (
                 <path
                   key={`edge-${n.id}`}
                   d={edgePath(parent, n)}
-                  stroke={n.color ?? "#9ca3af"}
-                  strokeWidth={2}
+                  stroke={color}
+                  strokeWidth={2.5}
                   fill="none"
-                  opacity={0.6}
+                  opacity={0.75}
                 />
               );
             })}
 
-            {/* Nodes */}
             {nodes.map((n) => {
               const isRoot = n.id === data.rootId;
               const isSelected = n.id === selectedId;
               const isEditing = n.id === editingId;
+              const h = nodeHeight(n);
+              const branchColor =
+                resolveNodeColor(data, n.id, theme.branchPalette) ?? theme.edge;
+              const fill = isRoot ? theme.rootBg : theme.nodeBg;
+              const textColor = isRoot ? theme.rootText : theme.nodeText;
+              const stroke = isSelected ? "#f59e0b" : isRoot ? theme.rootBg : branchColor;
+              const strokeW = isSelected ? 3 : 2;
+
               return (
                 <g
                   key={n.id}
-                  transform={`translate(${n.x - NODE_WIDTH / 2} ${n.y - NODE_HEIGHT / 2})`}
+                  transform={`translate(${n.x - NODE_WIDTH / 2} ${n.y - h / 2})`}
                   onMouseDown={(e) => onNodeMouseDown(e, n)}
                   onDoubleClick={() => onNodeDoubleClick(n)}
                   style={{ cursor: "pointer" }}
                 >
                   <rect
                     width={NODE_WIDTH}
-                    height={NODE_HEIGHT}
+                    height={h}
                     rx={isRoot ? 22 : 10}
-                    fill={isRoot ? "#1f2937" : "#ffffff"}
-                    stroke={
-                      isSelected
-                        ? "#f59e0b"
-                        : isRoot
-                          ? "#1f2937"
-                          : n.color ?? "#3b82f6"
-                    }
-                    strokeWidth={isSelected ? 3 : 2}
+                    fill={fill}
+                    stroke={stroke}
+                    strokeWidth={strokeW}
                   />
+                  {n.imageUrl && (
+                    <image
+                      href={n.imageUrl}
+                      x={IMAGE_PADDING}
+                      y={IMAGE_PADDING}
+                      width={NODE_WIDTH - IMAGE_PADDING * 2}
+                      height={IMAGE_HEIGHT}
+                      preserveAspectRatio="xMidYMid slice"
+                      clipPath={`inset(0 round 6px)`}
+                    />
+                  )}
                   {isEditing ? (
                     <foreignObject
                       x={6}
-                      y={6}
+                      y={h - NODE_HEIGHT_BASE + 6}
                       width={NODE_WIDTH - 12}
-                      height={NODE_HEIGHT - 12}
+                      height={NODE_HEIGHT_BASE - 12}
                     >
                       <input
                         autoFocus
@@ -350,23 +465,32 @@ export default function MindMap() {
                           e.stopPropagation();
                         }}
                         className="w-full h-full px-1 text-center bg-transparent outline-none text-sm"
-                        style={{
-                          color: isRoot ? "#ffffff" : "#111827",
-                          font: "inherit",
-                        }}
+                        style={{ color: textColor, font: "inherit" }}
                       />
                     </foreignObject>
                   ) : (
-                    <text
-                      x={NODE_WIDTH / 2}
-                      y={NODE_HEIGHT / 2}
-                      textAnchor="middle"
-                      dominantBaseline="middle"
-                      fontSize={14}
-                      fill={isRoot ? "#ffffff" : "#111827"}
-                    >
-                      {truncate(n.text, 18)}
-                    </text>
+                    <>
+                      {n.icon && (
+                        <text
+                          x={14}
+                          y={h - NODE_HEIGHT_BASE / 2}
+                          dominantBaseline="middle"
+                          fontSize={18}
+                        >
+                          {n.icon}
+                        </text>
+                      )}
+                      <text
+                        x={n.icon ? 36 : NODE_WIDTH / 2}
+                        y={h - NODE_HEIGHT_BASE / 2}
+                        textAnchor={n.icon ? "start" : "middle"}
+                        dominantBaseline="middle"
+                        fontSize={14}
+                        fill={textColor}
+                      >
+                        {truncate(n.text, n.icon ? 14 : 18)}
+                      </text>
+                    </>
                   )}
                 </g>
               );
@@ -374,8 +498,28 @@ export default function MindMap() {
           </g>
         </svg>
 
+        {iconPickerPos && (
+          <IconPicker
+            anchorPos={iconPickerPos}
+            value={selectedNode?.icon}
+            onPick={setIcon}
+            onClose={() => setIconPickerPos(null)}
+          />
+        )}
+
         <HelpPanel />
       </div>
+
+      {templateOpen && (
+        <TemplateGallery
+          onPick={useTemplateData}
+          onClose={() => setTemplateOpen(false)}
+        />
+      )}
+
+      {presenting && (
+        <PresentationMode data={data} onClose={() => setPresenting(false)} />
+      )}
     </div>
   );
 }
@@ -390,24 +534,39 @@ function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n) + "…" : s;
 }
 
+function migrate(d: MindMapData): MindMapData {
+  if (!d.themeId) {
+    return { ...d, version: 2, themeId: "default" };
+  }
+  return d;
+}
+
 function Toolbar({
   title,
+  theme,
+  onThemeChange,
   onTitleChange,
-  onNew,
+  onNewBlank,
+  onNewFromTemplate,
   onExportJson,
   onImport,
   onExportPng,
+  onPresent,
   onZoomIn,
   onZoomOut,
   onZoomReset,
   scale,
 }: {
   title: string;
+  theme: ThemeId;
+  onThemeChange: (t: ThemeId) => void;
   onTitleChange: (t: string) => void;
-  onNew: () => void;
+  onNewBlank: () => void;
+  onNewFromTemplate: () => void;
   onExportJson: () => void;
   onImport: () => void;
   onExportPng: () => void;
+  onPresent: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomReset: () => void;
@@ -422,10 +581,24 @@ function Toolbar({
         className="px-2 py-1 border border-gray-200 rounded text-sm w-64 focus:outline-none focus:border-blue-400"
       />
       <div className="w-px h-6 bg-gray-200 mx-1" />
-      <ToolbarButton onClick={onNew}>新規</ToolbarButton>
+      <ToolbarButton onClick={onNewFromTemplate}>テンプレート</ToolbarButton>
+      <ToolbarButton onClick={onNewBlank}>新規</ToolbarButton>
       <ToolbarButton onClick={onImport}>読み込み</ToolbarButton>
-      <ToolbarButton onClick={onExportJson}>JSONで保存</ToolbarButton>
-      <ToolbarButton onClick={onExportPng}>PNG出力</ToolbarButton>
+      <ToolbarButton onClick={onExportJson}>JSON</ToolbarButton>
+      <ToolbarButton onClick={onExportPng}>PNG</ToolbarButton>
+      <ToolbarButton onClick={onPresent}>▶ 発表</ToolbarButton>
+      <div className="w-px h-6 bg-gray-200 mx-1" />
+      <select
+        value={theme}
+        onChange={(e) => onThemeChange(e.target.value as ThemeId)}
+        className="text-sm border border-gray-200 rounded px-2 py-1 bg-white"
+      >
+        {Object.values(THEMES).map((t) => (
+          <option key={t.id} value={t.id}>
+            {t.name}
+          </option>
+        ))}
+      </select>
       <div className="flex-1" />
       <ToolbarButton onClick={onZoomOut}>－</ToolbarButton>
       <button
@@ -435,6 +608,50 @@ function Toolbar({
         {Math.round(scale * 100)}%
       </button>
       <ToolbarButton onClick={onZoomIn}>＋</ToolbarButton>
+    </div>
+  );
+}
+
+function ContextBar({
+  node,
+  themeNodeText,
+  onPickIcon,
+  onAttachImage,
+  onRemoveImage,
+}: {
+  node: MindNode;
+  themeNodeText: string;
+  onPickIcon: () => void;
+  onAttachImage: () => void;
+  onRemoveImage: () => void;
+}) {
+  return (
+    <div className="flex items-center gap-2 px-4 py-1.5 bg-amber-50 border-b border-amber-200 text-xs">
+      <span className="text-amber-700 font-medium">
+        選択: {node.icon ? node.icon + " " : ""}
+        {truncate(node.text, 20)}
+      </span>
+      <div className="w-px h-4 bg-amber-200 mx-1" />
+      <button
+        onClick={onPickIcon}
+        className="px-2 py-0.5 rounded hover:bg-amber-100 border border-amber-200 text-amber-800"
+      >
+        {node.icon ? "アイコン変更" : "+ アイコン"}
+      </button>
+      <button
+        onClick={onAttachImage}
+        className="px-2 py-0.5 rounded hover:bg-amber-100 border border-amber-200 text-amber-800"
+      >
+        {node.imageUrl ? "画像変更" : "+ 画像"}
+      </button>
+      {node.imageUrl && (
+        <button
+          onClick={onRemoveImage}
+          className="px-2 py-0.5 rounded hover:bg-red-100 border border-red-200 text-red-700"
+        >
+          画像削除
+        </button>
+      )}
     </div>
   );
 }
