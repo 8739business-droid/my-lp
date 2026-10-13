@@ -1,4 +1,5 @@
-import type { MindMapData } from "./types";
+import type { MindMapData, NodeId } from "./types";
+import { getChildren } from "./mindmap";
 
 export function downloadJSON(data: MindMapData) {
   const json = JSON.stringify(data, null, 2);
@@ -7,6 +8,71 @@ export function downloadJSON(data: MindMapData) {
   const a = document.createElement("a");
   a.href = url;
   a.download = `${data.title || "mindmap"}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function downloadMarkdown(data: MindMapData) {
+  const lines: string[] = [`# ${data.title}`, ""];
+  const walk = (id: NodeId, depth: number) => {
+    const children = getChildren(data, id);
+    for (const c of children) {
+      const indent = "  ".repeat(depth);
+      const icon = c.icon ? `${c.icon} ` : "";
+      lines.push(`${indent}- ${icon}${c.text}`);
+      walk(c.id, depth + 1);
+    }
+  };
+  walk(data.rootId, 0);
+  const blob = new Blob([lines.join("\n") + "\n"], {
+    type: "text/markdown;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${data.title || "mindmap"}.md`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function downloadOPML(data: MindMapData) {
+  const esc = (s: string) =>
+    s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  const walk = (id: NodeId, depth: number): string => {
+    const children = getChildren(data, id);
+    if (children.length === 0) return "";
+    const pad = "  ".repeat(depth);
+    return children
+      .map((c) => {
+        const sub = walk(c.id, depth + 1);
+        const text = esc(`${c.icon ? c.icon + " " : ""}${c.text}`);
+        if (!sub) return `${pad}<outline text="${text}"/>`;
+        return `${pad}<outline text="${text}">\n${sub}\n${pad}</outline>`;
+      })
+      .join("\n");
+  };
+  const body = walk(data.rootId, 3);
+  const opml = `<?xml version="1.0" encoding="UTF-8"?>
+<opml version="2.0">
+  <head>
+    <title>${esc(data.title)}</title>
+  </head>
+  <body>
+    <outline text="${esc(data.title)}">
+${body}
+    </outline>
+  </body>
+</opml>
+`;
+  const blob = new Blob([opml], { type: "text/x-opml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${data.title || "mindmap"}.opml`;
   a.click();
   URL.revokeObjectURL(url);
 }

@@ -2,9 +2,17 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useYMindMap } from "@/hooks/useYMindMap";
-import { downloadJSON, exportSvgAsPng, readJSONFile } from "@/lib/export";
+import {
+  downloadJSON,
+  downloadMarkdown,
+  downloadOPML,
+  exportSvgAsPng,
+  readJSONFile,
+} from "@/lib/export";
 import { resolveNodeColor } from "@/lib/mindmap";
 import { THEMES, getTheme } from "@/lib/themes";
+import { aiMapToMindMap, aiChildrenIntoExisting } from "@/lib/aiConvert";
+import type { AIMindMap } from "@/lib/aiTypes";
 import type {
   CollabUser,
   MindMapData,
@@ -17,6 +25,7 @@ import TemplateGallery from "./TemplateGallery";
 import PresentationMode from "./PresentationMode";
 import ShareDialog from "./ShareDialog";
 import CommentsPanel from "./CommentsPanel";
+import AIDialog from "./AIDialog";
 
 type Viewport = { x: number; y: number; scale: number };
 
@@ -71,6 +80,8 @@ function MindMapInner({
   const [presenting, setPresenting] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [commentsOpen, setCommentsOpen] = useState(false);
+  const [aiOpen, setAiOpen] = useState(false);
+  const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const panStart = useRef<{ x: number; y: number; vx: number; vy: number } | null>(
@@ -254,7 +265,20 @@ function MindMapInner({
     setTemplateOpen(false);
   };
 
-  const exportJson = () => downloadJSON(data);
+  const exportJson = () => {
+    downloadJSON(data);
+    setExportMenuOpen(false);
+  };
+
+  const exportMarkdown = () => {
+    downloadMarkdown(data);
+    setExportMenuOpen(false);
+  };
+
+  const exportOpml = () => {
+    downloadOPML(data);
+    setExportMenuOpen(false);
+  };
 
   const importJson = async (file: File) => {
     try {
@@ -267,6 +291,7 @@ function MindMapInner({
   };
 
   const exportPng = async () => {
+    setExportMenuOpen(false);
     if (!svgRef.current) return;
     const inner = svgRef.current.querySelector("g.map-root") as SVGGElement | null;
     if (!inner) return;
@@ -279,6 +304,31 @@ function MindMapInner({
     } finally {
       tmp.remove();
     }
+  };
+
+  const applyAINew = (ai: AIMindMap) => {
+    const next = aiMapToMindMap(ai, data.themeId);
+    actions.replaceMap(next);
+    setSelectedId(next.rootId);
+    setAiOpen(false);
+  };
+
+  const applyAIExpand = (ai: AIMindMap) => {
+    if (!selectedId) return;
+    const next = aiChildrenIntoExisting(data, selectedId, ai);
+    actions.replaceMap(next);
+    setAiOpen(false);
+  };
+
+  const getNodeContext = (id: NodeId | null): string[] => {
+    if (!id) return [];
+    const trail: string[] = [];
+    let cur: MindNode | undefined = data.nodes[id];
+    while (cur) {
+      trail.unshift(cur.text);
+      cur = cur.parentId ? data.nodes[cur.parentId] : undefined;
+    }
+    return trail.slice(0, -1);
   };
 
   const zoomIn = () =>
@@ -364,11 +414,16 @@ function MindMapInner({
         onNewBlank={() => newMap(false)}
         onNewFromTemplate={() => newMap(true)}
         onExportJson={exportJson}
+        onExportMarkdown={exportMarkdown}
+        onExportOpml={exportOpml}
         onImport={() => jsonInputRef.current?.click()}
         onExportPng={exportPng}
         onPresent={() => setPresenting(true)}
         onShare={() => setShareOpen(true)}
+        onAI={() => setAiOpen(true)}
         onToggleComments={() => setCommentsOpen((v) => !v)}
+        exportMenuOpen={exportMenuOpen}
+        onToggleExportMenu={() => setExportMenuOpen((v) => !v)}
         commentsCount={comments.filter((c) => !c.resolved).length}
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
@@ -636,6 +691,17 @@ function MindMapInner({
           onClose={() => setShareOpen(false)}
         />
       )}
+
+      {aiOpen && (
+        <AIDialog
+          defaultMode={selectedId && selectedId !== data.rootId ? "expand" : "new"}
+          selectedNodeText={selectedNode?.text}
+          selectedNodeContext={getNodeContext(selectedId)}
+          onClose={() => setAiOpen(false)}
+          onApplyNew={applyAINew}
+          onApplyExpand={applyAIExpand}
+        />
+      )}
     </div>
   );
 }
@@ -662,11 +728,16 @@ function Toolbar({
   onNewBlank,
   onNewFromTemplate,
   onExportJson,
+  onExportMarkdown,
+  onExportOpml,
   onImport,
   onExportPng,
   onPresent,
   onShare,
+  onAI,
   onToggleComments,
+  exportMenuOpen,
+  onToggleExportMenu,
   commentsCount,
   onZoomIn,
   onZoomOut,
@@ -684,11 +755,16 @@ function Toolbar({
   onNewBlank: () => void;
   onNewFromTemplate: () => void;
   onExportJson: () => void;
+  onExportMarkdown: () => void;
+  onExportOpml: () => void;
   onImport: () => void;
   onExportPng: () => void;
   onPresent: () => void;
   onShare: () => void;
+  onAI: () => void;
   onToggleComments: () => void;
+  exportMenuOpen: boolean;
+  onToggleExportMenu: () => void;
   commentsCount: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
@@ -710,10 +786,20 @@ function Toolbar({
           <ToolbarButton onClick={onNewFromTemplate}>テンプレート</ToolbarButton>
           <ToolbarButton onClick={onNewBlank}>新規</ToolbarButton>
           <ToolbarButton onClick={onImport}>読み込み</ToolbarButton>
+          <ToolbarButton onClick={onAI}>🤖 AI</ToolbarButton>
         </>
       )}
-      <ToolbarButton onClick={onExportJson}>JSON</ToolbarButton>
-      <ToolbarButton onClick={onExportPng}>PNG</ToolbarButton>
+      <div className="relative">
+        <ToolbarButton onClick={onToggleExportMenu}>エクスポート ▾</ToolbarButton>
+        {exportMenuOpen && (
+          <div className="absolute left-0 top-full mt-1 w-40 bg-white border border-gray-200 rounded shadow-lg z-30">
+            <ExportItem onClick={onExportJson} label="JSON" hint="再読込可" />
+            <ExportItem onClick={onExportPng} label="PNG画像" hint="2x高解像度" />
+            <ExportItem onClick={onExportMarkdown} label="Markdown" hint=".md 箇条書き" />
+            <ExportItem onClick={onExportOpml} label="OPML" hint="他ツール互換" />
+          </div>
+        )}
+      </div>
       <ToolbarButton onClick={onPresent}>▶ 発表</ToolbarButton>
       <ToolbarButton onClick={onShare}>
         {roomId ? "🔗 共有中" : "共有"}
@@ -826,6 +912,26 @@ function ToolbarButton({
       className="px-3 py-1 text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded"
     >
       {children}
+    </button>
+  );
+}
+
+function ExportItem({
+  onClick,
+  label,
+  hint,
+}: {
+  onClick: () => void;
+  label: string;
+  hint: string;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-50 border-b border-gray-100 last:border-b-0"
+    >
+      <div className="text-gray-800">{label}</div>
+      <div className="text-[10px] text-gray-500">{hint}</div>
     </button>
   );
 }
