@@ -1,0 +1,1323 @@
+<title>Core Bloom AI Video Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: fixed left rail, single reading column near 68ch, sticky section index on wide screens.
+   Dark-first, graded like a colour suite. Ice-blue accent from the Niseko locale; each week carries its own hue. */
+:root{
+  --bg:#0E1218; --bg-2:#0B0E13; --surface:#151A22; --surface-2:#1C232D; --surface-3:#242E3A;
+  --line:#28313D; --line-strong:#3A4654;
+  --fg:#E8ECF2; --fg-dim:#AEB9C8; --fg-mute:#7C8799;
+  --accent:#8CB9E0; --accent-strong:#A9CDEC; --accent-ink:#0E1218; --accent-soft:#15283A;
+  --ok:#74B08C; --ok-soft:#15271D;
+  --warn:#C9A14E; --warn-soft:#292213;
+  --alert:#C9776C; --alert-soft:#2B1917;
+  --w1:#8CB9E0; --w2:#D9A368; --w3:#7FBFAE; --w4:#B29CDC; --w5:#A3B389; --w6:#D98E88;
+  --f-img:#7FBFAE; --f-vid:#D9A368; --f-slot:#B29CDC; --f-doc:#9AA7B8;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.5);
+  --font-display:"Zen Old Mincho",'Hiragino Mincho ProN',"Yu Mincho",serif;
+  --font-body:"Zen Kaku Gothic New",'Hiragino Sans',"Yu Gothic",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --rail:252px;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --bg:#F5F7FA; --bg-2:#EDF1F6; --surface:#FFFFFF; --surface-2:#EFF3F8; --surface-3:#E3E9F1;
+    --line:#DBE2EB; --line-strong:#BDC8D6;
+    --fg:#161F2D; --fg-dim:#475569; --fg-mute:#6B7891;
+    --accent:#2B6392; --accent-strong:#1C4C75; --accent-ink:#FFFFFF; --accent-soft:#E5EFF8;
+    --ok:#3C7A57; --ok-soft:#E2F0E7;
+    --warn:#87631A; --warn-soft:#F6EFDC; --alert:#A2443A; --alert-soft:#F8E7E4;
+    --w1:#2B6392; --w2:#8C5A1E; --w3:#2E7566; --w4:#5E4B93; --w5:#566B38; --w6:#A1483F;
+    --f-img:#2E7566; --f-vid:#8C5A1E; --f-slot:#5E4B93; --f-doc:#5A6676;
+    --shadow:0 1px 2px rgba(16,30,54,.06), 0 10px 28px -16px rgba(16,30,54,.22);
+    color-scheme:light;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#F5F7FA; --bg-2:#EDF1F6; --surface:#FFFFFF; --surface-2:#EFF3F8; --surface-3:#E3E9F1;
+  --line:#DBE2EB; --line-strong:#BDC8D6;
+  --fg:#161F2D; --fg-dim:#475569; --fg-mute:#6B7891;
+  --accent:#2B6392; --accent-strong:#1C4C75; --accent-ink:#FFFFFF; --accent-soft:#E5EFF8;
+  --ok:#3C7A57; --ok-soft:#E2F0E7;
+  --warn:#87631A; --warn-soft:#F6EFDC; --alert:#A2443A; --alert-soft:#F8E7E4;
+  --w1:#2B6392; --w2:#8C5A1E; --w3:#2E7566; --w4:#5E4B93; --w5:#566B38; --w6:#A1483F;
+  --f-img:#2E7566; --f-vid:#8C5A1E; --f-slot:#5E4B93; --f-doc:#5A6676;
+  --shadow:0 1px 2px rgba(16,30,54,.06), 0 10px 28px -16px rgba(16,30,54,.22);
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:auto}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:16px;line-height:1.95;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-feature-settings:"palt" 1}
+.prose{max-width:43em}
+.prose p+p{margin-top:1.15em}
+.prose ul{margin:1em 0;padding-inline-start:0;list-style:none;display:flex;flex-direction:column;gap:.6em}
+.prose ul li{display:flex;gap:.7em}
+.prose ul li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none;margin-top:.72em;opacity:.8}
+.prose ol{margin:1em 0;padding-inline-start:1.4em;display:flex;flex-direction:column;gap:.6em}
+.prose ol li{padding-inline-start:.3em}
+.prose ol li::marker{font-family:var(--font-mono);font-size:.82em;color:var(--accent)}
+a{color:var(--accent);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,select:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:700;text-wrap:balance;margin:0;line-height:1.42}
+p{margin:0}
+::selection{background:var(--accent-soft);color:var(--fg)}
+.num{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+
+/* ---------- shell ---------- */
+.shell{display:flex;min-height:100%}
+.rail{position:fixed;inset-block:0;inset-inline-start:0;width:var(--rail);background:var(--bg-2);border-inline-end:1px solid var(--line);overflow-y:auto;z-index:30;padding-top:env(safe-area-inset-top,0px);display:flex;flex-direction:column}
+.brand{padding:22px 20px 17px}
+.brand-mark{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.26em;color:var(--accent);text-transform:uppercase}
+.brand-name{font-family:var(--font-display);font-size:18px;line-height:1.34;margin-top:8px}
+.brand-sub{font-size:10.5px;color:var(--fg-mute);margin-top:6px;letter-spacing:.05em}
+.railprog{padding:0 20px 16px;border-bottom:1px solid var(--line)}
+.railprog .pr{display:flex;justify-content:space-between;align-items:baseline;font-size:10.5px;color:var(--fg-mute);margin-bottom:6px;font-family:var(--font-mono);letter-spacing:.08em}
+.search-wrap{padding:13px 12px 0}
+.search-wrap input{width:100%;font:inherit;font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px 11px;color:var(--fg)}
+.search-wrap input::placeholder{color:var(--fg-mute)}
+.nav{padding:10px 12px 16px;display:flex;flex-direction:column;gap:1px}
+.nav a{display:flex;align-items:center;gap:11px;padding:8px 12px;border-radius:7px;color:var(--fg-dim);text-decoration:none;font-size:13px;font-weight:500}
+.nav a:hover{background:var(--surface-2);color:var(--fg)}
+.nav a[aria-current="page"]{background:var(--accent-soft);color:var(--accent-strong)}
+.nav .ico{width:16px;flex:none;opacity:.8;font-family:var(--font-mono);font-size:12px;text-align:center}
+.rail-foot{margin-top:auto;padding:14px 20px 20px;border-top:1px solid var(--line);font-size:10.5px;color:var(--fg-mute);line-height:1.7}
+.themebar{display:flex;gap:3px;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:3px;margin-bottom:12px}
+.themebar button{flex:1;font:inherit;font-size:10.5px;padding:4px 2px;border:0;background:transparent;color:var(--fg-mute);border-radius:5px;cursor:pointer;font-family:var(--font-mono)}
+.themebar button[aria-pressed="true"]{background:var(--surface-3);color:var(--fg)}
+.main{flex:1;min-width:0;margin-inline-start:var(--rail)}
+.wrap{max-width:1460px;margin:0 auto;padding-inline:44px;padding-block:52px 120px;display:grid;grid-template-columns:minmax(0,1fr);gap:64px}
+.wrap.has-index{grid-template-columns:minmax(0,1fr) 216px}
+.col{min-width:0;max-width:900px}
+@media (max-width:1300px){ .wrap.has-index{grid-template-columns:minmax(0,1fr)} .sideindex{display:none} }
+@media (max-width:1100px){ .wrap{padding-inline:32px} }
+@media (max-width:900px){
+  .rail{position:static;width:auto;border-inline-end:0;border-bottom:1px solid var(--line)}
+  .shell{flex-direction:column}
+  .main{margin-inline-start:0}
+  .brand{padding:16px 16px 12px}
+  .railprog{padding:0 16px 12px}
+  .search-wrap{padding:10px 12px 0}
+  .nav{flex-direction:row;overflow-x:auto;padding:8px;gap:4px;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav a{white-space:nowrap;padding:7px 11px;font-size:12.5px}
+  .nav .ico{display:none}
+  .rail-foot{display:none}
+  .wrap{padding-inline:18px;padding-block:28px 88px;gap:0}
+}
+
+/* ---------- type ---------- */
+.eyebrow{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--fg-mute)}
+.page-title{font-size:38px;margin-top:14px;letter-spacing:.01em;line-height:1.36}
+.page-lede{color:var(--fg-dim);margin-top:16px;max-width:40em;font-size:16.5px;line-height:1.85}
+h2.sec{font-size:21px;margin:0;letter-spacing:.01em}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin:58px 0 22px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.sec-head .n{font-family:var(--font-mono);font-size:11px;color:var(--accent);letter-spacing:.16em;flex:none;font-weight:600}
+@media (max-width:900px){.page-title{font-size:27px}.sec-head{margin:42px 0 18px}h2.sec{font-size:18px}body{font-size:15.5px}}
+
+/* ---------- parts ---------- */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:24px}
+.card.lift{transition:border-color .18s ease, transform .18s ease}
+.card.lift:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+.grid{display:grid;gap:13px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.row{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:11.5px;letter-spacing:.05em;padding:5px 11px;border-radius:6px;background:var(--surface-2);color:var(--fg-dim);border:1px solid var(--line);white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok);border-color:transparent}
+.chip.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.chip.alert{background:var(--alert-soft);color:var(--alert);border-color:transparent}
+.chip.acc{background:var(--accent-soft);color:var(--accent-strong);border-color:transparent}
+.chip.wk{background:transparent;color:var(--wk);border-color:var(--wk)}
+.btn{font:inherit;font-size:13px;font-weight:500;padding:9px 16px;border-radius:8px;border:1px solid var(--line-strong);background:var(--surface-2);color:var(--fg);cursor:pointer;transition:background .15s}
+.btn:hover{background:var(--surface-3)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.btn.primary:hover{background:var(--accent-strong)}
+.btn.sm{padding:5px 11px;font-size:11.5px}
+.meter{height:5px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.meter>i{display:block;height:100%;background:var(--bar,var(--accent));border-radius:99px;transition:width .5s cubic-bezier(.3,1,.4,1)}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.stat .k{font-size:10.5px;color:var(--fg-mute);letter-spacing:.08em;font-family:var(--font-mono)}
+.stat .v{font-family:var(--font-mono);font-size:27px;font-variant-numeric:tabular-nums;margin-top:5px;line-height:1.15;font-weight:500}
+.stat .u{font-size:12px;color:var(--fg-mute);margin-inline-start:3px}
+.muted{color:var(--fg-mute)} .dim{color:var(--fg-dim)} .small{font-size:12.5px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:14px;background:
+  radial-gradient(120% 140% at 88% -20%, var(--accent-soft) 0%, transparent 55%), var(--surface);
+  padding:28px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow)}
+.hero .hb{flex:1;min-width:230px}
+.ring{flex:none;display:grid;place-items:center;position:relative;width:118px;height:118px}
+.ring svg{transform:rotate(-90deg)}
+.ring .rv{position:absolute;text-align:center;font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+.ring .rv b{font-size:27px;font-weight:500;display:block;line-height:1.1}
+.ring .rv span{font-size:9.5px;color:var(--fg-mute);letter-spacing:.14em}
+
+/* ---------- week / lesson lists ---------- */
+.week{background:var(--surface);border:1px solid var(--line);border-radius:13px;overflow:hidden;margin-bottom:15px;position:relative}
+.week::before{content:"";position:absolute;inset-block:0;inset-inline-start:0;width:3px;background:var(--wk)}
+.week-head{padding:19px 22px 19px 24px;display:flex;gap:17px;align-items:flex-start;flex-wrap:wrap}
+.week-no{font-family:var(--font-mono);font-size:10.5px;color:var(--wk);letter-spacing:.16em;flex:none;padding-top:5px}
+.week-title{font-size:21px;line-height:1.45}
+.week-theme{color:var(--fg-dim);font-size:15px;margin-top:8px;line-height:1.75}
+.week-meter{flex:none;min-width:124px;margin-inline-start:auto;text-align:end}
+.week-meter .lbl{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-mute);margin-bottom:6px}
+.lesson-row{display:flex;gap:16px;align-items:center;padding:16px 24px 16px 26px;border-top:1px solid var(--line);text-decoration:none;color:inherit}
+.lesson-row:hover{background:var(--surface-2)}
+.tick{width:19px;height:19px;border-radius:50%;border:1.5px solid var(--line-strong);flex:none;display:grid;place-items:center;font-size:10px;color:transparent}
+.tick.on{background:var(--ok);border-color:transparent;color:#fff}
+.tick.part{border-color:var(--wk,var(--accent));border-style:dashed}
+.lesson-row .d{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-mute);flex:none;width:42px}
+.lesson-row .t{flex:1;min-width:0;font-size:15.5px;font-weight:500;line-height:1.5}
+.lesson-row .s{font-size:13.5px;color:var(--fg-mute);margin-top:4px;font-weight:400;display:block;line-height:1.6}
+.lesson-row .m{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-mute);flex:none}
+@media (max-width:640px){.lesson-row .m{display:none}.week-head{padding-inline:16px 16px;padding-inline-start:18px}.lesson-row{padding-inline:16px 16px;padding-inline-start:18px}}
+
+/* ---------- setup strip ---------- */
+.setup{border:1px solid var(--line-strong);border-radius:14px;background:var(--surface-2);margin-top:26px;overflow:hidden}
+.setup-h{display:flex;gap:12px;align-items:center;padding:14px 20px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.setup-h b{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.18em;color:var(--accent);font-weight:600}
+.setup-lead{padding:16px 20px;display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;border-bottom:1px solid var(--line);background:var(--surface)}
+.setup-lead .k{font-family:var(--font-mono);font-size:10px;letter-spacing:.14em;color:var(--fg-mute);text-transform:uppercase;flex:none;padding-top:3px}
+.setup-lead .v{flex:1;min-width:220px;font-size:15px;font-weight:500;line-height:1.7}
+.setup-pills{display:flex;flex-wrap:wrap;gap:0;background:var(--surface)}
+.setup-pills div{padding:13px 20px;min-width:0;border-inline-end:1px solid var(--line);flex:1 1 auto}
+.setup-pills div:last-child{border-inline-end:0}
+.setup-pills .k{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.12em;color:var(--fg-mute);text-transform:uppercase;white-space:nowrap}
+.setup-pills .v{font-size:15px;font-weight:600;margin-top:5px;line-height:1.5;white-space:nowrap}
+.setup-pills .v.wrap{white-space:normal}
+.setup-note{padding:14px 20px;font-size:14px;color:var(--fg-dim);display:flex;gap:12px;border-top:1px solid var(--line);line-height:1.8}
+.setup-note b{flex:none;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--ok);padding-top:4px;font-weight:600}
+@media (max-width:700px){.setup-pills div{flex:1 1 42%;border-bottom:1px solid var(--line)}}
+
+/* ---------- lesson detail ---------- */
+.lesson-hero{border-bottom:1px solid var(--line);padding-bottom:24px}
+.theory h3{font-size:18px;margin-bottom:14px;color:var(--fg);letter-spacing:.01em;padding-inline-start:13px;border-inline-start:3px solid var(--accent)}
+.theory .blk{margin-bottom:42px;max-width:43em}
+.theory .blk p{color:var(--fg-dim);font-size:16px;line-height:1.95}
+.theory .blk li{color:var(--fg-dim);font-size:15.5px}
+.theory strong{color:var(--fg);font-weight:700}
+.step{display:flex;gap:20px;padding:22px 0;border-top:1px solid var(--line)}
+.step .sn{font-family:var(--font-mono);font-size:11px;color:var(--accent);flex:none;width:28px;padding-top:6px;font-weight:600}
+.step .sb{flex:1;min-width:0;max-width:44em}
+.step .sa{font-weight:700;font-size:17px;line-height:1.5}
+.step .sd{color:var(--fg-dim);font-size:15.5px;margin-top:9px;line-height:1.9}
+.step .sc{font-size:14px;margin-top:13px;color:var(--ok);display:flex;gap:10px;line-height:1.7}
+.step .sc b{flex:none;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;padding-top:3px;font-weight:600}
+.ulist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;max-width:44em}
+.ulist li{display:flex;gap:13px;font-size:15.5px;color:var(--fg-dim);line-height:1.85}
+.ulist li::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--accent);flex:none;margin-top:12px;opacity:.85}
+.ulist.check li::before{content:"✓";width:auto;height:auto;background:none;color:var(--ok);font-size:12px;margin-top:0;font-weight:700}
+
+.prompt{border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:14px;background:var(--surface)}
+.prompt-h{display:flex;gap:9px;align-items:center;padding:11px 14px;background:var(--surface-2);flex-wrap:wrap}
+.prompt-h .pt{font-size:15px;font-weight:700;flex:1;min-width:0}
+.prompt-b{padding:17px 19px;font-family:var(--font-mono);font-size:13.5px;line-height:1.85;color:var(--fg-dim);white-space:pre-wrap;word-break:break-word;border-top:1px solid var(--line)}
+.prompt-n{padding:0 19px 17px;font-size:14px;color:var(--fg-mute);line-height:1.8}
+.prompt-n b{color:var(--fg-dim);font-weight:500}
+/* 工程表示 */
+.flow{border-top:1px solid var(--line);background:var(--surface-2);padding:11px 15px}
+.flow-h{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:9px}
+.flow-badge{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-mono);font-size:10.5px;font-weight:600;letter-spacing:.08em;padding:4px 10px;border-radius:6px;color:var(--fc);border:1px solid var(--fc);white-space:nowrap}
+.flow-badge .jp{font-family:var(--font-body);font-weight:700;letter-spacing:0;font-size:11.5px}
+.flow-step{font-family:var(--font-mono);font-size:10.5px;color:var(--fg-mute)}
+.flow-rows{display:grid;grid-template-columns:auto 1fr;gap:9px 14px;font-size:14px;align-items:baseline;line-height:1.75}
+.flow-rows dt{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;color:var(--fc);white-space:nowrap;padding-top:2px;font-weight:600}
+.flow-rows dd{margin:0;color:var(--fg-dim);min-width:0}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:9px;margin:18px 0 24px}
+.legend div{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:11px 13px}
+.legend .lc{font-family:var(--font-mono);font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--fc);border:1px solid var(--fc);border-radius:5px;padding:2px 7px;flex:none;margin-top:1px}
+.legend .ll{font-weight:700;font-size:12.5px}
+.legend .ld{color:var(--fg-mute);font-size:12px;margin-top:2px;line-height:1.6}
+
+table.t{width:100%;border-collapse:collapse;font-size:15px}
+table.t th,table.t td{text-align:start;padding:14px 18px;border-bottom:1px solid var(--line);vertical-align:top;line-height:1.75}
+table.t th{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg-mute);font-weight:500;white-space:nowrap;background:var(--surface-2)}
+table.t td{color:var(--fg-dim)}
+table.t td.ax{white-space:nowrap;font-weight:500;color:var(--fg)}
+table.t td.n{font-family:var(--font-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.t tr:last-child td{border-bottom:0}
+.scroll-x{overflow-x:auto;border:1px solid var(--line);border-radius:11px}
+
+.pit{border-inline-start:2px solid var(--alert);padding:2px 0 2px 16px;margin-bottom:19px}
+.pit{max-width:44em}
+.pit .pp{font-weight:700;font-size:16px;line-height:1.6}
+.pit .pc,.pit .pf{font-size:15px;color:var(--fg-dim);margin-top:8px;display:flex;gap:11px;line-height:1.8}
+.pit .pc b,.pit .pf b{flex:none;font-family:var(--font-mono);font-size:9.5px;letter-spacing:.1em;color:var(--fg-mute);padding-top:3px;font-weight:600}
+
+/* ---------- side index ---------- */
+.sideindex{position:sticky;top:calc(env(safe-area-inset-top,0px) + 52px);align-self:start;font-size:13px}
+.sideindex .ttl{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.16em;color:var(--fg-mute);margin-bottom:11px;text-transform:uppercase}
+.sideindex a{display:block;padding:6px 0 6px 13px;border-inline-start:2px solid var(--line);color:var(--fg-mute);text-decoration:none;line-height:1.55}
+.sideindex a:hover{color:var(--fg);border-color:var(--line-strong)}
+.sideindex a.on{color:var(--accent-strong);border-color:var(--accent)}
+
+/* ---------- work panel ---------- */
+.work{background:var(--surface-2);border:1px solid var(--line-strong);border-radius:13px;padding:26px;margin-top:24px}
+.work h3{font-size:15px;margin-bottom:4px}
+.field{margin-top:17px}
+.field label{display:block;font-family:var(--font-mono);font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--fg-mute);margin-bottom:8px}
+textarea,input[type=text],input[type=number],select{width:100%;font:inherit;font-size:13.5px;background:var(--bg);color:var(--fg);border:1px solid var(--line-strong);border-radius:8px;padding:9px 11px;resize:vertical}
+textarea{min-height:76px;font-family:var(--font-mono);font-size:12.5px;line-height:1.7}
+select{padding:7px 9px}
+.rub-grid{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center}
+.rub-grid .rl{font-size:13px;color:var(--fg-dim)}
+.rub-grid select{width:70px}
+.done-bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:20px;padding-top:17px;border-top:1px solid var(--line-strong)}
+.saved{font-size:11.5px;color:var(--ok);opacity:0;transition:opacity .2s}
+.saved.on{opacity:1}
+label.ck{display:flex;gap:8px;align-items:center;cursor:pointer;font-size:13.5px}
+label.ck input{width:auto}
+
+.pager{display:flex;justify-content:space-between;gap:12px;margin-top:42px;padding-top:21px;border-top:1px solid var(--line);flex-wrap:wrap}
+.pager a{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:11px;padding:13px 17px;max-width:340px}
+.pager a:hover{border-color:var(--line-strong)}
+.pager .pl{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.14em;color:var(--fg-mute)}
+.pager .pn{font-size:14px;font-weight:700;margin-top:3px}
+
+/* ---------- filters / resources / portfolio ---------- */
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin:20px 0 22px}
+.filters button{font:inherit;font-size:12.5px;padding:6px 13px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--fg-dim);cursor:pointer}
+.filters button:hover{border-color:var(--line-strong);color:var(--fg)}
+.filters button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:transparent;font-weight:700}
+.res{border:1px solid var(--line);border-radius:11px;padding:17px 19px;background:var(--surface);margin-bottom:11px}
+.res-h{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.res-h .rt{font-size:16.5px;font-weight:700;flex:1;min-width:190px;line-height:1.5}
+.res .prov{font-size:12px;color:var(--fg-mute);margin-top:4px}
+.res .sum{font-size:15px;color:var(--fg-dim);margin-top:12px;line-height:1.85;max-width:48em}
+.res .use{font-size:14.5px;color:var(--fg-dim);margin-top:13px;padding:14px 17px;background:var(--surface-2);border-radius:9px;line-height:1.8;max-width:48em}
+.res .use b{font-family:var(--font-mono);font-size:9.5px;letter-spacing:.12em;color:var(--accent);display:block;margin-bottom:4px}
+.res .lnk{font-family:var(--font-mono);font-size:11.5px;word-break:break-all;margin-top:11px;display:inline-block}
+.pf-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(238px,1fr))}
+.pf{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pf .thumb{aspect-ratio:16/9;max-width:100%;background:var(--surface-3);display:grid;place-items:center;color:var(--fg-mute);font-size:11px;font-family:var(--font-mono)}
+.pf .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.pf .pb{padding:15px;flex:1;display:flex;flex-direction:column;gap:8px}
+.pf .pt{font-size:14px;font-weight:700}
+.pf dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:3px 11px;font-size:12px}
+.pf dt{color:var(--fg-mute);white-space:nowrap}
+.pf dd{margin:0;color:var(--fg-dim);min-width:0}
+.empty{border:1px dashed var(--line-strong);border-radius:11px;padding:30px 20px;text-align:center;color:var(--fg-mute);font-size:13.5px}
+details.fold{border:1px solid var(--line);border-radius:11px;background:var(--surface);margin-bottom:10px}
+details.fold>summary{padding:13px 16px;cursor:pointer;font-size:14px;font-weight:500;list-style:none;display:flex;gap:11px;align-items:center}
+details.fold>summary::-webkit-details-marker{display:none}
+details.fold>summary::after{content:"＋";margin-inline-start:auto;color:var(--fg-mute);font-family:var(--font-mono);font-size:12px}
+details.fold[open]>summary::after{content:"−"}
+details.fold .fb{padding:0 16px 17px;border-top:1px solid var(--line);padding-top:15px}
+.callout{border:1px solid var(--line);border-inline-start:3px solid var(--warn);background:var(--surface);border-radius:10px;padding:18px 22px;font-size:15px;color:var(--fg-dim);margin:26px 0;line-height:1.85;max-width:48em}
+.callout b{color:var(--fg);display:block;margin-bottom:7px;font-size:14.5px}
+.callout p+p{margin-top:.9em}
+.callout.acc{border-inline-start-color:var(--accent)}
+
+/* ---------- budget ---------- */
+.bars{display:flex;flex-direction:column;gap:11px;margin-top:6px}
+.bar-row{display:grid;grid-template-columns:72px 1fr 92px;gap:12px;align-items:center;font-size:12.5px}
+.bar-row .bl{font-family:var(--font-mono);font-size:11px;color:var(--fg-dim)}
+.bar-track{height:22px;background:var(--surface-2);border-radius:6px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:6px;background:var(--wk);opacity:.85}
+.bar-row .bv{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:end;color:var(--fg-dim);font-size:12px}
+@media (max-width:560px){.bar-row{grid-template-columns:56px 1fr 78px;gap:8px}}
+
+.srch-item{display:block;padding:12px 15px;border:1px solid var(--line);border-radius:10px;background:var(--surface);margin-bottom:9px;text-decoration:none;color:inherit}
+.srch-item:hover{border-color:var(--line-strong)}
+.srch-item .st{font-size:14px;font-weight:700}
+.srch-item .sx{font-size:12.5px;color:var(--fg-mute);margin-top:4px}
+mark{background:var(--accent-soft);color:var(--accent-strong);padding:0 2px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="shell">
+  <aside class="rail">
+    <div class="brand">
+      <div class="brand-mark">Core Bloom</div>
+      <div class="brand-name">AI Video Marketing<br>Academy</div>
+      <div class="brand-sub">6週間・30レッスン / 実践型</div>
+    </div>
+    <div class="railprog">
+      <div class="pr"><span id="rp-lbl">PROGRESS</span><span id="rp-val" class="num">0%</span></div>
+      <div class="meter"><i id="rp-bar" style="width:0%"></i></div>
+    </div>
+    <div class="search-wrap">
+      <input type="search" id="q" placeholder="検索（ / キーで移動）" aria-label="サイト内検索" autocomplete="off">
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="rail-foot">
+      <div class="themebar" role="group" aria-label="テーマ">
+        <button data-th="system" aria-pressed="true">自動</button>
+        <button data-th="light" aria-pressed="false">明</button>
+        <button data-th="dark" aria-pressed="false">暗</button>
+      </div>
+      進捗はこのブラウザにのみ保存されます。端末間の同期はありません。<br><br>
+      教材リンク確認日 <span class="num" id="checkedOn"></span>
+    </div>
+  </aside>
+  <main class="main"><div class="wrap" id="wrap"><div class="col" id="view"></div></div></main>
+</div>
+
+<script type="application/json" id="cb-data">__DATA__</script>
+<script>
+(function(){
+"use strict";
+const DATA = JSON.parse(document.getElementById('cb-data').textContent);
+const WEEKS = DATA.weeks, PROMPTS = DATA.prompts, RES = DATA.resources, META = DATA.meta;
+const LESSONS = WEEKS.flatMap(w => w.lessons.map(l => Object.assign({week:w.week, weekTitle:w.title}, l)));
+const BY_ID = Object.fromEntries(LESSONS.map(l => [l.id, l]));
+const KEY = 'corebloom-academy-v1', TKEY = 'corebloom-theme';
+const AXES = META.rubricAxes;
+const wkVar = n => 'var(--w' + n + ')';
+
+/* ---------- state ---------- */
+let S = {lessons:{}, portfolio:[]};
+function load(){ try{ const r=localStorage.getItem(KEY); if(r){ const p=JSON.parse(r); S=Object.assign({lessons:{},portfolio:[]},p); } }catch(e){} }
+let saveTimer=null;
+function save(){ clearTimeout(saveTimer); saveTimer=setTimeout(()=>{ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} },250); }
+function L(id){ return S.lessons[id] || (S.lessons[id] = {done:false, assignment:false, notes:'', prompt:'', rubric:{}}); }
+function touched(id){ const s=L(id); return s.done||s.assignment||(s.notes||'').trim()||(s.prompt||'').trim()||Object.keys(s.rubric||{}).length; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function md(s){ return esc(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>'); }
+/* 長い和文を段落に割り、"- " と "1. " を実際のリストとして組む */
+function splitLong(t){
+  if(t.length < 200) return [t];
+  const parts = t.split(/(?<=。)/);
+  const out=[]; let buf='', sent=0;
+  for(const q of parts){
+    buf+=q; sent++;
+    const even = (buf.match(/\*\*/g)||[]).length % 2 === 0;
+    if(sent>=3 && even && buf.length>120){ out.push(buf); buf=''; sent=0; }
+  }
+  if(buf.trim()) { if(out.length && buf.length<60) out[out.length-1]+=buf; else out.push(buf); }
+  return out;
+}
+function inline(t){ return esc(t).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>'); }
+function rich(src){
+  const lines = String(src==null?'':src).split('\n');
+  let html='', para=[], list=null;
+  const flushPara=()=>{ if(!para.length) return;
+    splitLong(para.join('')).forEach(t=>{ html+='<p>'+inline(t)+'</p>'; }); para=[]; };
+  const flushList=()=>{ if(!list) return;
+    html+='<'+list.tag+'>'+list.items.map(i=>'<li><span>'+inline(i)+'</span></li>').join('')+'</'+list.tag+'>'; list=null; };
+  for(const raw of lines){
+    const line = raw.trim();
+    const ul = line.match(/^[-・]\s+(.*)$/);
+    const ol = line.match(/^(\d+)[.)]\s+(.*)$/);
+    if(ul){ flushPara(); if(!list||list.tag!=='ul'){ flushList(); list={tag:'ul',items:[]}; } list.items.push(ul[1]); continue; }
+    if(ol){ flushPara(); if(!list||list.tag!=='ol'){ flushList(); list={tag:'ol',items:[]}; } list.items.push(ol[2]); continue; }
+    if(!line){ flushPara(); flushList(); continue; }
+    flushList(); para.push(line);
+  }
+  flushPara(); flushList();
+  return html || '<p>'+inline(src)+'</p>';
+}
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  if(t==='system') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('.themebar button').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.th===t)));
+  try{ localStorage.setItem(TKEY, t); }catch(e){}
+}
+document.querySelectorAll('.themebar button').forEach(b=>b.addEventListener('click',()=>applyTheme(b.dataset.th)));
+(function(){ let t='system'; try{ t = localStorage.getItem(TKEY)||'system'; }catch(e){} applyTheme(t); })();
+
+/* ---------- progress ---------- */
+const doneCount = () => LESSONS.filter(l=>L(l.id).done).length;
+const assignCount = () => LESSONS.filter(l=>L(l.id).assignment).length;
+const weekDone = w => w.lessons.filter(l=>L(l.id).done).length;
+const overall = () => Math.round(doneCount()/LESSONS.length*100);
+const nextLesson = () => LESSONS.find(l=>!L(l.id).done) || null;
+const currentWeek = () => { const n=nextLesson(); return n?n.week:WEEKS[WEEKS.length-1].week; };
+function paintRail(){
+  const p=overall();
+  document.getElementById('rp-val').textContent = p+'%';
+  document.getElementById('rp-bar').style.width = p+'%';
+  document.getElementById('rp-lbl').textContent = 'WEEK ' + currentWeek();
+}
+
+/* ---------- routing ---------- */
+const ROUTES = [
+  {id:'dashboard',  label:'ダッシュボード', ico:'◧'},
+  {id:'curriculum', label:'カリキュラム',   ico:'▤'},
+  {id:'tasks',      label:'制作課題',       ico:'◪'},
+  {id:'prompts',    label:'プロンプト',     ico:'❯'},
+  {id:'packs',      label:'業種別プロンプト', ico:'▦'},
+  {id:'builder',    label:'プロンプト作成', ico:'✎'},
+  {id:'budget',     label:'費用設計',       ico:'¥'},
+  {id:'portfolio',  label:'ポートフォリオ', ico:'▣'},
+  {id:'resources',  label:'参考教材',       ico:'↗'},
+  {id:'guide',      label:'使い方・前提',   ico:'◌'}
+];
+const navHTML = a => ROUTES
+  .filter(r => !(r.id==='packs' && !(DATA.packs||[]).length) && !(r.id==='builder' && !DATA.builder))
+  .map(r=>`<a href="#${r.id}"${r.id===a?' aria-current="page"':''}><span class="ico">${r.ico}</span>${r.label}</a>`).join('');
+
+function route(){
+  const h=(location.hash||'#dashboard').slice(1);
+  const v=document.getElementById('view'), wrap=document.getElementById('wrap');
+  wrap.classList.remove('has-index');
+  const si=document.getElementById('sideindex'); if(si) si.remove();
+  let active=h;
+  if(h.startsWith('lesson-')){ active='curriculum'; renderLesson(h.slice(7), v, wrap); }
+  else if(h==='curriculum') renderCurriculum(v);
+  else if(h==='tasks') renderTasks(v);
+  else if(h==='prompts') renderPrompts(v);
+  else if(h==='packs') renderPacks(v);
+  else if(h==='builder') renderBuilder(v);
+  else if(h==='budget') renderBudget(v);
+  else if(h==='portfolio') renderPortfolio(v);
+  else if(h==='resources') renderResources(v);
+  else if(h==='guide') renderGuide(v);
+  else if(h==='search') renderSearch(v);
+  else { active='dashboard'; renderDashboard(v); }
+  document.getElementById('nav').innerHTML = navHTML(active);
+  paintRail();
+  window.scrollTo(0,0);
+}
+
+/* ---------- shared bits ---------- */
+/* 工程（T2I / I2V など）の表示 */
+const FLOW = {
+  T2I:{jp:'テキスト → 画像', c:'var(--f-img)'},
+  I2I:{jp:'画像 → 画像',     c:'var(--f-img)'},
+  I2V:{jp:'画像 → 動画',     c:'var(--f-vid)'},
+  T2V:{jp:'テキスト → 動画', c:'var(--f-vid)'},
+  V2V:{jp:'動画 → 動画',     c:'var(--f-vid)'},
+  SLOT:{jp:'プロンプト部品', c:'var(--f-slot)'},
+  DOC:{jp:'文書テンプレート', c:'var(--f-doc)'}
+};
+function flowHTML(f){
+  if(!f || !FLOW[f.code]) return '';
+  const m = FLOW[f.code];
+  return `<div class="flow" style="--fc:${m.c}">
+    <div class="flow-h">
+      <span class="flow-badge"><span>${f.code}</span><span class="jp">${m.jp}</span></span>
+      ${f.step?`<span class="flow-step">${esc(f.step)}</span>`:''}
+    </div>
+    <dl class="flow-rows">
+      ${f.where?`<dt>作る場所</dt><dd><b style="color:var(--fg)">${esc(f.where)}</b>${f.whereNote?`<span class="muted" style="display:block;font-size:13px;margin-top:2px">${esc(f.whereNote)}</span>`:''}</dd>`:''}
+      <dt>入力</dt><dd>${esc(f.input)}</dd>
+      <dt>出力</dt><dd>${esc(f.output)}</dd>
+      <dt>次に</dt><dd>${esc(f.next)}</dd>
+    </dl></div>`;
+}
+function setupHTML(s){
+  if(!s) return '';
+  const pills = [
+    ['尺', s.seconds], ['解像度', s.res], ['比率', s.aspect],
+    ['出力数', s.outputs], ['本日の上限', s.cap],
+    ['目安コスト', s.credits], ['Unlimited適用時', s.unlimited]
+  ].filter(c=>c[1] && c[1]!=='—');
+  return `<div class="setup">
+    <div class="setup-h"><b>本日の推奨設定</b>${s.tag?`<span class="chip acc">${esc(s.tag)}</span>`:''}</div>
+    ${s.model?`<div class="setup-lead"><div class="k">モデル</div><div class="v">${esc(s.model)}</div></div>`:''}
+    <div class="setup-pills">${pills.map(c=>`<div><div class="k">${esc(c[0])}</div><div class="v${String(c[1]).length>12?' wrap':''}">${esc(c[1])}</div></div>`).join('')}</div>
+    ${s.save?`<div class="setup-note"><b>節約</b><span>${esc(s.save)}</span></div>`:''}
+  </div>`;
+}
+function bindCopy(root){
+  root.querySelectorAll('.copy').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const el=document.getElementById(b.dataset.copy); if(!el) return;
+      const ok=()=>{ const o=b.textContent; b.textContent='コピー済'; setTimeout(()=>b.textContent=o,1600); };
+      const no=()=>{ const r=document.createRange(); r.selectNodeContents(el);
+        const s=window.getSelection(); s.removeAllRanges(); s.addRange(r); b.textContent='選択しました'; };
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(el.textContent).then(ok).catch(no); else no();
+    });
+  });
+}
+
+/* ---------- dashboard ---------- */
+function renderDashboard(v){
+  const n=nextLesson(), cw=currentWeek(), w=WEEKS.find(x=>x.week===cw);
+  const recent=LESSONS.filter(l=>L(l.id).done).slice(-4).reverse();
+  const deliv=WEEKS.filter(x=>weekDone(x)===x.lessons.length).flatMap(x=>x.weekDeliverables);
+  const p=overall(), R=52, C=2*Math.PI*R;
+  v.innerHTML = `
+  <div class="eyebrow">Dashboard</div>
+  <h1 class="page-title">${esc(META.courseTitle)}</h1>
+  <p class="page-lede">${esc(META.courseLede)}</p>
+
+  <div class="hero" style="margin-top:26px">
+    <div class="ring">
+      <svg width="118" height="118" viewBox="0 0 118 118" aria-hidden="true">
+        <circle cx="59" cy="59" r="${R}" fill="none" stroke="var(--surface-3)" stroke-width="7"></circle>
+        <circle cx="59" cy="59" r="${R}" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"
+          stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C*(1-p/100)).toFixed(1)}"></circle>
+      </svg>
+      <div class="rv"><b>${p}%</b><span>COMPLETE</span></div>
+    </div>
+    <div class="hb">
+      ${n ? `<div class="row" style="gap:8px"><span class="chip wk" style="--wk:${wkVar(n.week)}">Week ${n.week}</span><span class="chip">Day ${n.day}</span><span class="chip">${esc(n.duration)}</span></div>
+      <h2 style="font-size:21px;margin-top:12px">${esc(n.title)}</h2>
+      <p class="dim small" style="margin-top:7px">${esc(n.subtitle)}</p>
+      <p style="margin-top:12px;font-size:13.5px;color:var(--fg-dim)"><b style="color:var(--fg)">課題：</b>${esc(n.assignment.title)}</p>
+      <div class="row" style="margin-top:17px"><a class="btn primary" href="#lesson-${n.id}">このレッスンを始める</a>
+        <span class="muted small">${esc(w.title)}</span></div>`
+      : `<h2 style="font-size:21px">30レッスン完了</h2>
+      <p class="dim small" style="margin-top:8px">ポートフォリオと収益シミュレーションを見直し、提案先リストを更新してください。</p>`}
+    </div>
+  </div>
+
+  <div class="grid g3" style="margin-top:14px">
+    <div class="stat"><div class="k">完了レッスン</div><div class="v">${doneCount()}<span class="u">/ ${LESSONS.length}</span></div></div>
+    <div class="stat"><div class="k">提出済み課題</div><div class="v">${assignCount()}<span class="u">/ ${LESSONS.length}</span></div></div>
+    <div class="stat"><div class="k">ポートフォリオ</div><div class="v">${S.portfolio.length}<span class="u">本</span></div></div>
+    <div class="stat"><div class="k">記録のある日</div><div class="v">${LESSONS.filter(l=>touched(l.id)).length}<span class="u">日</span></div></div>
+  </div>
+
+  <div class="sec-head"><span class="n">WEEKS</span><h2 class="sec">6週間の進行</h2></div>
+  <div class="grid g2">
+    ${WEEKS.map(x=>{const d=weekDone(x),pc=Math.round(d/x.lessons.length*100);return `
+      <a class="card lift" href="#curriculum" style="text-decoration:none;color:inherit;display:block;--wk:${wkVar(x.week)}">
+        <div class="row" style="justify-content:space-between">
+          <span class="eyebrow" style="color:var(--wk)">Week ${x.week}</span>
+          <span class="num small" style="${d===x.lessons.length?'color:var(--ok)':'color:var(--fg-mute)'}">${d}/${x.lessons.length}</span></div>
+        <div style="font-size:15px;font-weight:700;margin:9px 0 11px;font-family:var(--font-display)">${esc(x.title)}</div>
+        <div class="meter" style="--bar:var(--wk)"><i style="width:${pc}%"></i></div>
+      </a>`}).join('')}
+  </div>
+
+  <div class="sec-head"><span class="n">OUTPUT</span><h2 class="sec">完了週の成果物</h2></div>
+  ${deliv.length?`<ul class="ulist check">${deliv.map(d=>`<li>${esc(d)}</li>`).join('')}</ul>`
+   :`<div class="empty">週をひとつ完了すると、その週の成果物がここに並びます。</div>`}
+
+  ${recent.length?`<div class="sec-head"><span class="n">LOG</span><h2 class="sec">直近の完了</h2></div>
+  <div class="card" style="padding:0;overflow:hidden">${recent.map(l=>`<a class="lesson-row" href="#lesson-${l.id}" style="border-top:0;border-bottom:1px solid var(--line);padding-inline-start:22px"><span class="tick on">✓</span><span class="d">W${l.week}D${l.day}</span><span class="t">${esc(l.title)}</span></a>`).join('')}</div>`:''}
+
+  <div class="sec-head"><span class="n">DATA</span><h2 class="sec">進捗データ</h2></div>
+  <div class="card">
+    <p class="small dim">保存先はこのブラウザのみです。別の端末やブラウザには引き継がれません。端末を移すときは、下のボタンでコピーし、移行先で貼り付けて読み込んでください。</p>
+    <div class="row" style="margin-top:15px">
+      <button class="btn sm" id="btn-export">データをコピー</button>
+      <button class="btn sm" id="btn-import">データを読み込む</button>
+      <button class="btn sm" id="btn-reset">進捗をリセット</button>
+      <span class="saved" id="data-msg"></span>
+    </div>
+    <div id="import-box" hidden style="margin-top:14px">
+      <label for="import-text" style="display:block;font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--fg-mute);margin-bottom:6px">バックアップJSON</label>
+      <textarea id="import-text" placeholder='{"lessons":{...},"portfolio":[...]}'></textarea>
+      <div class="row" style="margin-top:10px"><button class="btn sm primary" id="btn-import-go">読み込む</button></div>
+    </div>
+  </div>`;
+
+  const msg=document.getElementById('data-msg');
+  const flash=t=>{ msg.textContent=t; msg.classList.add('on'); setTimeout(()=>msg.classList.remove('on'),2400); };
+  document.getElementById('btn-export').onclick=function(){
+    const txt=JSON.stringify(S);
+    const fb=()=>{ const b=document.getElementById('import-box'),t=document.getElementById('import-text');
+      b.hidden=false; t.value=txt; t.select(); flash('下の欄から手動でコピーしてください'); };
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(()=>flash('コピーしました')).catch(fb); else fb();
+  };
+  document.getElementById('btn-import').onclick=function(){ const b=document.getElementById('import-box'); b.hidden=!b.hidden; };
+  document.getElementById('btn-import-go').onclick=function(){
+    try{ const p=JSON.parse(document.getElementById('import-text').value);
+      if(!p||typeof p!=='object') throw 0;
+      S={lessons:p.lessons||{}, portfolio:Array.isArray(p.portfolio)?p.portfolio:[]}; save(); route();
+    }catch(e){ flash('読み込めませんでした。JSONを確認してください'); }
+  };
+  let armed=false;
+  document.getElementById('btn-reset').onclick=function(){
+    if(!armed){ armed=true; this.textContent='もう一度押すと消去'; this.style.color='var(--alert)';
+      setTimeout(()=>{armed=false;this.textContent='進捗をリセット';this.style.color='';},4000); return; }
+    S={lessons:{},portfolio:[]}; save(); route();
+  };
+}
+
+/* ---------- curriculum ---------- */
+function renderCurriculum(v){
+  v.innerHTML = `
+  <div class="eyebrow">Curriculum</div>
+  <h1 class="page-title">6週間のカリキュラム</h1>
+  <p class="page-lede">1日60〜90分・週5日の30レッスン。各週の Day 5 がその週の総合課題の仕上げ日です。</p>
+  ${WEEKS.map(w=>{
+    const d=weekDone(w), p=Math.round(d/w.lessons.length*100);
+    return `<div class="week" style="margin-top:18px;--wk:${wkVar(w.week)}">
+      <div class="week-head">
+        <div class="week-no">WEEK ${w.week}</div>
+        <div style="flex:1;min-width:190px">
+          <div class="week-title">${esc(w.title)}</div>
+          <div class="week-theme">${esc(w.theme)}</div>
+          <div class="row" style="margin-top:12px"><span class="chip">${esc(w.hours)}</span>${w.weekDeliverables.slice(0,2).map(x=>`<span class="chip">${esc(x)}</span>`).join('')}</div>
+        </div>
+        <div class="week-meter"><div class="lbl">${d} / ${w.lessons.length}</div><div class="meter" style="--bar:var(--wk)"><i style="width:${p}%"></i></div></div>
+      </div>
+      ${w.lessons.map(l=>{const st=L(l.id);return `<a class="lesson-row" href="#lesson-${l.id}">
+        <span class="tick${st.done?' on':(touched(l.id)?' part':'')}">✓</span>
+        <span class="d">Day ${l.day}</span>
+        <span class="t">${esc(l.title)}<span class="s">${esc(l.subtitle)}</span></span>
+        <span class="m">${l.setup&&l.setup.credits?esc(l.setup.credits):esc(l.duration)}</span></a>`}).join('')}
+      <div style="padding:15px 22px 15px 24px;border-top:1px solid var(--line);background:var(--surface-2)">
+        <div class="eyebrow" style="margin-bottom:7px">週の到達点</div>
+        <p class="small dim">${esc(w.outcome)}</p>
+      </div>
+    </div>`;
+  }).join('')}`;
+}
+
+/* ---------- lesson ---------- */
+function renderLesson(id, v, wrap){
+  const l=BY_ID[id];
+  if(!l){ v.innerHTML=`<div class="empty">レッスンが見つかりません。<a href="#curriculum">カリキュラム</a>へ戻ってください。</div>`; return; }
+  const st=L(id), idx=LESSONS.findIndex(x=>x.id===id);
+  const prev=LESSONS[idx-1], next=LESSONS[idx+1];
+  const resItems=(l.resourceIds||[]).map(r=>RES.items.find(x=>x.id===r)).filter(Boolean);
+  const secs=[];
+  const S_=(n,t)=>{ const sid='s-'+n; secs.push({id:sid,n:n,t:t});
+    return `<div class="sec-head" id="${sid}"><span class="n">${n}</span><h2 class="sec">${t}</h2></div>`; };
+
+  v.innerHTML = `
+  <div class="lesson-hero" style="--wk:${wkVar(l.week)}">
+    <div class="row" style="gap:8px"><span class="chip wk" style="--wk:${wkVar(l.week)}">Week ${l.week}</span><span class="chip">Day ${l.day}</span>
+      <span class="chip">${esc(l.duration)}</span>${st.done?'<span class="chip ok">✓ 完了</span>':''}</div>
+    <h1 class="page-title">${esc(l.title)}</h1>
+    <p class="page-lede">${esc(l.subtitle)}</p>
+    <div class="row" style="margin-top:16px">${(l.timeBreakdown||[]).map(t=>`<span class="chip"><span class="num">${t.min}分</span> ${esc(t.label)}</span>`).join('')}</div>
+    ${setupHTML(l.setup)}
+  </div>
+
+  ${S_('01','このレッスンを学ぶ理由')}
+  <div class="prose dim">${rich(l.why)}</div>
+
+  ${S_('02','到達目標')}
+  <ul class="ulist">${l.goals.map(g=>`<li>${esc(g)}</li>`).join('')}</ul>
+  <div class="grid g2" style="margin-top:26px">
+    <div class="card"><div class="eyebrow">使用するツール</div><ul class="ulist" style="margin-top:11px">${l.tools.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+    <div class="card"><div class="eyebrow">前提</div><ul class="ulist" style="margin-top:11px">${l.prereq.map(t=>`<li>${esc(t)}</li>`).join('')}</ul></div>
+  </div>
+
+  ${S_('03','解説')}
+  <div class="theory">${l.theory.map(b=>`<div class="blk"><h3>${esc(b.heading)}</h3><div class="prose">${rich(b.body)}</div></div>`).join('')}</div>
+
+  ${S_('04','操作手順')}
+  <div>${l.steps.map(s=>`<div class="step"><div class="sn">${String(s.n).padStart(2,'0')}</div>
+    <div class="sb"><div class="sa">${esc(s.action)}</div><div class="sd prose">${rich(s.detail)}</div>
+    <div class="sc"><b>完了の目印</b><span>${esc(s.check)}</span></div></div></div>`).join('')}</div>
+
+  ${(l.prompts&&l.prompts.length)?S_('05','プロンプト')
+    +`<p class="small muted" style="margin:-4px 0 16px">各プロンプトの先頭に、何を入力して何が出てくるかを示しています。画像を新しく作るのか、すでに作った画像を動かすのかを確認してから実行してください。</p>`
+    +l.prompts.map((p,i)=>`<div class="prompt">
+    <div class="prompt-h"><span class="pt">${esc(p.label)}</span><span class="chip warn">${esc(p.status||'未検証')}</span>
+      <button class="btn sm copy" data-copy="l-${id}-${i}">コピー</button></div>
+    ${flowHTML(p.flow)}
+    <div class="prompt-b" id="l-${id}-${i}">${esc(p.text)}</div>
+    ${p.note?`<div class="prompt-n"><b>狙い：</b>${esc(p.note)}</div>`:''}</div>`).join(''):''}
+
+  ${S_('06','期待する出力')}
+  <div class="prose dim">${rich(l.expected)}</div>
+
+  ${S_('07','実践課題')}
+  <div class="card">
+    <h3 style="font-size:17px">${esc(l.assignment.title)}</h3>
+    <div class="prose dim" style="margin-top:13px">${rich(l.assignment.brief)}</div>
+    <div class="grid g2" style="margin-top:21px">
+      <div><div class="eyebrow">提出物</div><ul class="ulist" style="margin-top:10px">${l.assignment.deliverables.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div>
+      <div><div class="eyebrow">制約</div><ul class="ulist" style="margin-top:10px">${l.assignment.constraints.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div>
+    </div>
+  </div>
+
+  ${S_('08','成功条件')}
+  <ul class="ulist check">${l.success.map(s=>`<li>${esc(s)}</li>`).join('')}</ul>
+
+  ${S_('09','評価ルーブリック')}
+  <div class="scroll-x"><table class="t"><thead><tr><th>評価軸</th><th>このレッスンでの基準</th></tr></thead><tbody>
+    ${l.rubric.map(r=>`<tr><td class="ax">${esc(r.axis)}</td><td>${esc(r.pass)}</td></tr>`).join('')}</tbody></table></div>
+
+  ${S_('10','よくある失敗と改善')}
+  ${l.pitfalls.map(p=>`<div class="pit"><div class="pp">${esc(p.problem)}</div>
+    <div class="pc"><b>原因</b><span>${esc(p.cause)}</span></div>
+    <div class="pf"><b>改善</b><span>${esc(p.fix)}</span></div></div>`).join('')}
+
+  ${resItems.length?S_('11','参考教材')+resItems.map(r=>`<div class="res"><div class="res-h"><span class="rt">${esc(r.title)}</span>
+    <span class="chip ${r.status==='確認済み'?'ok':'warn'}">${esc(r.status)}</span></div>
+    <div class="prov">${esc(r.provider)} ／ ${esc(r.duration)}</div>
+    <div class="use"><b>このレッスンでの使い方</b>${esc(r.useFor)}</div>
+    <a class="lnk" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)} ↗</a></div>`).join(''):''}
+
+  ${S_('WORK','作業記録')}
+  <div class="work">
+    <h3>このレッスンの記録</h3>
+    <p class="small muted">入力はこのブラウザに自動保存されます。</p>
+    <div class="field"><label for="wp-${id}">使用したプロンプト</label>
+      <textarea id="wp-${id}" placeholder="実際に投げたプロンプトを貼っておくと、次回の改善点が追えます">${esc(st.prompt)}</textarea></div>
+    <div class="field"><label for="wn-${id}">制作メモ・気づき</label>
+      <textarea id="wn-${id}" placeholder="生成回数 / 採用数 / 消費クレジット / 外れた原因 / 次に変える変数">${esc(st.notes)}</textarea></div>
+    <div class="field"><label>自己評価（5段階）</label>
+      <div class="rub-grid">${AXES.map(a=>`<div class="rl">${esc(a)}</div>
+        <select data-ax="${esc(a)}" aria-label="${esc(a)}">${[0,1,2,3,4,5].map(n=>`<option value="${n}"${(st.rubric[a]||0)==n?' selected':''}>${n===0?'—':n}</option>`).join('')}</select>`).join('')}</div>
+      <p class="small muted" style="margin-top:10px">合計 <b class="num" id="rub-total">${AXES.reduce((s,a)=>s+(+st.rubric[a]||0),0)}</b> / 30。各軸で必ず1つは3点以下を付けると、次に直す変数が見つかります。</p>
+    </div>
+    <div class="done-bar">
+      <label class="ck"><input type="checkbox" id="ck-assign-${id}" ${st.assignment?'checked':''}> 課題を提出した</label>
+      <label class="ck"><input type="checkbox" id="ck-done-${id}" ${st.done?'checked':''}> レッスンを完了にする</label>
+      <span class="saved" id="save-msg">保存しました</span>
+    </div>
+  </div>
+
+  <div class="callout acc"><b>次のレッスンへ</b>${esc(l.nextHint)}</div>
+
+  <div class="pager">
+    ${prev?`<a href="#lesson-${prev.id}"><div class="pl">← 前</div><div class="pn">${esc(prev.title)}</div></a>`:'<span></span>'}
+    ${next?`<a href="#lesson-${next.id}" style="text-align:end"><div class="pl">次 →</div><div class="pn">${esc(next.title)}</div></a>`:'<span></span>'}
+  </div>`;
+
+  /* side index */
+  wrap.classList.add('has-index');
+  const aside=document.createElement('aside');
+  aside.className='sideindex'; aside.id='sideindex';
+  aside.innerHTML=`<div class="ttl">Contents</div>`+secs.map(s=>`<a href="#${s.id}" data-sec="${s.id}">${esc(s.t)}</a>`).join('');
+  wrap.appendChild(aside);
+  aside.querySelectorAll('a').forEach(a=>a.addEventListener('click',e=>{
+    e.preventDefault();
+    const t=document.getElementById(a.dataset.sec);
+    if(t) t.scrollIntoView({behavior:'smooth',block:'start'});
+  }));
+  if('IntersectionObserver' in window){
+    const links=Object.fromEntries([...aside.querySelectorAll('a')].map(a=>[a.dataset.sec,a]));
+    const io=new IntersectionObserver(es=>{
+      es.forEach(en=>{ if(en.isIntersecting){ Object.values(links).forEach(a=>a.classList.remove('on'));
+        const a=links[en.target.id]; if(a) a.classList.add('on'); } });
+    },{rootMargin:'-10% 0px -75% 0px'});
+    secs.forEach(s=>{ const el=document.getElementById(s.id); if(el) io.observe(el); });
+  }
+
+  const msg=document.getElementById('save-msg');
+  const flash=()=>{ msg.classList.add('on'); setTimeout(()=>msg.classList.remove('on'),1400); };
+  const bindText=(el,key)=>{ el.addEventListener('input',()=>{ st[key]=el.value; save(); flash(); }); };
+  bindText(document.getElementById('wp-'+id),'prompt');
+  bindText(document.getElementById('wn-'+id),'notes');
+  v.querySelectorAll('select[data-ax]').forEach(sel=>sel.addEventListener('change',()=>{
+    st.rubric[sel.dataset.ax]=+sel.value; save(); flash();
+    document.getElementById('rub-total').textContent=AXES.reduce((s,a)=>s+(+st.rubric[a]||0),0);
+  }));
+  document.getElementById('ck-assign-'+id).addEventListener('change',e=>{ st.assignment=e.target.checked; save(); flash(); paintRail(); });
+  document.getElementById('ck-done-'+id).addEventListener('change',e=>{ st.done=e.target.checked; save(); route(); });
+  bindCopy(v);
+}
+
+/* ---------- tasks ---------- */
+function renderTasks(v){
+  v.innerHTML = `
+  <div class="eyebrow">Assignments</div>
+  <h1 class="page-title">制作課題</h1>
+  <p class="page-lede">30レッスン分の課題を横断で管理します。提出物と制約を開いて確認し、作業記録はレッスンページで残します。</p>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="stat"><div class="k">提出済み</div><div class="v">${assignCount()}<span class="u">/ ${LESSONS.length}</span></div>
+      <div class="meter" style="margin-top:11px"><i style="width:${Math.round(assignCount()/LESSONS.length*100)}%"></i></div></div>
+    <div class="stat"><div class="k">週次の総合課題</div><div class="v">${LESSONS.filter(l=>l.day===5&&L(l.id).assignment).length}<span class="u">/ 6</span></div></div>
+    <div class="stat"><div class="k">記録の残る課題</div><div class="v">${LESSONS.filter(l=>(L(l.id).notes||'').trim()).length}<span class="u">件</span></div></div>
+  </div>
+  ${WEEKS.map(w=>`
+    <div class="sec-head"><span class="n" style="color:${wkVar(w.week)}">W${w.week}</span><h2 class="sec">${esc(w.title)}</h2></div>
+    ${w.lessons.map(l=>{const st=L(l.id);return `<details class="fold">
+      <summary><span class="tick${st.assignment?' on':''}">✓</span>
+        <span style="flex:1;min-width:0">Day ${l.day}　${esc(l.assignment.title)}</span></summary>
+      <div class="fb">
+        <div class="prose dim" style="font-size:15px">${rich(l.assignment.brief)}</div>
+        <div class="grid g2" style="margin-top:17px">
+          <div><div class="eyebrow">提出物</div><ul class="ulist" style="margin-top:9px">${l.assignment.deliverables.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div>
+          <div><div class="eyebrow">制約</div><ul class="ulist" style="margin-top:9px">${l.assignment.constraints.map(d=>`<li>${esc(d)}</li>`).join('')}</ul></div>
+        </div>
+        ${(st.notes||'').trim()?`<div class="res" style="margin-top:17px;margin-bottom:0"><div class="use" style="margin-top:0"><b>記録済みのメモ</b>${esc(st.notes).replace(/\n/g,'<br>')}</div></div>`:''}
+        <div class="row" style="margin-top:17px"><a class="btn sm primary" href="#lesson-${l.id}">レッスンを開いて記録する</a>
+        ${st.assignment?'<span class="chip ok">提出済み</span>':'<span class="chip">未提出</span>'}</div>
+      </div></details>`}).join('')}`).join('')}`;
+}
+
+/* ---------- prompts ---------- */
+let promptFilter='all', flowFilter='all';
+function renderPrompts(v){
+  const cats=PROMPTS.categories;
+  let list=PROMPTS.prompts;
+  if(promptFilter!=='all') list=list.filter(p=>p.category===promptFilter);
+  if(flowFilter!=='all') list=list.filter(p=>p.flow&&p.flow.code===flowFilter);
+  const codes=['T2I','I2I','I2V','T2V','V2V','SLOT','DOC'].filter(c=>PROMPTS.prompts.some(p=>p.flow&&p.flow.code===c));
+  v.innerHTML = `
+  <div class="eyebrow">Prompt Library</div>
+  <h1 class="page-title">プロンプトライブラリ</h1>
+  <p class="page-lede">被写体・動作・環境・カメラ・光・質感・スタイルの7スロット構造で整理しています。各プロンプトには、何を入力して何が出てくるかの工程を付けました。本環境で生成検証はしていないため、すべて「未検証」です。</p>
+
+  <div class="sec-head"><span class="n">FLOW</span><h2 class="sec">工程の記号</h2></div>
+  <div class="legend">
+    ${(PROMPTS.flowLegend||[]).map(f=>{const m=FLOW[f.code]||{c:'var(--fg-mute)'};
+      return `<div style="--fc:${m.c}"><span class="lc">${esc(f.code)}</span>
+        <div><div class="ll">${esc(f.label)}</div><div class="ld">${esc(f.desc)}</div></div></div>`}).join('')}
+  </div>
+
+  <div class="filters" id="fflt">
+    <button data-f="all" aria-pressed="${flowFilter==='all'}">工程すべて</button>
+    ${codes.map(c=>{const n=PROMPTS.prompts.filter(p=>p.flow&&p.flow.code===c).length;
+      return `<button data-f="${c}" aria-pressed="${flowFilter===c}">${c} <span class="num">${n}</span></button>`}).join('')}
+  </div>
+  <div class="filters" id="pfilters" style="margin-top:-10px">
+    <button data-c="all" aria-pressed="${promptFilter==='all'}">用途すべて <span class="num">${PROMPTS.prompts.length}</span></button>
+    ${cats.map(c=>{const n=PROMPTS.prompts.filter(p=>p.category===c.id).length;
+      return `<button data-c="${c.id}" aria-pressed="${promptFilter===c.id}">${esc(c.label)} <span class="num">${n}</span></button>`}).join('')}
+  </div>
+  ${promptFilter!=='all'?`<p class="small muted" style="margin:-8px 0 18px">${esc((cats.find(c=>c.id===promptFilter)||{}).desc||'')}</p>`:''}
+  ${list.length?list.map((p,i)=>`<div class="prompt">
+    <div class="prompt-h"><span class="pt">${esc(p.title)}</span>
+      <span class="chip">${esc((cats.find(c=>c.id===p.category)||{}).label||'')}</span>
+      <span class="chip warn">${esc(p.status)}</span>
+      <button class="btn sm copy" data-copy="pl-${i}">コピー</button></div>
+    ${flowHTML(p.flow)}
+    <div class="prompt-b" id="pl-${i}">${esc(p.text)}</div>
+    <div class="prompt-n">
+      <div style="margin-bottom:6px"><b>目的：</b>${esc(p.purpose)}</div>
+      <div style="margin-bottom:6px"><b>用意するもの：</b>${esc(p.input)}</div>
+      <div style="margin-bottom:6px"><b>使用モデル・機能：</b>${esc(p.model)}</div>
+      <div style="margin-bottom:6px"><b>期待する効果：</b>${esc(p.effect)}</div>
+      <div style="color:var(--alert)"><b style="color:var(--alert)">注意：</b>${esc(p.caution)}</div>
+    </div></div>`).join(''):'<div class="empty">この組み合わせに該当するプロンプトはありません。</div>'}
+  <div class="callout"><b>検証状態について</b>${esc(PROMPTS.note)}</div>`;
+  document.getElementById('pfilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{ promptFilter=b.dataset.c; renderPrompts(v); });
+  document.getElementById('fflt').querySelectorAll('button').forEach(b=>b.onclick=()=>{ flowFilter=b.dataset.f; renderPrompts(v); });
+  bindCopy(v);
+}
+
+/* ---------- industry packs ---------- */
+let packId=null, packSub='all', packFlow='all';
+function renderPacks(v){
+  const PK=DATA.packs||[];
+  if(!PK.length){ v.innerHTML='<div class="empty">業種別プロンプト集はまだ登録されていません。</div>'; return; }
+  if(!packId || !PK.find(p=>p.id===packId)) packId=PK[0].id;
+  const pk=PK.find(p=>p.id===packId);
+  let list=pk.prompts;
+  if(packSub!=='all') list=list.filter(p=>p.sub===packSub);
+  if(packFlow!=='all') list=list.filter(p=>p.flow&&p.flow.code===packFlow);
+  const codes=['T2I','I2I','I2V','T2V','V2V','SLOT','DOC'].filter(c=>pk.prompts.some(p=>p.flow&&p.flow.code===c));
+  v.innerHTML = `
+  <div class="eyebrow">Industry Packs</div>
+  <h1 class="page-title">業種別プロンプト集</h1>
+  <p class="page-lede">顧客の業種ごとに、そのまま提案に持っていけるプロンプトをまとめています。各30本。工程記号を見れば、画像を新しく作るのか、作った画像を動かすのかが実行前に分かります。</p>
+  <div class="filters" id="pkTabs" style="margin-top:24px">
+    ${PK.map(p=>`<button data-p="${p.id}" aria-pressed="${packId===p.id}">${esc(p.label)} <span class="num">${p.prompts.length}</span></button>`).join('')}
+  </div>
+  <p class="dim" style="font-size:14px;max-width:62ch">${esc(pk.lede)}</p>
+  ${pk.legal?`<div class="callout"><b>この業種で必ず確認すること</b>${rich(pk.legal)}</div>`:''}
+  <div class="filters" id="pkSub" style="margin-top:20px">
+    <button data-s="all" aria-pressed="${packSub==='all'}">すべて</button>
+    ${pk.subcategories.map(s=>{const n=pk.prompts.filter(p=>p.sub===s.id).length;
+      return `<button data-s="${s.id}" aria-pressed="${packSub===s.id}">${esc(s.label)} <span class="num">${n}</span></button>`}).join('')}
+  </div>
+  <div class="filters" id="pkFlow" style="margin-top:-10px">
+    <button data-f="all" aria-pressed="${packFlow==='all'}">工程すべて</button>
+    ${codes.map(c=>{const n=pk.prompts.filter(p=>p.flow&&p.flow.code===c).length;
+      return `<button data-f="${c}" aria-pressed="${packFlow===c}">${c} <span class="num">${n}</span></button>`}).join('')}
+  </div>
+  ${list.length?list.map((p,i)=>`<div class="prompt">
+    <div class="prompt-h"><span class="pt">${esc(p.title)}</span>
+      <span class="chip">${esc((pk.subcategories.find(s=>s.id===p.sub)||{}).label||'')}</span>
+      <span class="chip warn">${esc(p.status)}</span>
+      <button class="btn sm copy" data-copy="pk-${i}">コピー</button></div>
+    ${flowHTML(p.flow)}
+    <div class="prompt-b" id="pk-${i}">${esc(p.text)}</div>
+    <div class="prompt-n">
+      <div style="margin-bottom:6px"><b>目的：</b>${esc(p.purpose)}</div>
+      <div style="margin-bottom:6px"><b>推奨ツール：</b>${esc(p.model)}</div>
+      <div style="margin-bottom:6px"><b>効く理由：</b>${esc(p.effect)}</div>
+      <div style="color:var(--alert)"><b style="color:var(--alert)">注意：</b>${esc(p.caution)}</div>
+    </div></div>`).join(''):'<div class="empty">この組み合わせに該当するプロンプトはありません。</div>'}`;
+  document.getElementById('pkTabs').querySelectorAll('button').forEach(b=>b.onclick=()=>{ packId=b.dataset.p; packSub='all'; packFlow='all'; renderPacks(v); });
+  document.getElementById('pkSub').querySelectorAll('button').forEach(b=>b.onclick=()=>{ packSub=b.dataset.s; renderPacks(v); });
+  document.getElementById('pkFlow').querySelectorAll('button').forEach(b=>b.onclick=()=>{ packFlow=b.dataset.f; renderPacks(v); });
+  bindCopy(v);
+}
+
+/* ---------- prompt builder ---------- */
+const BKEY='corebloom-builder-v1';
+let B={mode:'still', subject:'', action:'', env:'', textureFree:'', motionFree:'',
+       sel:{}, tg:{}, vmodel:'kling30', vsecs:'5', vres:'720', vout:'1', imodel:'soul2', icount:'4'};
+(function(){ try{ const r=localStorage.getItem(BKEY); if(r) B=Object.assign(B,JSON.parse(r)); }catch(e){} })();
+function bSave(){ try{ localStorage.setItem(BKEY, JSON.stringify(B)); }catch(e){} }
+function renderBuilder(v){
+  const BD=DATA.builder, MD=DATA.models||{};
+  if(!BD){ v.innerHTML='<div class="empty">ビルダーの設定が読み込めませんでした。</div>'; return; }
+  const G=BD.groups;
+  const stillKeys=['shot','angle','lens','dof','aspect','lightDir','lightQ','kelvin','texture','style','grade'];
+  const videoKeys=['move','amount','motion'];
+  const keys=B.mode==='still'?stillKeys:videoKeys;
+  const tgs=B.mode==='still'?BD.toggles.still:BD.toggles.video;
+  Object.keys(G).forEach(k=>{ if(B.sel[k]===undefined) B.sel[k]=G[k].options[0].v; });
+  tgs.forEach(t=>{ if(B.tg[t.id]===undefined) B.tg[t.id]=!!t.on; });
+  const vmods=Object.keys(MD).filter(k=>MD[k].perSec);
+  const imods=Object.keys(MD).filter(k=>MD[k].cr!=null);
+  const selHTML=k=>{ const g=G[k]; return `<div class="field" style="margin-top:0">
+    <label for="b-${k}">${esc(g.label)}</label>
+    <select id="b-${k}" data-k="${k}">${g.options.map(o=>`<option value="${esc(o.v)}"${B.sel[k]===o.v?' selected':''}>${esc(o.l)}</option>`).join('')}</select>
+    <p class="small muted" id="bh-${k}" style="margin-top:5px;min-height:2.6em;line-height:1.5"></p></div>`; };
+
+  v.innerHTML = `
+  <div class="eyebrow">Prompt Builder</div>
+  <h1 class="page-title">プロンプト作成</h1>
+  <p class="page-lede">レッスンで学んだ変数を選ぶと、7スロット構造のプロンプトが組み上がります。ショットサイズ・レンズ・カメラの動き・光を切り替えて、同じ被写体の見え方を作り分けてください。選んだ内容はこのブラウザに保存されます。</p>
+
+  <div class="filters" style="margin-top:24px">
+    <button id="m-still" aria-pressed="${B.mode==='still'}">静止画を作る（T2I）</button>
+    <button id="m-video" aria-pressed="${B.mode==='video'}">画像を動かす（I2V）</button>
+  </div>
+  <p class="small muted" style="margin:-10px 0 4px">${B.mode==='still'
+    ?'何も参照せず、文章から静止画を作ります。ツールは問いません。手持ちの ChatGPT や Gemini で作れば Higgsfield のクレジットは使いません。'
+    :'すでにある静止画を動かします。画像は新しく作りません。構図・光・色は静止画で確定済みなので、ここでは動きだけを指定します。'}</p>
+
+  <div class="sec-head"><span class="n">PRESET</span><h2 class="sec">業種から始める</h2></div>
+  <div class="filters" id="bpre">
+    ${BD.presets.map(p=>`<button data-pre="${p.id}">${esc(p.label)}</button>`).join('')}
+    <button data-pre="__clear">選択をクリア</button>
+  </div>
+
+  ${B.mode==='still'?`
+  <div class="sec-head"><span class="n">01</span><h2 class="sec">被写体と環境</h2></div>
+  <div class="work" style="margin-top:0">
+    <div class="field" style="margin-top:0"><label for="b-subject">被写体（英語・具体名詞）</label>
+      <input type="text" id="b-subject" value="${esc(B.subject)}" placeholder="a bowl of miso ramen with chashu and a halved soft-boiled egg"></div>
+    <div class="field"><label for="b-action">状態・添える要素（任意）</label>
+      <input type="text" id="b-action" value="${esc(B.action)}" placeholder="freshly served, chopsticks resting on the bowl"></div>
+    <div class="field"><label for="b-env">環境・背景</label>
+      <input type="text" id="b-env" value="${esc(B.env)}" placeholder="on a dark walnut counter, softly blurred warm interior behind"></div>
+  </div>`:`
+  <div class="sec-head"><span class="n">01</span><h2 class="sec">動かす対象</h2></div>
+  <div class="callout acc" style="margin-top:0"><b>入力するもの</b>すでに作ってある静止画を1枚アップロードしてから、下で組み上げたプロンプトを入力してください。ここでは画像を作りません。手持ちのツールで作った画像をそのままアップロードして構いません。</div>`}
+
+  <div class="sec-head"><span class="n">02</span><h2 class="sec">${B.mode==='still'?'カメラ・光・質感':'カメラの動きと被写体の動き'}</h2></div>
+  <div class="grid g2" style="gap:18px">${keys.map(selHTML).join('')}</div>
+  ${B.mode==='still'?`<div class="field" style="max-width:580px"><label for="b-texfree">質感を自由に書く（入力すると選択より優先）</label>
+    <input type="text" id="b-texfree" value="${esc(B.textureFree)}" placeholder="glossy broth surface, fine condensation on the counter"></div>`
+   :`<div class="field" style="max-width:580px"><label for="b-motfree">被写体の動きを自由に書く（入力すると選択より優先）</label>
+    <input type="text" id="b-motfree" value="${esc(B.motionFree)}" placeholder="steam rising slowly and drifting to the right"></div>`}
+
+  <div class="sec-head"><span class="n">03</span><h2 class="sec">トグル</h2></div>
+  <div class="grid g2" style="gap:10px">
+    ${tgs.map(t=>`<label class="card lift" style="display:flex;gap:11px;align-items:flex-start;cursor:pointer;padding:14px">
+      <input type="checkbox" data-tg="${t.id}" ${B.tg[t.id]?'checked':''} style="width:auto;margin-top:4px">
+      <span style="flex:1;min-width:0"><span style="font-weight:700;font-size:13.5px">${esc(t.l)}</span>
+      <span class="small muted" style="display:block;margin-top:3px">${esc(t.h)}</span>
+      <span class="num small" style="display:block;margin-top:6px;color:var(--fg-mute);word-break:break-word">${esc(t.v)}</span></span></label>`).join('')}
+  </div>
+
+  <div class="sec-head"><span class="n">04</span><h2 class="sec">コストの見積り</h2></div>
+  <div class="work" style="margin-top:0">
+    ${B.mode==='video'?`
+    <div class="grid g3" style="gap:13px">
+      <div class="field" style="margin-top:0"><label for="b-vmodel">モデル</label>
+        <select id="b-vmodel">${vmods.map(k=>`<option value="${k}"${B.vmodel===k?' selected':''}>${esc(MD[k].label)}</option>`).join('')}</select></div>
+      <div class="field" style="margin-top:0"><label for="b-vsecs">尺</label>
+        <select id="b-vsecs">${[3,4,5,6,8,10,15].map(s=>`<option value="${s}"${String(B.vsecs)===String(s)?' selected':''}>${s}秒</option>`).join('')}</select></div>
+      <div class="field" style="margin-top:0"><label for="b-vres">解像度</label>
+        <select id="b-vres">${['480','720','1080'].map(r=>`<option value="${r}"${B.vres===r?' selected':''}>${r}p</option>`).join('')}</select></div>
+      <div class="field" style="margin-top:0"><label for="b-vout">本数</label>
+        <select id="b-vout">${[1,2,3,4,5,6,8,10,12].map(n=>`<option value="${n}"${String(B.vout)===String(n)?' selected':''}>${n}本</option>`).join('')}</select></div>
+    </div>`:`
+    <div class="grid g3" style="gap:13px">
+      <div class="field" style="margin-top:0"><label for="b-imodel">Higgsfield で作る場合のモデル</label>
+        <select id="b-imodel">${imods.map(k=>`<option value="${k}"${B.imodel===k?' selected':''}>${esc(MD[k].label)}</option>`).join('')}</select></div>
+      <div class="field" style="margin-top:0"><label for="b-icount">枚数</label>
+        <select id="b-icount">${[1,2,3,4,6,8,10,12,16,20].map(n=>`<option value="${n}"${String(B.icount)===String(n)?' selected':''}>${n}枚</option>`).join('')}</select></div>
+    </div>`}
+    <div id="b-cost" class="callout acc" style="margin-bottom:0"></div>
+  </div>
+
+  <div class="sec-head"><span class="n">05</span><h2 class="sec">組み上がったプロンプト</h2></div>
+  <div class="prompt">
+    <div class="prompt-h"><span class="pt">このままコピーして使えます</span>
+      <span class="chip acc">${B.mode==='still'?'T2I':'I2V'}</span>
+      <button class="btn sm copy" data-copy="b-out">コピー</button></div>
+    <div class="prompt-b" id="b-out"></div>
+  </div>
+  <p class="small muted">抽象的な形容詞を足さないこと。指定が散漫になるほど狙いから外れます。足す前に、効いていない語を削ってください。</p>`;
+
+  const $=id=>document.getElementById(id);
+  const upd=()=>{
+    Object.keys(G).forEach(k=>{ const el=$('bh-'+k); if(!el) return;
+      const o=G[k].options.find(x=>x.v===B.sel[k]); el.textContent=(o&&o.h)?o.h:(G[k].hint||''); });
+    let out='';
+    if(B.mode==='still'){
+      const cam=['shot','angle','lens','dof','aspect'].map(k=>B.sel[k]).filter(Boolean).join(', ');
+      const lit=['lightDir','lightQ','kelvin'].map(k=>B.sel[k]).filter(Boolean).join(', ');
+      const tex=(B.textureFree||'').trim()||B.sel.texture;
+      const sty=['style','grade'].map(k=>B.sel[k]).filter(Boolean).join(', ');
+      const tg=BD.toggles.still.filter(t=>B.tg[t.id]).map(t=>t.v).join(', ');
+      out=[(B.subject||'').trim(),(B.action||'').trim(),(B.env||'').trim(),cam,lit,tex,sty,tg].filter(Boolean).join(', ');
+      if(out) out=out.charAt(0).toUpperCase()+out.slice(1)+'.';
+    } else {
+      const mv=B.sel.move||'';
+      const seg1=mv.indexOf('static')===0?mv:[mv,B.sel.amount].filter(Boolean).join(', ');
+      const mo=(B.motionFree||'').trim()||(B.sel.motion==='no subject motion'?'':B.sel.motion);
+      const tg=BD.toggles.video.filter(t=>B.tg[t.id]).map(t=>t.v).join(', ');
+      out=[seg1,mo,tg].filter(Boolean).map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join('. ');
+      if(out) out+='.';
+    }
+    $('b-out').textContent = out || '上の項目を選ぶと、ここにプロンプトが組み上がります。';
+    let line='';
+    if(B.mode==='video'){
+      const m=MD[B.vmodel], r=(m&&m.perSec)?m.perSec[B.vres]:null;
+      if(r==null){ line=`<b>${m?esc(m.label):''} には ${B.vres}p の公表単価がありません。</b><br><span class="muted">生成ボタンに表示される消費クレジットを確認してから実行してください。</span>`; }
+      else{ const c=r*(+B.vsecs)*(+B.vout);
+        line=`<b>${Math.round(c*10)/10} クレジット（約 $${(c*0.05).toFixed(2)}）</b>　${esc(m.label)} / ${B.vsecs}秒 / ${B.vres}p / ${B.vout}本`
+          +(m.unlimited?'<br><span style="color:var(--ok)">Unlimited 対象のモデルです。トグルが有効なら消費しません。</span>'
+                       :'<br><span style="color:var(--warn)">Unlimited 対象外です。必ずクレジットを消費します。</span>')
+          +(+B.vout>1?'<br><span class="muted">本数を増やすと各出力が個別に課金されます。学習中は1本ずつ出して1本ずつ評価してください。</span>':'');
+      }
+    } else {
+      const m=MD[B.imodel], c=(m&&m.cr!=null)?m.cr*(+B.icount):0;
+      line=`<b>${Math.round(c*1000)/1000} クレジット（約 $${(c*0.05).toFixed(3)}）</b>　${m?esc(m.label):''} / ${B.icount}枚`
+        +(m&&m.unlimited?'　<span style="color:var(--ok)">Unlimited 対象</span>':'')
+        +'<br><span class="muted">手持ちの ChatGPT や Gemini で作れば、Higgsfield のクレジットは0です。作った画像はそのままアップロードして動画化できます。</span>';
+    }
+    $('b-cost').innerHTML=line;
+    bSave();
+  };
+  $('m-still').onclick=()=>{ B.mode='still'; bSave(); renderBuilder(v); };
+  $('m-video').onclick=()=>{ B.mode='video'; bSave(); renderBuilder(v); };
+  v.querySelectorAll('select[data-k]').forEach(s=>s.addEventListener('change',()=>{ B.sel[s.dataset.k]=s.value; upd(); }));
+  v.querySelectorAll('input[data-tg]').forEach(c=>c.addEventListener('change',()=>{ B.tg[c.dataset.tg]=c.checked; upd(); }));
+  [['b-subject','subject'],['b-action','action'],['b-env','env'],['b-texfree','textureFree'],['b-motfree','motionFree']]
+    .forEach(([id,k])=>{ const el=$(id); if(el) el.addEventListener('input',()=>{ B[k]=el.value; upd(); }); });
+  [['b-vmodel','vmodel'],['b-vsecs','vsecs'],['b-vres','vres'],['b-vout','vout'],['b-imodel','imodel'],['b-icount','icount']]
+    .forEach(([id,k])=>{ const el=$(id); if(el) el.addEventListener('change',()=>{ B[k]=el.value; upd(); }); });
+  document.getElementById('bpre').querySelectorAll('button').forEach(b=>b.onclick=()=>{
+    if(b.dataset.pre==='__clear'){ Object.keys(G).forEach(k=>B.sel[k]=G[k].options[0].v); }
+    else { const p=BD.presets.find(x=>x.id===b.dataset.pre); if(p) Object.assign(B.sel,p.set); }
+    bSave(); renderBuilder(v);
+  });
+  upd();
+  bindCopy(v);
+}
+
+/* ---------- budget ---------- */
+function renderBudget(v){
+  const B=META.budget;
+  if(!B){ v.innerHTML='<div class="empty">費用データが未設定です。</div>'; return; }
+  const max=Math.max.apply(null,B.weeks.map(w=>w.credits));
+  const totC=B.weeks.reduce((s,w)=>s+w.credits,0);
+  const totP=B.weeks.reduce((s,w)=>s+(w.paid||0),0);
+  v.innerHTML = `
+  <div class="eyebrow">Budget</div>
+  <h1 class="page-title">費用設計</h1>
+  <p class="page-lede">${esc(B.lede)}</p>
+
+  <div class="grid g3" style="margin-top:26px">
+    <div class="stat"><div class="k">6週間の生成クレジット</div><div class="v">${totC.toLocaleString()}<span class="u">cr</span></div>
+      <div class="small muted" style="margin-top:4px">約 $${(totC*0.05).toFixed(0)}</div></div>
+    <div class="stat"><div class="k">Unlimited を使った場合</div><div class="v" style="color:var(--ok)">${totP.toLocaleString()}<span class="u">cr</span></div>
+      <div class="small muted" style="margin-top:4px">約 $${(totP*0.05).toFixed(0)}　対象外のみ課金</div></div>
+    <div class="stat"><div class="k">想定サブスク</div><div class="v" style="font-size:18px;padding-top:7px;line-height:1.4">${esc(B.planHeadline)}</div></div>
+  </div>
+  <div class="callout acc" style="margin-top:14px"><b>この差が最大の節約点</b>本カリキュラムで使うモデルのうち、Soul 2.0・Seedance 2.0・2.0 Fast・Kling 3.0・Wan 2.7 は Unlimited の対象です。対象外なのは Seedance 2.5 と Ad Multiplier（Ads Studio）だけなので、Unlimited が有効な期間に重い日を寄せると、6週間の実費は ${totC.toLocaleString()} クレジットから ${totP.toLocaleString()} クレジットまで下がります。</div>
+
+  <div class="sec-head"><span class="n">RULES</span><h2 class="sec">費用を抑える原則</h2></div>
+  ${B.rules.map((r,i)=>`<div class="card" style="margin-bottom:11px"><div class="row" style="gap:11px;align-items:baseline">
+    <span class="num" style="color:var(--accent);font-size:11px;letter-spacing:.1em">${String(i+1).padStart(2,'0')}</span>
+    <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14.5px">${esc(r.title)}</div>
+    <div class="prose dim" style="margin-top:8px;font-size:15px">${rich(r.body)}</div></div></div></div>`).join('')}
+
+  <div class="sec-head"><span class="n">PLAN</span><h2 class="sec">週ごとの生成量と費用</h2></div>
+  <div class="card">
+    <div class="bars">
+      ${B.weeks.map(w=>`<div class="bar-row" style="--wk:${wkVar(w.week)}">
+        <div class="bl">Week ${w.week}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${Math.max(4,Math.round(w.credits/max*100))}%"></div></div>
+        <div class="bv">${w.credits} cr<br><span class="muted">$${(w.credits*0.05).toFixed(2)}</span></div>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div class="scroll-x" style="margin-top:14px"><table class="t"><thead><tr>
+    <th>週</th><th>静止画</th><th>動画</th><th>クレジット</th><th>Unlimited時</th><th>内訳の考え方</th></tr></thead><tbody>
+    ${B.weeks.map(w=>`<tr><td class="ax">W${w.week}</td><td class="n">${w.stills}枚</td><td class="n">${w.videos}本</td>
+      <td class="n">${w.credits} cr</td><td class="n" style="color:var(--ok)">${w.paid||0} cr</td><td>${esc(w.note)}</td></tr>`).join('')}
+    <tr><td class="ax">合計</td><td class="n">${B.weeks.reduce((s,w)=>s+w.stills,0)}枚</td>
+      <td class="n">${B.weeks.reduce((s,w)=>s+w.videos,0)}本</td>
+      <td class="n">${totC} cr</td><td class="n" style="color:var(--ok)">${totP} cr</td><td>約 $${(totC*0.05).toFixed(0)} → $${(totP*0.05).toFixed(0)}</td></tr>
+  </tbody></table></div>
+
+  <div class="sec-head"><span class="n">PLANS</span><h2 class="sec">プランの選び方</h2></div>
+  <div class="scroll-x"><table class="t"><thead><tr><th>プラン</th><th>価格</th><th>付与クレジット</th><th>判断</th></tr></thead><tbody>
+    ${B.plans.map(p=>`<tr><td class="ax">${esc(p.name)}</td><td class="n">${esc(p.price)}</td>
+      <td class="n">${esc(p.credits)}</td><td>${esc(p.verdict)}</td></tr>`).join('')}
+  </tbody></table></div>
+
+  <div class="sec-head"><span class="n">COST</span><h2 class="sec">単価の目安</h2></div>
+  <div class="scroll-x"><table class="t"><thead><tr><th>生成物</th><th>クレジット</th><th>概算</th><th>出典</th></tr></thead><tbody>
+    ${B.unitCosts.map(u=>`<tr><td class="ax">${esc(u.item)}</td><td class="n">${esc(u.cr)}</td>
+      <td class="n">${esc(u.usd)}</td><td class="small">${esc(u.src)}</td></tr>`).join('')}
+  </tbody></table></div>
+
+  ${B.assumptions.length?`<div class="sec-head"><span class="n">NOTE</span><h2 class="sec">前提と未確認事項</h2></div>
+  <ul class="ulist">${B.assumptions.map(a=>`<li>${esc(a)}</li>`).join('')}</ul>`:''}
+  <div class="callout"><b>必ず現物で確認すること</b>${esc(B.caution)}</div>`;
+}
+
+/* ---------- portfolio ---------- */
+function renderPortfolio(v){
+  v.innerHTML = `
+  <div class="eyebrow">Portfolio</div>
+  <h1 class="page-title">ポートフォリオ</h1>
+  <p class="page-lede">作品集ではなく仕事の見本として記録します。目的・ターゲット・制作意図・制作時間まで添えて初めて、提案資料として使えます。</p>
+  <div class="row" style="margin-top:22px"><button class="btn primary" id="pf-add">記録を追加</button>
+    <span class="muted small">登録 <b class="num">${S.portfolio.length}</b> 本</span></div>
+  <div id="pf-form" hidden style="margin-top:18px"></div>
+  <div class="sec-head"><span class="n">LIST</span><h2 class="sec">登録済み</h2></div>
+  ${S.portfolio.length?`<div class="pf-grid">${S.portfolio.map((p,i)=>`
+    <div class="pf">
+      <div class="thumb">${p.thumb?`<img src="${p.thumb}" alt="${esc(p.title)}のサムネイル">`:'サムネイル未登録'}</div>
+      <div class="pb">
+        <div class="pt">${esc(p.title)}</div>
+        <dl>
+          ${p.purpose?`<dt>目的</dt><dd>${esc(p.purpose)}</dd>`:''}
+          ${p.target?`<dt>ターゲット</dt><dd>${esc(p.target)}</dd>`:''}
+          ${p.tools?`<dt>ツール</dt><dd>${esc(p.tools)}</dd>`:''}
+          ${p.craft?`<dt>工夫</dt><dd>${esc(p.craft)}</dd>`:''}
+          ${p.minutes?`<dt>制作時間</dt><dd><span class="num">${esc(p.minutes)}</span> 分</dd>`:''}
+          ${p.result?`<dt>成果</dt><dd>${esc(p.result)}</dd>`:''}
+        </dl>
+        <div class="row" style="margin-top:auto;padding-top:10px"><button class="btn sm" data-del="${i}">削除</button></div>
+      </div></div>`).join('')}</div>`
+  :`<div class="empty">まだ登録がありません。Week 2 の15秒広告が完成したら、1本目として記録してください。</div>`}`;
+
+  const form=document.getElementById('pf-form');
+  document.getElementById('pf-add').onclick=()=>{
+    form.hidden=false;
+    form.innerHTML=`<div class="work"><h3>記録を追加</h3>
+      ${[['pf-title','動画タイトル','text'],['pf-purpose','制作目的','text'],['pf-target','ターゲット','text'],
+         ['pf-tools','使用ツール','text'],['pf-craft','制作上の工夫','text'],['pf-minutes','制作時間（分）','number'],
+         ['pf-result','成果・検証結果','text']]
+        .map(([id,lab,ty])=>`<div class="field"><label for="${id}">${lab}</label><input type="${ty}" id="${id}"></div>`).join('')}
+      <div class="field"><label for="pf-thumb">サムネイル画像</label><input type="file" id="pf-thumb" accept="image/*" style="font-size:12.5px">
+        <p class="small muted" style="margin-top:6px">保存容量を抑えるため、幅480pxに縮小して保存します。</p></div>
+      <div class="done-bar"><button class="btn primary" id="pf-save">保存</button><button class="btn" id="pf-cancel">やめる</button></div></div>`;
+    document.getElementById('pf-cancel').onclick=()=>{ form.hidden=true; };
+    document.getElementById('pf-save').onclick=()=>{
+      const g=id=>(document.getElementById(id).value||'').trim();
+      if(!g('pf-title')){ document.getElementById('pf-title').focus(); return; }
+      const rec={title:g('pf-title'),purpose:g('pf-purpose'),target:g('pf-target'),tools:g('pf-tools'),
+                 craft:g('pf-craft'),minutes:g('pf-minutes'),result:g('pf-result'),thumb:''};
+      const f=document.getElementById('pf-thumb').files[0];
+      const commit=()=>{ S.portfolio.push(rec); save(); renderPortfolio(v); };
+      if(f) shrink(f,d=>{rec.thumb=d;commit();},commit); else commit();
+    };
+  };
+  v.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{ S.portfolio.splice(+b.dataset.del,1); save(); renderPortfolio(v); });
+}
+function shrink(file, ok, fail){
+  const fr=new FileReader(); fr.onerror=fail;
+  fr.onload=()=>{ const img=new Image(); img.onerror=fail;
+    img.onload=()=>{ try{
+      const w=Math.min(480,img.width), h=Math.round(img.height*(w/img.width));
+      const c=document.createElement('canvas'); c.width=w; c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h); ok(c.toDataURL('image/jpeg',0.72));
+    }catch(e){ fail(); } };
+    img.src=fr.result; };
+  fr.readAsDataURL(file);
+}
+
+/* ---------- resources ---------- */
+let resFilter='all';
+function renderResources(v){
+  const cats=RES.categories;
+  const used={}; LESSONS.forEach(l=>(l.resourceIds||[]).forEach(r=>(used[r]=used[r]||[]).push(l)));
+  const list=resFilter==='all'?RES.items:RES.items.filter(r=>r.category===resFilter);
+  const confirmed=RES.items.filter(r=>r.status==='確認済み').length;
+  v.innerHTML = `
+  <div class="eyebrow">Resources</div>
+  <h1 class="page-title">参考教材一覧</h1>
+  <p class="page-lede">${esc(RES.note)}</p>
+  <div class="grid g3" style="margin-top:24px">
+    <div class="stat"><div class="k">登録教材</div><div class="v">${RES.items.length}<span class="u">件</span></div></div>
+    <div class="stat"><div class="k">リンク確認済み</div><div class="v" style="color:var(--ok)">${confirmed}<span class="u">件</span></div></div>
+    <div class="stat"><div class="k">未確認</div><div class="v" style="color:var(--warn)">${RES.items.length-confirmed}<span class="u">件</span></div></div>
+  </div>
+  <div class="filters" id="rfilters">
+    <button data-c="all" aria-pressed="${resFilter==='all'}">すべて</button>
+    ${cats.map(c=>{const n=RES.items.filter(r=>r.category===c.id).length;
+      return n?`<button data-c="${c.id}" aria-pressed="${resFilter===c.id}">${esc(c.label)} <span class="num">${n}</span></button>`:''}).join('')}
+  </div>
+  ${list.map(r=>{
+    const rel=used[r.id]||[], cat=cats.find(c=>c.id===r.category)||{};
+    return `<div class="res">
+      <div class="res-h"><span class="rt">${esc(r.title)}</span>
+        <span class="chip ${r.status==='確認済み'?'ok':'warn'}">${esc(r.status)}</span>
+        ${cat.kind==='third-party'?'<span class="chip">公式外</span>':''}
+        ${r.lang==='en'?'<span class="chip">英語</span>':''}</div>
+      <div class="prov">${esc(r.provider)}　/　${esc(r.duration)}　/　確認日 <span class="num">${esc(r.checkedOn)}</span></div>
+      <div class="sum">${esc(r.summary)}</div>
+      <div class="use"><b>学習での使い方</b>${esc(r.useFor)}</div>
+      ${rel.length?`<div class="row" style="margin-top:11px"><span class="eyebrow">関連</span>${rel.map(l=>`<a class="chip wk" style="--wk:${wkVar(l.week)};text-decoration:none" href="#lesson-${l.id}">W${l.week}D${l.day}</a>`).join('')}</div>`:''}
+      <a class="lnk" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)} ↗</a>
+    </div>`}).join('')}`;
+  document.getElementById('rfilters').querySelectorAll('button').forEach(b=>b.onclick=()=>{ resFilter=b.dataset.c; renderResources(v); });
+}
+
+/* ---------- guide ---------- */
+function renderGuide(v){
+  v.innerHTML = `
+  <div class="eyebrow">How to use</div>
+  <h1 class="page-title">使い方と前提</h1>
+  <p class="page-lede">${esc(META.courseLede)}</p>
+  ${META.guide.map(g=>`<div class="sec-head"><span class="n">${esc(g.n)}</span><h2 class="sec">${esc(g.heading)}</h2></div>
+    <div class="prose dim">${rich(g.body)}</div>`).join('')}
+  ${META.surfaces?`
+  <div class="sec-head"><span class="n">WHERE</span><h2 class="sec">Higgsfield のどこで作るか</h2></div>
+  <div class="prose dim"><p>${esc(META.surfaces.lede)}</p></div>
+  <div class="callout acc"><b>判断の順序</b>${META.surfaces.order.map((o,i)=>`<p><span class="num" style="color:var(--accent)">${i+1}.</span> ${esc(o)}</p>`).join('')}</div>
+  <div class="scroll-x" style="margin-top:18px"><table class="t"><thead><tr>
+    <th>画面</th><th>何をするところか</th><th>向いている用途</th><th>制約</th><th>費用</th><th>Unlimited</th><th>判断</th></tr></thead><tbody>
+    ${META.surfaces.rows.map(r=>`<tr><td class="ax">${esc(r.name)}</td><td>${esc(r.what)}</td><td>${esc(r.use)}</td>
+      <td>${esc(r.limit)}</td><td>${esc(r.cost)}</td>
+      <td class="n" style="color:${r.unlimited==='対象'?'var(--ok)':'var(--warn)'}">${esc(r.unlimited)}</td>
+      <td>${esc(r.verdict)}</td></tr>`).join('')}
+  </tbody></table></div>
+  <div class="callout"><b>見落としやすい点</b>${esc(META.surfaces.caution)}</div>`:''}
+  <div class="sec-head"><span class="n">AXES</span><h2 class="sec">評価の6軸</h2></div>
+  <div class="scroll-x"><table class="t"><thead><tr><th>軸</th><th>見るところ</th></tr></thead><tbody>
+    ${META.rubricDefs.map(r=>`<tr><td class="ax">${esc(r.axis)}</td><td>${esc(r.def)}</td></tr>`).join('')}</tbody></table></div>
+  <div class="callout"><b>この教材の限界</b>${esc(META.disclaimer)}</div>`;
+}
+
+/* ---------- search ---------- */
+let QUERY='';
+const IDX = (function(){
+  const ix=[];
+  LESSONS.forEach(l=>ix.push({type:'レッスン', title:'W'+l.week+'D'+l.day+'　'+l.title, sub:l.subtitle,
+    href:'#lesson-'+l.id, hay:(l.title+' '+l.subtitle+' '+l.why+' '+l.goals.join(' ')+' '+
+      l.theory.map(t=>t.heading+' '+t.body).join(' ')+' '+l.steps.map(s=>s.action+' '+s.detail).join(' ')+' '+
+      l.assignment.title+' '+l.assignment.brief).toLowerCase()}));
+  PROMPTS.prompts.forEach(p=>ix.push({type:'プロンプト', title:p.title, sub:p.purpose, href:'#prompts',
+    hay:(p.title+' '+p.purpose+' '+p.text+' '+p.effect+' '+p.caution).toLowerCase()}));
+  RES.items.forEach(r=>ix.push({type:'参考教材', title:r.title, sub:r.provider+' / '+r.summary.slice(0,70),
+    href:'#resources', hay:(r.title+' '+r.provider+' '+r.summary+' '+r.useFor).toLowerCase()}));
+  return ix;
+})();
+function renderSearch(v){
+  const q=QUERY.trim().toLowerCase();
+  const hits=q?IDX.filter(i=>i.hay.indexOf(q)>=0).slice(0,60):[];
+  v.innerHTML = `
+  <div class="eyebrow">Search</div>
+  <h1 class="page-title">検索</h1>
+  <p class="page-lede">${q?`「${esc(QUERY)}」の結果 <b class="num">${hits.length}</b> 件`:'左上の検索欄に語を入れてください。レッスン本文・プロンプト・参考教材を横断して探します。'}</p>
+  <div style="margin-top:26px">
+  ${hits.length?hits.map(h=>`<a class="srch-item" href="${h.href}">
+    <div class="row" style="gap:8px"><span class="chip">${esc(h.type)}</span></div>
+    <div class="st" style="margin-top:7px">${esc(h.title)}</div>
+    <div class="sx">${esc((h.sub||'').slice(0,110))}</div></a>`).join('')
+   :(q?'<div class="empty">該当がありません。別の語で試してください。</div>':'')}
+  </div>`;
+}
+const qEl=document.getElementById('q');
+let qt=null;
+qEl.addEventListener('input',()=>{
+  QUERY=qEl.value;
+  clearTimeout(qt);
+  qt=setTimeout(()=>{ if(QUERY.trim()){ if(location.hash!=='#search') location.hash='#search'; else renderSearch(document.getElementById('view')); } },220);
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='/' && document.activeElement!==qEl && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)){
+    e.preventDefault(); qEl.focus(); }
+});
+
+/* ---------- boot ---------- */
+load();
+document.getElementById('checkedOn').textContent = RES.checkedOn;
+window.addEventListener('hashchange', route);
+route();
+})();
+</script>

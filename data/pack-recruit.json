@@ -1,0 +1,574 @@
+{
+  "id": "recruit",
+  "label": "採用",
+  "lede": "東京の採用素材は、受注用の素材とは評価軸が違います。求人倍率の高い市場では「人が来ない」ことより「応募は来るが他社に流れる」「面接に来ない」「入って三か月で辞める」ことが課題の中心にあり、素材の仕事は同じ沿線に並んだ他社の求人と比較されたときに選ばれることです。応募者が見ているのは商品の見栄えではなく「自分がここで働けるか」であり、判断材料になるのは最寄駅からの距離と通勤のしやすさ、シフトがどこまで融通するか、職場の広さと清潔さ、手元で何をしているか、教えてくれる人がいるかです。飲食、都市型ホテル、内装・設備工事、介護・保育、小売、物流倉庫、清掃・ビルメンテナンスでは、Wワーク可・週2から・扶養内といった働き方の幅、深夜手当とまかない、未経験歓迎と研修、正社員登用、残業の実態、スタッフの年齢構成、外国籍スタッフの受け入れとインバウンド客対応で語学が活きること、育児との両立が、そのまま比較の項目になります。費用は撮影の段取りに効き、信用は人物の扱い方に効きます。このパックで最も重要な制作上の原則は、AI生成の人物をその会社に実在する社員であるかのように見せないことです。求人情報には虚偽または誤解を生じさせる表示をしてはならないという考え方があるため、人物が写るカットは「顔を映さない構図」「イメージ素材として明示するもの」「実在社員の写真を入力にした I2I / I2V」の三つのいずれかに必ず当てはめ、手元・後ろ姿・シルエットを主軸にして運用してください。顔を映さない型は肖像の問題が生じにくく、どの会社でも使い回せるため、商品としての汎用性も同時に上がります。",
+  "subcategories": [
+    {
+      "id": "workplace",
+      "label": "職場の空気・環境"
+    },
+    {
+      "id": "people",
+      "label": "働く人・手元の所作"
+    },
+    {
+      "id": "process",
+      "label": "仕事の流れ・一日"
+    },
+    {
+      "id": "culture",
+      "label": "文化・待遇・福利厚生"
+    },
+    {
+      "id": "message",
+      "label": "メッセージ・訴求"
+    },
+    {
+      "id": "ads",
+      "label": "求人広告用カット・フック"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "recruit-01",
+      "sub": "workplace",
+      "title": "開店前の厨房・窓光の全景（無人）",
+      "purpose": "飲食店の厨房を、広さと清潔さが読める状態で見せる。同じ沿線の他店と比較されたときに「狭くて汚い厨房ではない」ことを一枚で示す基本素材で、人物を一切入れないため肖像の問題が生じない。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。設備の文字やメーカー名は生成させないので、後述の注意を参照",
+      "text": "The kitchen of a small restaurant in a Tokyo backstreet before opening, completely empty of people, a stainless steel prep counter wiped down and clear, a six-burner range and a griddle with the surfaces clean, knives seated in a magnetic rail, stock pots stacked upside down on a drying rack, a floor-standing fan and a rubber mat on a dry tiled floor, a large window on the left wall looking onto a narrow street with the tiled wall of the next building across it, wide interior shot at standing eye level from the doorway, 24mm equivalent, deep focus so the far wall, the range and the floor drain all stay sharp, daylight entering only from the left window at 4500K as the main source with a weak overhead fluorescent fill so the ceiling does not go dark, brushed stainless with faint directional grain, matte tile grout, dry floor with no standing water, photorealistic documentary interior photography, neutral grade, no text, no logo",
+      "effect": "窓光を主光源にすると光に方向が生まれ、ステンレスの面ごとに明暗が分かれて設備の立体が読める。天井照明だけの平板な絵では奥行きが消え、厨房の広さという応募判断の中心情報が伝わらない。deep focus で床の排水口まで解像させることで、清掃が行き届いている状態が根拠として写る。",
+      "caution": "人物を入れない構図なので肖像の問題は生じないが、実際の厨房より広く清潔に見える画は入社後の早期離職につながるため、設備の数と配置は依頼主の現場に合わせること。実在する店舗の紹介として使う場合は職場の雰囲気を伝えるイメージである旨を明示し、実写の店内写真と同じ並びに混在させない。設備のメーカー名、注意書きのラベル、メニューの貼り紙は高確率で崩れるため文字は生成させず、必要なら編集工程で合成する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけで作る。レンジの口数、作業台の数、窓の位置を依頼主の厨房に置き換える。人物は入れない",
+        "output": "16:9 の静止画1枚。厨房の広さ、窓光の方向、床と設備の清潔さがここで確定する",
+        "next": "床と設備が破綻していない1枚を「湯気と換気扇（始業前の厨房を動かす）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-02",
+      "sub": "workplace",
+      "title": "湯気と換気扇（始業前の厨房を動かす）",
+      "purpose": "無人の厨房に湯気とファンの回転だけを足し、人物を出さずに「稼働している職場」として読ませる。求人媒体の縦型枠や採用ページの背景ループに使い、一覧の中で止まる素材にする。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。湯気と流体の表現に強く、最安で試せる",
+      "text": "Steam rises slowly and thinly from one stock pot on the range and drifts to the right, the ceiling exhaust fan blades turn at a slow constant rate, the window light stays unchanged, no people enter the frame, the counters, the equipment and the camera all stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "湯気という一方向の上昇運動とファンの回転という定速の回転運動だけに動きを限定すると、ステンレスの直線や床のタイル目地が作り変えられるリスクが最小になる。無人のまま湯気が立つことで、人を写さずに職場が動いていることだけが伝わる。",
+      "caution": "湯気は増殖して画面を覆いやすいので thinly と slowly を外さず、量が増えた出力は捨てる。人物が画面に湧いた出力は、AI生成の人物を実在の社員として提示することになるため使わずに破棄する。タイル目地と作業台の直線が歪んでいないかを等倍で確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「開店前の厨房・窓光の全景（無人）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・設備は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。湯気の上昇と換気扇の回転だけが動く",
+        "next": "採用ページの冒頭ループ、または求人媒体の動画枠の1カット目に置く。縦型に切り出して SNS の採用発信にも回す"
+      }
+    },
+    {
+      "id": "recruit-03",
+      "sub": "workplace",
+      "title": "ホテルのバックヤードとリネン室（後ろ姿）",
+      "purpose": "都市型ホテルの裏方という、求人票では伝わりにくい仕事場を見せる。接客以外の持ち場があることを示して、応募の間口を広げるカット。人物は後ろ姿のみで顔を映さない構図なので、肖像の問題が生じにくく他の施設にも使い回せる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。後ろ姿の指定を外すと顔が生成されるので必ず残す",
+      "text": "The linen room and back corridor of a city hotel in Tokyo, one staff member seen only from behind in a plain apron over long sleeves, shoulders and back visible with the head turned away so the face is not in frame, folding a white towel at a stainless work table, open shelving stacked with white sheets and towels in neat squared piles, a housekeeping cart parked against the wall, a mop and bucket stored upright in the corner, a corridor window at the end of the room looking onto the wall of the adjacent building, medium wide shot at standing eye level from behind the person, 35mm equivalent, deep focus so the shelf stacks at the far end stay readable, daylight from the corridor window at 4500K as the main source with a weak overhead fill so the shelving does not fall into shadow, soft cotton terry texture, brushed stainless table, scuffed vinyl floor, photorealistic documentary interior photography, neutral grade, no text, no logo",
+      "effect": "後方から撮ると顔が物理的に画面に入らないため、人物が写りながら特定の個人を提示しない構図が成立する。窓光を廊下の奥に置くことで視線が奥へ抜け、バックヤードの奥行きと棚の収納量が同時に読める。",
+      "caution": "AI生成の人物を実在の社員として提示しない。掲載時は職場の雰囲気を伝えるイメージである旨を明示すること。背中が写る構図でも、振り向いた顔が生成された出力は使わず破棄する。制服のワッペン、タグの文字、館内表示は崩れるので文字は生成させず、必要なら編集工程で合成する。棚の積み重ねとリネンの枚数は反復構造として破綻しやすいので等倍で確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。棚の規模、カートの有無、廊下の窓位置を依頼主の施設に置き換える。人物は後ろ姿のみで、顔が入る指定は加えない",
+        "output": "16:9 の静止画1枚。バックヤードの奥行き、収納量、後ろ姿の位置がここで確定する",
+        "next": "顔が入っていない1枚を「リネンを抱えた後ろ姿が通る（裏方の動線）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-04",
+      "sub": "workplace",
+      "title": "リネンを抱えた後ろ姿が通る（裏方の動線）",
+      "purpose": "バックヤードの静止画に歩行の動きだけを足し、仕事の流れを人物の顔なしで伝える。他社の求人画像が客室だけを見せている中で、実際の持ち場を見せて差をつけるカット。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。人物の歩行は破綻しやすいため、カメラ移動が安定するモデルを選ぶ",
+      "text": "The staff member picks up the folded stack of towels and walks slowly away from the camera down the corridor at a natural pace, the back of the head and shoulders stay toward the camera throughout and the person never turns around, the folded stack stays the same size, the shelving, the cart and the camera all stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "カメラから遠ざかる歩行は顔が画面に入らない運動方向なので、後ろ姿という設計を動画でも維持できる。奥へ抜ける移動が廊下の長さを視差として示し、静止画では出ない施設の規模が伝わる。",
+      "caution": "歩行は脚の数と歩行周期が破綻しやすく、途中で振り向く挙動が混ざると顔が生成される。never turns around の指定を外さず、顔が写った出力は使わずに破棄する。AI生成の人物を実在の社員として提示しない。掲載時はイメージである旨を明示すること。抱えたリネンが増減していないかも等倍で確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「ホテルのバックヤードとリネン室（後ろ姿）」（T2I）で作った静止画1枚。新しく画像は作らない。顔が入っていない枚のみを入力にする",
+        "output": "5秒の動画1本。後ろ姿の歩行とリネンの移動だけが動く",
+        "next": "採用動画の中盤、または仕事の一日を追う構成の2カット目に置く"
+      }
+    },
+    {
+      "id": "recruit-05",
+      "sub": "workplace",
+      "title": "職場全景の差し替え型（事務所・休憩室・更衣室・売場・倉庫）",
+      "purpose": "業種と部屋だけを入れ替えて同じ構図で撮り揃えるための型。応募者が実際に過ごす場所を無人カットで並べ、人物を出さずに職場の実像を示す。比較されたときに情報量で負けないための素材。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。部屋だけを差し替えて同じ型で数点作る",
+      "text": "An empty [room: small company office with four desks facing a window / staff break room with a six-seat table and a kitchenette / changing room with a row of steel lockers and a bench / retail shop floor aisle with stocked shelving / logistics warehouse picking aisle with pallet racking] in a small business in Tokyo, completely empty of people, everything in use but tidy, [detail: monitors asleep and a wall clock / an electric kettle, mugs on a tray and a wall-mounted first-aid box / lockers closed with a folded apron on the bench / price rail strips left blank with no lettering / plain cardboard cartons and a hand pallet truck parked straight], a vinyl, carpet or sealed concrete floor swept clean, a window on one side looking onto a city street or an adjacent building wall, wide interior shot at standing eye level from the doorway, 24mm equivalent, deep focus so the far wall and the floor at the frame edge both stay sharp, daylight from the side window at 4500K as the main source with a weak overhead fill so the ceiling and the corners stay legible, matte laminate surfaces, powder-coated steel, worn but clean flooring, photorealistic documentary interior photography, neutral grade, no text, no logo",
+      "effect": "同じ焦点距離・同じ立ち位置・同じ光の条件で部屋だけを差し替えると、業種が違っても同じシリーズのカットとして横並びにできる。無人で deep focus にすることで、広さと清潔さという応募判断の中心情報だけが残り、個人の提示という問題が構造的に発生しない。",
+      "caution": "実際にない部屋や設備を描かないこと。休憩室、更衣室、ロッカーの有無と実物の状態は必ず依頼主に確認し、確認が取れない部屋はこの型から外す。実物より広く新しく見える画は入社後の早期離職につながる。掲載時は職場の雰囲気を伝えるイメージである旨を明示し、実写の社内写真と同じ並びに混在させない。値札、ロッカーの名札、掲示物、段ボールの印字は崩れるので文字は生成させず、空白のまま出して編集工程で合成する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。[room] と [detail] を依頼主に実在が確認できた部屋だけに差し替え、同じ型で3〜5点まとめて生成する。人物は入れない",
+        "output": "同じ構図・同じ光の無人カットが部屋の数だけ。求人媒体に横並びで置ける状態",
+        "next": "ここで完結。求人票の添付画像と採用ページの職場紹介に使う。各枚に「イメージ」の表記を付け、実物との差分を依頼主に確認してから出す"
+      }
+    },
+    {
+      "id": "recruit-06",
+      "sub": "workplace",
+      "title": "職場の光と奥行き（窓光・4500K・deep focus）",
+      "purpose": "職場を写すすべての静止画・動画に同じ光の条件を差し込み、天井照明だけの平板な絵を避ける。広さと清潔さが伝わらなければ他社の求人に流れるため、採用素材でもっとも効く部品。",
+      "model": "静止画・動画の両方で、光と被写界深度のスロットに共通で挿入する",
+      "text": "Daylight entering through a side window as the main light source at 4500K, the window placed off to one side of the frame rather than behind the camera so the light has a clear direction and surfaces separate into lit and shaded faces, a weak overhead artificial fill only strong enough to keep the ceiling and the far corners legible without flattening the directional shadows, the light-colored wall of the building opposite the window acting as a large diffuse reflector so shaded sides lift instead of crushing to black, deep focus with a small aperture so the far wall, the work surface and the floor at the frame edge all stay sharp, exposure held so the window itself keeps some detail instead of blowing out to white, no text, no logo",
+      "effect": "窓光は面光源かつ方向を持つため、設備や壁の面ごとに明暗が分かれて部屋の立体が知覚される。天井照明のみの環境は上から全面に均等に当たるため影が消え、奥行きと広さの手がかりが画面から失われる。4500K前後の中間色温度は、青すぎて寒々しくも、黄すぎて古びても見えない範囲で、清潔さと信頼感が同時に出る。向かいの建物の壁からの反射を足すのは、都市部の窓が隣接建物と向き合っていて空が直接見えないことが多く、それ自体が影側を持ち上げる現実の光源になるため。",
+      "caution": "窓をカメラの真後ろに置くと光が正面から回り込んで影が消え、天井照明だけの絵と同じ平板さになる。off to one side の指定を外さないこと。室内で被写界深度を浅くすると部屋の広さが読めなくなるため、手元の寄りカット以外では deep focus を外さない。窓が白飛びした出力は外の時間帯と立地の情報が失われるので使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "職場が写るすべての静止画・動画プロンプトの光と被写界深度の記述に、この文言を差し込む。他のスロットは変えない",
+        "output": "それ自体は何も生成しない。差し込んだ先の職場が、方向のある窓光と深い被写界深度で写る確率が上がる",
+        "next": "採用素材の全カットの既定値にする。1案件の全カットで同じ色温度を使い、最終的なトーンの統一は編集のカラーグレーディングで担保する"
+      }
+    },
+    {
+      "id": "recruit-07",
+      "sub": "people",
+      "title": "仕込みの手元（包丁とまな板・顔を映さない）",
+      "purpose": "飲食の仕事内容をもっとも直接的に示す寄りのカット。求人一覧で料理の完成写真ばかりが並ぶ中、仕事そのものを見せて応募後の認識のずれを減らす。肩から下だけを画面に入れる顔を映さない構図なので、特定の個人を提示せず、どの店舗にも使い回せる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。手指は破綻しやすいので生成後の等倍確認が前提",
+      "text": "A close-up of two bare hands working on a wooden cutting board, the left hand holding a leek with fingers curled back into a safe claw grip and the right hand holding a Japanese vegetable knife mid-cut, only the hands, forearms and the lower part of a clean white chef coat in frame with the head and face entirely outside the top of the frame, evenly sliced rounds already lined up on the board, a stainless prep counter and a bowl of trimmed vegetables beside it, the kitchen behind softly out of focus, close-up from a 45-degree angle slightly above the hands, 85mm equivalent, shallow depth of field with the blade edge and the contact point on the board sharp, daylight from a window to the left at 4500K as the main source with a weak bounce from the stainless counter on the right so the knuckles keep gradation instead of going flat, grain of the wet cutting board, satin blade finish with a faint reflection, damp vegetable surfaces, photorealistic documentary food-work photography, neutral grade, no text, no logo",
+      "effect": "顔を画面上端の外に出すと、人物の所作だけが主題として残り、誰が働いているかという情報が構造的に画面に入らない。側光と作業台からのバウンスの組み合わせは、包丁の鋼材を白飛びさせず階調として見せ、刃物を扱う仕事の精度が質感として伝わる。切り終えた輪切りを同じ画面に入れることで、所作の結果が比較で読める。",
+      "caution": "手と指はAIが最も破綻させる部位。指の本数、関節の向き、包丁を握る手と押さえる手の左右が正しいかを必ず等倍で確認すること。押さえる手が伸びて刃の進行方向に指が出ている出力は、作業として危険な描写なので破棄する。AI生成の人物を実在の社員として提示しない。掲載時は職場の雰囲気を伝えるイメージである旨を明示すること。コート袖のワッペンや名札の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。食材、包丁の種類、作業台の素材を依頼主の仕込み内容に置き換える。顔が画面外に出る指定は外さない",
+        "output": "寄りの静止画1枚。手の位置、刃と材料の接点、窓光の方向がここで確定する",
+        "next": "指の本数と関節が正しい1枚を「包丁が刻む（手元の反復動作）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-08",
+      "sub": "people",
+      "title": "包丁が刻む（手元の反復動作）",
+      "purpose": "仕込みの手元を動かし、音なし視聴でも冒頭1〜3秒で視線が止まるフックを作る。求人媒体の一覧で親指を止めることが最初の勝負になるため、顔が入らない縦型枠にそのまま流せる形で用意する。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。手の形が保たれやすく、1080pでも安い。手の破綻が許容できない最終カットのみ Seedance 2.5、8秒・1080p（約72クレジット、Unlimited 対象外で常に課金）",
+      "text": "The knife rises and falls in a steady repeating rhythm, each cut releasing one thin round that joins the row on the board, the left hand retreats a few millimeters between cuts keeping the fingers curled back, the head and face stay outside the top of the frame throughout, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts",
+      "effect": "上下の反復という単一周期の運動に限定すると、手の形が各フレームで同じ姿勢に戻るため破綻が蓄積しにくい。切るごとに輪切りが一枚増えるという因果が画面内で完結するので、短い尺でも作業の意味が伝わる。",
+      "caution": "指の本数が途中で変わる、包丁が材料をすり抜ける、押さえる手が刃の下に入るといった破綻が頻発する。押さえる手が刃の進行方向に出た出力は危険な作業の描写なので破棄する。顔が画面内に入ってきた出力も、AI生成の人物を実在の社員として提示することになるため使わない。手元の動画は採用率が低い前提で生成回数を見込み、3回で当たらなければ静止画で見せ切る。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「仕込みの手元（包丁とまな板・顔を映さない）」（T2I）で作った静止画1枚。新しく画像は作らない。指の本数と関節が正しい枚のみを入力にする",
+        "output": "5秒の動画1本。包丁の上下、輪切りの増加、押さえる手の後退だけが動く",
+        "next": "求人媒体の動画枠の冒頭フック、または15秒の採用広告の1カット目に置く。音なし視聴前提で画面上部にテキストを載せる"
+      }
+    },
+    {
+      "id": "recruit-09",
+      "sub": "people",
+      "title": "先輩が教える手元（差し替え型・ホール／売場／現場）",
+      "purpose": "教えてくれる人がいるかどうかは未経験者の応募判断の中心で、研修体制の有無が他社との比較項目になる。二人分の手と肩から下だけを画面に入れる顔を映さない構図で、指導関係だけを示す。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。業種だけを差し替えて同じ型で数点作る",
+      "text": "A close-up of two pairs of hands at the same work surface, an older worker's hand pointing at a detail while a younger worker's hands hold the tool or item, both people shown only from the shoulders down with both heads and faces entirely outside the top of the frame, [situation: a restaurant service counter where the senior hand points at the placement of cutlery on a tray the junior is holding / a retail shelf where the senior hand points at a facing while the junior restocks a row of boxes / an interior fit-out workbench where the senior hand points at a measurement on a board while the junior holds a tape measure], plain work clothing with no insignia, the room behind softly out of focus, close-up at a 45-degree angle from slightly above the hands, 85mm equivalent, shallow depth of field with the pointing fingertip and the item it indicates both sharp, daylight from a window to the left at 4500K as the main source with a weak bounce from the right so both hands keep gradation and neither falls into shadow, worn cotton sleeve cuffs, matte tool and packaging surfaces with no printed lettering, photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "二人の手を同じ作業面に置き、片方が指差し、片方が持つという役割の差を作ると、顔がなくても指導関係が読める。指差しの先と指された物の両方にピントを合わせることで、何を教えているかという内容まで一枚で伝わる。",
+      "caution": "手が四本写る構図は指の本数と関節の破綻が倍で起きる。どちらの手も指の本数と関節の向きを必ず等倍で確認し、手首から先が不自然に接続している出力は破棄する。AI生成の人物を実在の社員として提示しない。掲載時は職場の雰囲気を伝えるイメージである旨を明示すること。実際には教育担当を置いていない職場でこのカットを使うと誤解を生じさせるため、研修体制と初日に誰が付くかの実態を必ず依頼主に確認する。制服のワッペン、商品パッケージ、目盛の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。[situation] を依頼主の業種に差し替え、同じ型で3点程度まとめて生成する。顔が画面外に出る指定は外さない",
+        "output": "寄りの静止画1枚。二人の手の位置関係、指差しの先、窓光の方向がここで確定する",
+        "next": "手の本数と関節が正しい1枚を「指差しと受け取る手（指導の動き）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-10",
+      "sub": "people",
+      "title": "指差しと受け取る手（指導の動き）",
+      "purpose": "指導の一瞬を動画にして、未経験歓迎という訴求を言葉なしで成立させる。未経験可と書いただけでは他社と並んで差がつかないため、教わっている場面そのものを見せる。顔が入らないため肖像の問題が生じにくい。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。手の形が保たれやすく、1080pでも安い",
+      "text": "The senior hand moves slowly to point at a second detail a short distance away on the same surface, the junior hands adjust the item slightly in response, both heads and faces stay outside the top of the frame throughout, no one turns toward the camera, the work surface and the camera stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "指差しの移動と、それに応じた持ち手の微調整という原因と結果の順序を一本に収めると、短い尺でも指導という関係が読める。動く要素を指先と持ち物の二つに絞ることで、四本の手が同時に破綻する確率を下げられる。",
+      "caution": "手の数が増える、指が融合する、持ち物が別の形に変わるといった破綻が出る。顔が画面内に入ってきた出力は、AI生成の人物を実在の社員として提示することになるため使わずに破棄する。実際の研修体制と異なる訴求に使わないこと。教育担当の配置、研修期間、マニュアルの有無は依頼主に確認し、求人票の記載と一致させる。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「先輩が教える手元（差し替え型・ホール／売場／現場）」（T2I）で作った静止画1枚。新しく画像は作らない。手の本数が正しい枚のみを入力にする",
+        "output": "5秒の動画1本。指差しの移動と持ち手の微調整だけが動く",
+        "next": "採用動画の研修パート、または未経験者向け訴求の縦型広告の中盤に置く"
+      }
+    },
+    {
+      "id": "recruit-11",
+      "sub": "people",
+      "title": "実在社員の写真から道具の手入れの手元を作る",
+      "purpose": "終業後の道具の手入れという、仕事への向き合い方が伝わる所作を寄りで見せる。実在の社員を撮影した写真を入力にする I2I なので、本人の同意を前提に、実在の職場として提示できる唯一の型。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実在社員の手元写真を参照として渡すこと自体が、この型の前提になる",
+      "text": "Keep the hands, the sleeves, the tool and the work surface of the reference photograph as they are. Clean up only the background clutter and the lighting: the same hands wiping down [tool: a chef knife blade with a cloth / a trowel and float / a set of electrician's pliers / a stainless cart handle] at the end of the workday, shown only from the shoulders down with the head and face entirely outside the top of the frame as in the reference, remove unrelated objects and bins from the background, close-up at the same angle and the same framing as the reference, 85mm equivalent, shallow depth of field with the contact point between cloth and tool sharp, replace the overhead fluorescent look with directional daylight from one side at 4500K plus a weak bounce from the opposite side so the knuckles and the tool keep gradation instead of going flat, oiled metal surface, damp cloth fibers, worn sleeve cuffs, photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "手と道具を参照写真から動かさず、背景と光だけを置き換えるため、実際に働いている人の所作が保たれたまま、天井照明の平板な絵が方向のある窓光の絵に変わる。実在の手を入力にすることで、AIが指の形を一から組み立てる必要がなくなり、手元カットでもっとも破綻しやすい部位の事故が減る。",
+      "caution": "実在の社員を使う場合は本人の同意を取り、採用素材としての使用範囲と、退職後に使用を停止する取り決めを事前に書面で決めておくこと。加工後も本人が特定されうるため、同意の範囲に「背景と光をAIで加工する」ことを含める。手指の本数と関節の向きは参照写真があっても変わるので必ず等倍で確認する。加工の過程で道具や作業面が実物と違うものに変わった出力は、仕事内容の誤解を生じさせるため破棄する。名札、社名、工具の刻印の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "実在社員の手元を撮影した写真1枚を参照として必ず添付する。撮影時に本人の同意を取り、顔が入らない角度で撮っておく。[tool] を実物に書き換える",
+        "output": "参照と同じ手・同じ道具で、背景が整理され光が方向を持った寄りの静止画1枚",
+        "next": "ここで完結。採用ページの仕事紹介と求人票の添付に使う。同意の範囲と退職後の扱いは「採用素材の人物・設備確認表」に記録する"
+      }
+    },
+    {
+      "id": "recruit-12",
+      "sub": "people",
+      "title": "顔を映さない構図の必須記述（人物が写る全カットに差し込む）",
+      "purpose": "人物が写るすべての生成に同じ文言を差し込み、顔が生成される確率を下げる。採用素材でもっとも重要な部品で、肖像の問題を構図の段階で回避するための既定値。",
+      "model": "静止画・動画の両方で、被写体スロットに共通で挿入する。4つのうち1つを選んで使う",
+      "text": "A — hands only: only the hands, forearms and the lower part of the clothing in frame, the head and face entirely outside the top of the frame, the camera framed on the work surface so no face can enter | B — from behind: the person seen only from behind, shoulders and back toward the camera with the head turned away, never turning around, the face not visible at any point | C — silhouette: the person rendered as a dark silhouette against a bright window with no facial features resolved, exposure set for the window so the figure stays unlit | D — shoulders down: the frame cut at the collarbone so the neck and head are above the top edge, plain work clothing with no insignia, no name tag and no printed lettering anywhere on the body. In every case: no text, no logo",
+      "effect": "顔の不在を「写さない」という否定ではなく、フレームの切り方・向き・露出という観測可能な条件として指定すると、モデルが顔を補完する余地が減る。AとDは画面上端の外に頭部を出す物理的な構成、Bは向き、Cは露出で顔を消す構成で、どれも生成の失敗ではなく設計として成立しているため、商品として他社にもそのまま使い回せる。",
+      "caution": "この文言を入れても顔が入り込む枚数が必ず混ざる。顔が写った出力は生成し直して使うのではなく破棄する。AI生成の人物を実在の社員として提示しないこと。人物が写るすべての素材には、職場の雰囲気を伝えるイメージであり実在の社員ではない旨を掲載時に明示する。実在の社員を撮影した写真を入力にする場合は本人の同意を取り、退職後に使用を停止する取り決めも事前に決めておく。A〜Dを一つのカットで混ぜると構図が成立しないので、1カットにつき1つだけを選ぶ。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "人物が写るすべての静止画・動画プロンプトの被写体の記述に、A・B・C・D のうち1つだけを差し込む。他のスロットは変えない",
+        "output": "それ自体は何も生成しない。差し込んだ先の人物に顔が生成されない確率が上がる",
+        "next": "採用素材の人物カットの既定値にする。検品は等倍で行い、顔が入った枚は破棄する"
+      }
+    },
+    {
+      "id": "recruit-13",
+      "sub": "process",
+      "title": "更衣室・装備を身につける手元（出勤の所作）",
+      "purpose": "一日の始まりを更衣室から追う構成の1カット目。手元だけを画面に入れる顔を映さない構図で、更衣室とロッカーが実在することを同時に示す。狭い店舗で着替える場所がないという不安に先に答えるカット。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。手指は破綻しやすいので生成後の等倍確認が前提",
+      "text": "A close-up of two hands tying the strap of a clean work apron in front of a row of steel lockers in a staff changing room, only the hands, forearms and the chest area of the apron in frame with the head and face entirely outside the top of the frame, a pair of work gloves tucked under one arm and non-slip work shoes on the bench below, one locker door open showing a folded towel and a thermos, a window high on the wall showing the wall of the adjacent building, medium close-up at chest height from slightly to the side, 50mm equivalent, moderate depth of field with the knot sharp and the locker row behind softly separated but still readable, daylight from the high window at 4500K as the main source with a weak overhead fill so the locker fronts keep their shape, powder-coated steel locker finish, matte cotton apron, textured rubber shoe sole, photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "装備を身につけるという始業の所作は、手元だけで意味が完結する数少ない動作なので、顔を切った構図でも時間帯が伝わる。背景のロッカー列を完全にぼかさず形が読める程度に残すことで、更衣室という設備の存在が同じ画面で示される。",
+      "caution": "手指の本数と関節の向き、紐を結ぶ左右の手の役割が正しいかを必ず等倍で確認すること。実際にない設備を描かない。更衣室とロッカーの有無、個人用ロッカーが支給されるか、制服が貸与されるかは必ず依頼主に確認し、ない場合はこのカットを使わない。AI生成の人物を実在の社員として提示しない。掲載時はイメージである旨を明示すること。ロッカーの名札、エプロンのワッペン、ボトルの印字の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。装備（エプロン・作業着・ヘルメット・介護用シューズ）とロッカーの形式を依頼主の実物に置き換える。顔が画面外に出る指定は外さない",
+        "output": "寄りの静止画1枚。手の位置、装備の形、ロッカー列の見え方がここで確定する",
+        "next": "指の本数と関節が正しい1枚を「手袋をはめてロッカーを閉める（始業のワンアクション）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-14",
+      "sub": "process",
+      "title": "手袋をはめてロッカーを閉める（始業のワンアクション）",
+      "purpose": "始業の所作を動画にして、仕事の一日を追う構成の冒頭に置く。顔が入らないため、求人媒体の縦型枠にそのまま流せる。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。手の形が保たれやすく、直線の多い金属ロッカーも崩れにくい",
+      "text": "The hands finish tying the apron strap, pull on the work gloves one after the other, then push the open locker door closed with a short steady motion, the head and face stay outside the top of the frame throughout, the locker row and the camera stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "結ぶ、はめる、閉めるという三つの短い動作を順序どおりに並べると、各動作の終わりで手が決まった姿勢に戻るため、破綻が次の動作に蓄積しにくい。ロッカーが閉まる動きが終点になるので、5秒という尺に区切りが生まれる。",
+      "caution": "手袋をはめる動作は指が融合しやすく、途中で手が三本になる破綻が出る。等倍で指の本数を確認し、合わない出力は破棄する。顔が画面内に入ってきた出力も使わない。ロッカーの扉の直線が歪んだ出力は設備の描写として使えないので確認すること。AI生成の人物を実在の社員として提示しないため、掲載時はイメージである旨を明示する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「更衣室・装備を身につける手元（出勤の所作）」（T2I）で作った静止画1枚。新しく画像は作らない。指の本数が正しい枚のみを入力にする",
+        "output": "5秒の動画1本。紐の結び、手袋の装着、ロッカーの閉まりだけが動く",
+        "next": "仕事の一日を追う採用動画の1カット目に置く。次を「朝礼が解けて持ち場へ散る」につなぐと時間の流れが成立する"
+      }
+    },
+    {
+      "id": "recruit-15",
+      "sub": "process",
+      "title": "朝礼・輪の後方から（内装工事の現場の始業）",
+      "purpose": "朝礼という、管理された職場で働けることが一枚で伝わる場面。残業や段取りの実態を気にする応募者に、始業が決まった時間に始まる職場であることを示す。全員を後ろ姿と横向きで構成する顔を映さない構図で、集団を写しながら個人を提示しない。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。後方からの指定を外すと顔が生成されるので必ず残す",
+      "text": "Six workers standing in a loose circle at the start of the workday inside a commercial interior fit-out site in Tokyo, photographed from behind the nearest workers so the camera sees the backs of their heads, shoulders and high-visibility vests, the workers on the far side of the circle seen at a distance with their heads bowed toward a clipboard so no face is resolved, all wearing white hard hats with chin straps fastened, high-visibility vests over work wear and steel-toed safety boots, protective sheeting on the floor and a partially framed partition wall behind them, stacked plasterboard and a folded step ladder at the side, medium wide shot at eye level from just behind the circle, 35mm equivalent, deep focus so the whole circle and the partition stay readable, daylight from a large unfinished window opening at the camera right at 4500K as the main source with a weak temporary work light overhead so the shadows under the hard hat brims stay legible, matte nylon vests, scuffed boots, chalky plasterboard dust, photorealistic documentary photography, restrained natural grade, no text, no logo",
+      "effect": "輪の外側から撮ると手前の人物は後頭部、向かい側の人物は距離と俯きで顔が解像しないため、人数を見せながら誰も特定されない構成になる。窓の開口からの大きな面光源が主光源になることで、仮設照明だけの平板な現場写真と違って空間の奥行きと天井高が読める。",
+      "caution": "向かい側の人物の顔が解像した出力は、AI生成の人物を実在の社員として提示することになるため破棄する。掲載時は職場の雰囲気を伝えるイメージであり実在の社員ではない旨を明示すること。ヘルメットのあご紐が外れている、脚立の天板に乗っているといった安全基準を満たさない描写も、生成し直すのではなく破棄する。ヘルメットの社名とベストのワッペン、資材の印字の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。人数、業種（内装現場・厨房・ホール・介護施設・倉庫）、持ち場の種類を依頼主の実情に置き換える。後方から撮る指定は外さない",
+        "output": "16:9 の静止画1枚。輪の人数、体の向き、窓開口からの光の方向がここで確定する",
+        "next": "顔が解像していない1枚を「朝礼が解けて持ち場へ散る」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-16",
+      "sub": "process",
+      "title": "朝礼が解けて持ち場へ散る",
+      "purpose": "朝礼の静止画に解散の動きだけを足し、仕事の一日が始まる瞬間を5秒で見せる。スタッフの人数と年齢構成が動きで伝わるため、一人で現場を回させられるのではないかという不安に答えるカット。",
+      "model": "Higgsfield / Seedance 2.0、8秒・720p（約36クレジット）。複数人の歩行が入るため、まず Seedance 2.0 Fast（8秒・720p 約28クレジット）で当たりを見てから上げる",
+      "text": "The circle breaks up and the workers walk away in different directions at a natural unhurried pace, the nearest workers continue to move away from the camera so only their backs stay toward the lens, no one turns toward the camera at any point, dust drifts faintly in the window light, the partition wall and the camera stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "全員がカメラから遠ざかる方向に歩くという指定は、顔が画面に入らない運動方向を物理的に固定する。人が同時に別方向へ散る動きは、集団が組織として動いていることを短い尺で示し、朝礼という場面の意味を完結させる。",
+      "caution": "複数人の歩行は脚の数と歩行周期が破綻しやすく、振り向く挙動が混ざると顔が生成される。no one turns toward the camera を外さず、顔が写った出力は使わずに破棄する。AI生成の人物を実在の社員として提示しない。掲載時はイメージである旨を明示すること。移動中に安全装備が消えた出力も破棄する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「朝礼・輪の後方から（内装工事の現場の始業）」（T2I）で作った静止画1枚。新しく画像は作らない。顔が解像していない枚のみを入力にする",
+        "output": "5〜8秒の動画1本。輪の解散と各自の歩行、光に舞う粉塵が動く",
+        "next": "仕事の一日を追う採用動画の2カット目に置く。「手袋をはめてロッカーを閉める」の次につなぐ"
+      }
+    },
+    {
+      "id": "recruit-17",
+      "sub": "process",
+      "title": "実際の研修室の写真から研修風景を作る",
+      "purpose": "研修があるという事実を、実際の研修室や会議室の写真を基にして見せる。未経験歓迎と書く企業が並ぶ中で、入ってから何をするかを具体物で示して早期離職を減らす。受講者を全員後ろ姿にする顔を映さない構図で、実在の設備を保ったまま人の存在だけを足す。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実際の部屋の写真を参照として渡すこと自体が精度の条件になる",
+      "text": "Keep the room geometry, the window positions, the ceiling height, the furniture layout and the camera viewpoint of the reference photograph exactly as they are. Add four people seated at the tables seen only from behind with the backs of their heads and shoulders toward the camera, none of them turning around, and one instructor standing at the whiteboard shown only from the shoulders down with the head above the top edge of the frame, the whiteboard left completely blank with no writing on it, plain work clothing with no insignia, notebooks open on the tables with blank pages, medium wide shot at standing eye level matching the reference, 35mm equivalent, deep focus so the far wall and the window frame both stay sharp, daylight from the existing side window at 4500K as the main source with a weak overhead fill so the room corners stay legible, matte laminate table surfaces, fabric chair backs, photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "部屋の形状と撮影位置を参照写真に固定したまま人物だけを足すと、実在の設備が保たれたまま使われている状態が示せる。受講者を全員後方から、講師を肩から下で構成することで、人数と研修の形式は伝わり、個人は一人も特定されない。ホワイトボードを空白にするのは文字の破綻対策と、研修内容の誤解を避けるための両方の理由による。",
+      "caution": "実際にない研修制度を描かないこと。研修の有無、期間、座学があるか、研修中の時給が本給と違うかは必ず依頼主に確認し、確認が取れない場合はこのカットを使わない。参照写真の部屋が実在でも、加えた人物はAI生成なので、実在の社員として提示しない。掲載時は職場の雰囲気を伝えるイメージであり実在の社員ではない旨を明示し、実写の社内写真と同じ並びに混在させない。振り向いた顔や講師の顔が生成された出力は破棄する。ホワイトボードと資料に文字が湧いていないかを等倍で確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "実際の研修室・会議室・休憩室の写真1枚を参照として必ず添付する。人物が写っていない無人の状態で撮っておく。人数と机の配置を実情に合わせて書き換える",
+        "output": "参照と同じ部屋・同じ視点で、後ろ姿の受講者と肩から下の講師が入った静止画1枚",
+        "next": "ここで完結。採用ページの研修紹介と求人票の添付に使う。研修制度の記載と画の内容が一致しているかを求人票と突き合わせる"
+      }
+    },
+    {
+      "id": "recruit-18",
+      "sub": "culture",
+      "title": "休憩室・まかないの卓（手元と器）",
+      "purpose": "まかないと休憩がきちんと取れることを、人の顔ではなく卓の上で示す。時給が横並びの求人の中で、実質的な手取りと働きやすさの差として読まれる訴求。手元と器だけを画面に入れる顔を映さない構図で、福利厚生の実態を具体物として見せる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。器の反復と手指は生成後の等倍確認が前提",
+      "text": "A staff break room table at the middle of the day, two sets of hands visible at the near edge of the table holding chopsticks and a rice bowl, shown only from the forearms with both heads and faces entirely outside the top of the frame, a simple staff meal of rice, miso soup, a grilled fish and pickles on a melamine tray, a teapot and two tumblers of water beside it, a wall clock and a kettle on the counter behind, a window to the left looking onto a city street, medium close-up at seated eye level across the table, 50mm equivalent, moderate depth of field with the tray sharp and the counter behind softly separated but still readable, daylight from the left window at 4500K as the main source with a weak overhead fill so the far side of the table stays legible, steam from the soup, glazed ceramic, matte melamine tray, condensation on the tumblers, photorealistic documentary food-work photography, neutral grade, no text, no logo",
+      "effect": "卓を横断する構図は食事の内容を主題にし、手を画面手前の端に置くことで人がいることだけが伝わる。まかないという待遇は、制度の文字で書くより皿の中身で示したほうが具体的に読まれる。汁物の湯気と湯呑みの結露が、撮影した瞬間ではなく過ごしている時間として画面を成立させる。",
+      "caution": "実際にない制度を描かない。まかないの有無、自己負担額、休憩室が使えるか、休憩が何分取れるかは必ず依頼主に確認し、提供がない場合はこのカットを使わない。実物より豪華な食事を描くと待遇の誤認につながるため、献立は実際の内容に合わせること。AI生成の人物を実在の社員として提示しない。掲載時はイメージである旨を明示する。手指の本数と箸を持つ指の形は等倍で確認し、器とパッケージの文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。献立、器、休憩室の広さを依頼主の実際の提供内容に置き換える。顔が画面外に出る指定は外さない",
+        "output": "16:9 の静止画1枚。卓の上の内容、手の位置、窓光の方向がここで確定する",
+        "next": "手指が破綻していない1枚を「味噌汁の湯気と箸（休憩の時間）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-19",
+      "sub": "culture",
+      "title": "味噌汁の湯気と箸（休憩の時間）",
+      "purpose": "休憩室の静止画に湯気と箸の小さな動きだけを足し、待遇の訴求カットを静止画より強くする。顔が入らないため求人媒体の縦型枠にそのまま流せる。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。湯気と流体の表現に強く、最安で試せる",
+      "text": "Steam rises slowly and thinly from the miso soup bowl and drifts to the right, one pair of chopsticks moves a short distance toward the tray and back at an unhurried pace, the heads and faces stay outside the top of the frame throughout, the tray, the counter behind and the camera all stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "湯気の上昇と箸の短い往復という二つの小さな運動だけで、静止画との差は最小のまま時間が流れている状態になる。動く範囲を卓の上に限定することで、背景のカウンターや窓が作り変えられるリスクが残らない。",
+      "caution": "湯気は増殖しやすく、量が増えると料理が見えなくなる。thinly と slowly を外さず、量が増えた出力は捨てる。箸を持つ手の指が融合する、器が別の形に変わるといった破綻が出るので等倍で確認すること。顔が画面内に入ってきた出力は、AI生成の人物を実在の社員として提示することになるため使わない。まかないの有無と自己負担額は依頼主に確認し、求人票の記載と一致させる。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「休憩室・まかないの卓（手元と器）」（T2I）で作った静止画1枚。新しく画像は作らない。手指が破綻していない枚のみを入力にする",
+        "output": "5秒の動画1本。湯気の上昇と箸の短い往復だけが動く",
+        "next": "求人媒体の待遇紹介枠、または採用動画の福利厚生パートに置く。縦型に切り出して SNS の採用発信にも回す"
+      }
+    },
+    {
+      "id": "recruit-20",
+      "sub": "culture",
+      "title": "駅の出口から職場までの道（通勤動線・無人）",
+      "purpose": "最寄駅から徒歩何分かは、東京の応募で最初に見られる条件。その距離を文字ではなく実際の道で見せ、乗り換えなしで通える立地を比較優位に変える。人物を一切入れないため肖像の問題が生じない。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。駅名表示や店舗の看板文字は生成させないので後述の注意を参照",
+      "text": "The view from a small Tokyo station exit toward a narrow shopping street in the early evening, completely empty of people in the foreground, a tiled station stair exit with a handrail at the near edge of the frame, a flat paved street leading straight away with low mixed-use buildings on both sides, a bicycle parking rack, a vending machine and a potted plant at a shopfront, blank signboard panels and blank awning strips with no lettering anywhere, a distant elevated rail line crossing the background, vertical 9:16 framing with the upper third left as plain evening sky so a text overlay can be added later, wide shot at standing eye level from the station exit, 28mm equivalent, deep focus from the handrail in the foreground to the far end of the street, low 4000K late afternoon sun raking down the street from behind the camera with the light-colored building facades on the right returning a soft bounce into the shaded left side, exposure held so the shopfront interiors keep some detail, damp asphalt with faint reflections, painted metal shutters, photorealistic documentary street photography, neutral grade, no text, no logo",
+      "effect": "駅の出口を手前の端に置いて道を奥へ抜かせると、駅から職場までが一本の視線でつながり、徒歩距離が体感として読める。街路に沿った斜光は路面に長い明暗を作るため、平板な街の写真と違って距離が知覚される。上部三分の一を空に充てておくと、徒歩分数と沿線名を載せたときに道に被らない。",
+      "caution": "駅名、店舗の看板、自動販売機の商品名、路線表示の文字は高確率で崩れるため、すべて空白のまま生成し、必要な情報は編集工程で合成する。実在しない立地を描かないこと。最寄駅、出口、徒歩分数、坂や踏切の有無は必ず依頼主に確認し、実際の道より平坦で明るく見える画は入社後の認識のずれを生むため調整する。実在の駅や店舗が特定できる描写は、無関係の事業者の店先を使うことになるので避ける。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。街路の幅、建物の高さ、駅の出口の形式を依頼主の最寄駅まわりに置き換える。看板は空白のまま生成し、人物は入れない",
+        "output": "9:16 の静止画1枚。駅出口から道の奥までの距離感、斜光の方向、上部のテキスト余白がここで確定する",
+        "next": "看板に文字が湧いていない1枚を「夕方の通りに灯りが点く（通勤動線を動かす）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-21",
+      "sub": "culture",
+      "title": "夕方の通りに灯りが点く（通勤動線を動かす）",
+      "purpose": "通勤動線の静止画に灯りの点灯と遠景の人通りだけを足し、夕方からのシフトでも駅前が明るく人通りがあることを示す。夜勤や遅番の応募で最大の障壁になる帰り道の不安に答えるカット。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。街路の直線とカメラの安定性が保たれやすい",
+      "text": "The shopfront and street lights come up gradually and evenly as the sky darkens slightly, three or four distant pedestrians cross the far end of the street at a natural pace, too small for any face to be resolved, no one approaches the camera, the station exit, the buildings and the camera all stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "照明の立ち上がりは画面全体の輝度分布を変えるため、短い尺でも時刻が移行した印象が出る。遠景の通行人を小さいサイズに限定すると、顔が解像しないまま人通りの有無という情報だけが伝わる。",
+      "caution": "通行人は顔が近いほど破綻が目立ち、カメラに寄ってきた出力は顔が解像して個人の提示になる。too small と no one approaches the camera を外さず、人物が手前に来た出力は破棄する。点灯の過程で看板パネルに文字が湧いていないかを等倍で確認すること。最寄駅と徒歩分数は依頼主に確認し、求人票の記載と一致させる。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「駅の出口から職場までの道（通勤動線・無人）」（T2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の縦型動画1本。照明の点灯、空の暗転、遠景の人通りが動く",
+        "next": "条件訴求の縦型広告の冒頭に置く。徒歩分数と沿線名を上部三分の一に載せ、締めを応募導線のカットにつなぐ"
+      }
+    },
+    {
+      "id": "recruit-22",
+      "sub": "culture",
+      "title": "実在社員の後ろ姿から接客の場面を作る",
+      "purpose": "スタッフの年齢構成と、外国籍スタッフを受け入れていることや語学が活きることを、実際に働いている人の後ろ姿を基にして見せる。他社の求人画像が若い日本人スタッフだけに見える中で、自分が入れる場所だと読ませるためのカット。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実在社員の後ろ姿の写真を参照として渡すこと自体が、この型の前提になる",
+      "text": "Keep the people, their clothing, their build, their standing positions and the room of the reference photograph as they are. Clean up only the background clutter and the lighting: the same two staff members seen from behind at a [setting: hotel front desk / restaurant service counter / retail register], shoulders and backs toward the camera with both heads turned away so neither face is in frame and neither turns around, one gesturing toward a counter display while the other stands alongside, a guest standing on the far side of the counter shown only as an out-of-focus back of a shoulder with no face resolved, remove unrelated boxes and clutter from the background, keep every fixture that exists in the reference and add nothing that is not already there, medium wide shot at standing eye level matching the reference, 35mm equivalent, deep focus so the counter and the far wall both stay sharp, replace the overhead downlight look with directional daylight from a window to one side at 4500K plus a weak overhead fill so the counter surface and the shaded sides keep gradation, matte counter laminate, pressed uniform fabric with no insignia, photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "実在の社員の背格好と立ち位置を参照写真に固定するため、スタッフ構成という情報が作り物にならずに保たれる。後ろ姿だけで構成しても、身長差と立ち方の差でチームの多様さは読め、顔は一人も解像しない。背景の整理と光の置き換えだけに加工を限定すると、職場そのものは実物のまま残る。",
+      "caution": "実在の社員を使う場合は本人の同意を取り、採用素材としての使用範囲と、退職後に使用を停止する取り決めを事前に書面で決めておくこと。加工後も後ろ姿から本人が特定されうるため、同意の範囲に「背景と光をAIで加工する」ことを含め、写っている全員分を個別に取る。外国籍スタッフの受け入れを訴求する場合は、在留資格で認められる職務の範囲を依頼主に確認し、実際には採用していない職種で訴求しない。語学手当や語学の必須要件の有無も求人票の記載と一致させる。振り向いた顔や客の顔が解像した出力は破棄する。制服の名札、カウンターの掲示、商品の印字の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "実在社員の後ろ姿を撮影した写真1枚を参照として必ず添付する。撮影時に写っている全員の同意を取り、顔が入らない角度で撮っておく。[setting] を実際の持ち場に書き換える",
+        "output": "参照と同じ人・同じ持ち場で、背景が整理され光が方向を持った静止画1枚",
+        "next": "ここで完結。採用ページのスタッフ紹介と求人票の添付に使う。同意の範囲と退職後の扱いは「採用素材の人物・設備確認表」に全員分記録する"
+      }
+    },
+    {
+      "id": "recruit-23",
+      "sub": "message",
+      "title": "未経験からの成長（新人の手と先輩の手・縦型）",
+      "purpose": "未経験から始められるという訴求の中心カット。未経験歓迎の文字が並ぶ求人一覧で、何年か続けると何が身につくかを画面で示して差をつける。新人と先輩の手の状態の差だけで経験の違いを示す顔を映さない構図で、縦型のテキスト余白を最初から構図に確保する。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。9:16 の縦型で生成し、上部三分の一を空ける",
+      "text": "A vertical close-up of two hands side by side on a workbench, one younger hand with smooth unmarked skin and one older hand with thick calluses and worn nails, both resting beside the same tool, shown only from the forearms with both heads and faces entirely outside the top of the frame, the upper third of the vertical frame left as plain out-of-focus wall and empty workbench with no subject matter in it so a text overlay can be added later, the workshop or kitchen behind softly out of focus, vertical 9:16 framing, close-up from directly above at a slight angle, 85mm equivalent, shallow depth of field with both hands and the tool sharp in the same plane, daylight from a window to the left at 4500K as the main source with a weak bounce from the right so the skin texture of both hands reads as relief rather than flat tone, callused skin, clean young skin, worn tool handle, photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "同じ平面に二つの手を並べ、皮膚の状態だけを変数にすると、経験年数という抽象的な情報が観測可能な質感の差として画面に出る。側光とバウンスの組み合わせが皮膚の凹凸を影として可視化するため、タコや爪の摩耗が階調として読める。上部三分の一を空の壁と作業台で埋めておくと、編集でテキストを載せても手に被らない。",
+      "caution": "手指の本数、関節の向き、二つの手の左右が揃っているかを必ず等倍で確認すること。手が四本に増える、指が融合するといった破綻が頻発する。AI生成の人物を実在の社員として提示しない。掲載時は職場の雰囲気を伝えるイメージであり実在の社員ではない旨を明示すること。未経験歓迎と書けるか、正社員登用の実績があるかは求人票の要件と実績に依存するため、未経験者の採用実績・教育体制・登用人数を依頼主に確認し、記載と画の訴求を一致させる。工具の刻印と袖のワッペンの文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。道具と職種を依頼主の業種に置き換える。9:16 の縦型で生成し、上部三分の一を空ける指定は外さない",
+        "output": "9:16 の静止画1枚。二つの手の並び、皮膚の質感差、上部のテキスト余白がここで確定する",
+        "next": "手が二本ずつ正しく写っている1枚を「道具が手から手へ渡る（引き継ぎの動き）」に渡して動かす"
+      }
+    },
+    {
+      "id": "recruit-24",
+      "sub": "message",
+      "title": "道具が手から手へ渡る（引き継ぎの動き）",
+      "purpose": "先輩から新人へ道具が渡るという一動作で、教わって覚える職場という訴求を言葉なしで成立させる。入社直後に放り出されるのではないかという不安が早期離職の主因になるため、その逆を先に見せる。縦型・顔なしなので求人媒体の動画枠にそのまま流せる。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。手の形が保たれやすく、1080pでも安い。手の破綻が許容できない最終カットのみ Seedance 2.5、8秒・1080p（約72クレジット、Unlimited 対象外で常に課金）",
+      "text": "The older hand picks up the tool and passes it slowly across to the younger hand, which takes hold of the handle and settles its grip, the tool stays the same shape and size throughout, both heads and faces stay outside the top of the frame, the upper third of the vertical frame stays empty, the workbench and the camera stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "物が一方の手からもう一方へ移るという受け渡しは、原因と結果が画面内で完結する数少ない動作で、顔がなくても関係が読める。道具という固い物体を動かす対象にすると、柔らかい物より形状が保たれやすい。",
+      "caution": "受け渡しの瞬間に手が三本になる、道具が二本に増える、途中で道具が消えるといった破綻が頻発する。等倍で手の本数と道具の数を確認し、合わない出力は破棄する。顔が画面内に入ってきた出力も使わない。手元の受け渡しは採用率が低い前提で生成回数を見込み、3回で当たらなければ静止画で見せ切る。実際の教育体制と異なる訴求に使わないこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「未経験からの成長（新人の手と先輩の手・縦型）」（T2I）で作った静止画1枚。新しく画像は作らない。手が二本ずつ正しく写っている枚のみを入力にする",
+        "output": "5秒の縦型動画1本。道具の受け渡しと握りの決まりだけが動く",
+        "next": "未経験者向け縦型広告の中盤に置く。上部三分の一にテキストを載せ、締めを応募導線のカットにつなぐ"
+      }
+    },
+    {
+      "id": "recruit-25",
+      "sub": "message",
+      "title": "横型の職場写真を縦型9:16に作り直す",
+      "purpose": "横型で撮った実際の職場写真を、求人媒体とSNSの縦型枠に合わせて作り直す。撮り直しなしで配信面を増やし、上部にテキストの居場所を確保する。媒体ごとに素材を作り直す手間が、比較で選ばれる前の離脱に効く。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実写の職場写真を参照として渡すこと自体が、この型の前提になる",
+      "text": "Keep the room, the equipment, the furniture and the finishes of the reference photograph exactly as they are. Recompose the same scene from horizontal to vertical 9:16, centering on the work surface or the equipment rather than the empty ceiling, extend the floor at the bottom and the wall at the top only as far as needed to fill the vertical frame and invent no new equipment, furniture or openings, keep any person in the frame visible only from behind or from the shoulders down with the face outside the frame, leave the upper third of the vertical frame as plain wall or ceiling with no subject matter in it so a text overlay can be added later, vertical 9:16 framing, standing eye level matching the reference, 24mm equivalent, deep focus so the far wall and the floor at the frame edge both stay sharp, keep the window light direction and the 4500K color temperature of the reference, matte surfaces as in the reference, photorealistic documentary interior photography, neutral grade, no text, no logo",
+      "effect": "部屋と設備を参照写真に固定したまま画角だけを変えるため、実写で確認済みの職場がそのまま縦型に移る。上下に伸ばす範囲を床と壁に限定することで、存在しない設備が画面外から作られる余地が狭まる。上部三分の一を空けておくと、音なし視聴で読まれるテキストが作業点に被らない。",
+      "caution": "縦型に作り直す過程で、横型では画面端にあった設備が外れたり、画面外に存在しない設備が足されたりする。生成後に参照写真と見比べ、設備の増減がないかを必ず確認し、足された設備がある出力は破棄する。参照写真に社員が写っている場合は本人の同意を取り、退職後に使用を停止する取り決めも事前に決めておくこと。加工後も本人が特定されうるため、同意の範囲に「AIで画角を作り直す」ことを含める。加工した素材であることを掲載時に明示し、無加工の実写と同じ並びに混在させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "横型で撮った実際の職場写真1枚を参照として必ず添付する。人物が写っている場合は顔が入らない角度で撮り、本人の同意を取っておく",
+        "output": "参照と同じ設備・同じ光で、上部にテキスト余白のある 9:16 の静止画1枚",
+        "next": "ここで完結。求人媒体の縦型枠と Instagram のストーリーズに出す。テキストは編集工程で上部三分の一に載せる"
+      }
+    },
+    {
+      "id": "recruit-26",
+      "sub": "message",
+      "title": "採用素材の人物・設備確認表",
+      "purpose": "人物カットがどの設計で作られたか、同意を取ったか、描いた設備と制度が実在するかを一元管理する。AI生成の人物を実在の社員として提示する事故と、実在しない条件を訴求して面接での不信や早期離職を招く事故を、入力段階で止めるための帳票。",
+      "model": "生成AIに投げるものではない。表計算ソフトで作り、依頼主ごとに1シートで運用する",
+      "text": "【採用素材 人物・設備確認表】依頼主ごとに1シート。列は次の12項目。\n1. 素材ID（依頼主コード＋連番。例 TKY2601-07）\n2. 使用プロンプトID（本パックのID。例 recruit-09）\n3. 種別（実写 / AI生成 / 実写をAIで加工）\n4. 人物の設計（人物なし / 顔を映さない構図 / イメージ素材として明示 / 実在社員のI2I・I2V）\n5. 顔の写り込み（なし / あり。「あり」の行は掲載しない）\n6. 本人同意（該当なし / 未取得 / 取得済。取得日と同意の範囲を記入。範囲に「AIで加工する」ことを含めたかを併記。複数人が写る素材は全員分の行を分けて記入）\n7. 退職後の取り扱い（該当なし / 取り決め済。停止の手順と連絡先を記入）\n8. 描いた条件・設備（最寄駅と徒歩分数 / シフトの融通（Wワーク可・週2から・扶養内）/ 時給と深夜手当 / まかない / 休憩室 / 更衣室・ロッカー / 研修 / 正社員登用 / 残業の実態 / 外国籍スタッフの受け入れ / 語学手当 / 育児との両立シフト / 異動・転勤の有無 / 該当なし。複数可）\n9. 実在確認（未 / 依頼主に確認済。確認日と確認した担当者名を記入。8が「該当なし」以外で未の行は掲載しない）\n10. 求人票との一致（未確認 / 一致 / 不一致。不一致の行は掲載しない）\n11. 「イメージ」表記の有無（AI生成・加工は必ず「有」。無の行は掲載しない）\n12. 掲載先と掲載日（求人媒体 / 自社採用ページ / SNS / 会社説明資料。掲載停止日も記入）\n\n運用の規則を表の上部に固定で書いておく。「4の設計が空欄の人物カットは生成しない」「5が『あり』の素材は種別を問わず掲載しない」「6が取得済でない実在社員の素材は社外に出さない」「9が未の条件・設備は画にも文章にも出さない」「種別が AI生成 または 実写をAIで加工 の素材は、無加工の実写と同じギャラリー・同じ並びに置かない」。",
+      "effect": "人物の設計と顔の写り込みを必須入力にすると、AI生成の人物を実在の社員として提示する事故が掲載前に検出できる。条件・設備の列と実在確認の列を対にしておくことで、徒歩分数やシフトの融通といった比較の中心になる訴求が、依頼主への確認なしに外に出る経路が塞がる。退職後の取り扱いを先に記入させるのは、退職の連絡が来てから探すと該当素材が特定できなくなるため。",
+      "caution": "この表を作らずに人物カットを生成すると、どの枚がAI生成でどの枚が実写か後から区別できなくなり、全件の差し替えが必要になる。人物の設計の列だけは案件開始時点で必須入力にすること。本人同意の列は、同意の記録を残すこと自体が目的なので口頭了解で埋めない。条件・設備の実在確認は、依頼主の担当者名と確認日まで記入する。担当者名のない確認は、後から誰にも遡れない。",
+      "status": "未検証",
+      "flow": {
+        "code": "DOC",
+        "step": "単発",
+        "input": "生成AIには投げない。既存の素材管理表に12列を足すか、依頼主ごとに新規シートを作る。自社の案件コード体系に合わせる",
+        "output": "依頼主ごとの素材一覧1シート。人物の設計、同意の状態、条件・設備の実在確認がその場で判断できる状態",
+        "next": "ここで完結。制作着手の最初の作業にする。生成を始めてから作ると、人物の設計と同意の記録が抜ける"
+      }
+    },
+    {
+      "id": "recruit-27",
+      "sub": "ads",
+      "title": "縦型フック用の1枚（上部にテキスト余白）",
+      "purpose": "求人媒体とSNSの縦型枠で、冒頭1〜3秒に置くフック用の静止画。同じ沿線の求人が何十件も並ぶ一覧で親指を止めることが最初の勝負になる。手元だけの顔を映さない構図で、上部三分の一をテキスト余白として構図に確保する。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。9:16 の縦型で生成し、上部三分の一を空ける",
+      "text": "A vertical close-up of one pair of hands at the single most recognizable action of the job, [action: a gloved hand setting a drill bit to a marked point on a board / a hand lifting a lid off a simmering pot with steam escaping / a hand straightening the last item in a freshly faced retail row / a hand scanning a carton label area on a warehouse shelf / a hand adjusting a folded blanket at the foot of a made bed], shown only from the forearms with the head and face entirely outside the top of the frame, the subject placed in the lower two thirds of the vertical frame with the upper third left as plain out-of-focus wall or ceiling with no subject matter in it so a text overlay can be added later, the workplace behind softly out of focus, vertical 9:16 framing, close-up at a 45-degree angle from slightly above the hands, 85mm equivalent, shallow depth of field with the contact point between hand and object sharp, daylight from a window to one side at 4500K as the main source with a weak bounce from the opposite side so the knuckles keep gradation, [material: planed board and steel bit / wet steam and glazed ceramic / matte packaging with no lettering / plain cardboard with blank label area / soft woven blanket], photorealistic documentary workplace photography, neutral grade, no text, no logo",
+      "effect": "被写体を下部三分の二に寄せ、上部三分の一を無地のボケに固定すると、音なし視聴で読まれるテキストが作業点に被らない。縦型は視野の中心が画面中央より下に来るため、手元を下寄りに置くほうが指が止まりやすい。業種ごとにもっとも認識されやすい一動作だけを選ぶことで、1秒以内に何の仕事かが判別される。",
+      "caution": "手指の本数と関節の向きを必ず等倍で確認すること。AI生成の人物を実在の社員として提示しない。掲載時は職場の雰囲気を伝えるイメージであり実在の社員ではない旨を明示し、媒体の仕様でテキストを載せられない枠では表記の方法を先に確認する。[action] は依頼主の実際の業務から選び、実際にやっていない作業を描かない。商品パッケージ、段ボールのラベル、工具の刻印、寝具のタグの文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。[action] と [material] を依頼主の業種に差し替え、同じ型で3〜5点まとめて生成する。9:16 と上部三分の一の余白指定は外さない",
+        "output": "上部にテキスト余白のある 9:16 の静止画が業種分。求人媒体の縦型枠にそのまま入る状態",
+        "next": "ここで完結。求人媒体の掲載画像と SNS の静止画広告に使う。動かす必要があれば「包丁が刻む（手元の反復動作）」と同じ要領で反復動作だけを足す"
+      }
+    },
+    {
+      "id": "recruit-28",
+      "sub": "ads",
+      "title": "終業後の職場・照明が落ちる（直接動画）",
+      "purpose": "一日を追う構成の締めカット。残業なしで上がれることを時刻の移行で示し、応募導線のテキストを載せる暗い余白を同時に作る。無人の職場なので静止画を経由せず直接作って試行回数を稼ぐ。",
+      "model": "Higgsfield / Seedance 2.0 Fast、8秒・720p（約28クレジット）で当たりを探し、採用カットだけ Seedance 2.0、8秒・720p（約36クレジット）で作り直す",
+      "text": "The interior of a small workplace in Tokyo at the end of the workday, completely empty of people, a wiped-down work surface with the tools put away and the floor swept clean, the overhead lights switch off in two stages leaving only the dim light coming through the side window from the street and the lit windows of the building opposite, nothing else in the room moves, no people enter the frame, vertical 9:16 framing with the upper third left as plain wall so a text overlay can be added later, medium wide shot at standing eye level, 35mm equivalent, deep focus, 4500K overhead light before the switch and the mixed 3000K street light and 4000K window light from across the street as the only remaining sources after it, matte laminate surfaces, brushed metal, swept floor, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no text, no logo",
+      "effect": "照明が二段で落ちる構成は画面全体の輝度分布を二度変えるため、音なし視聴でも終わりという区切りが知覚される。残るのが街灯と向かいのビルの窓明かりだけになることで、人を写さずに一日が終わった状態だけが示され、応募導線のテキストを置く暗い余白が同時に生まれる。",
+      "caution": "画像を経由しないため構図と光を制御できず、人物が湧く、設備が実際の職場と違うものになるといった出力が混ざる。人物が写った出力は、AI生成の人物を実在の社員として提示することになるため破棄する。実際の職場より広く新しい描写も入社後の早期離職につながるので、設備の種類は依頼主の実情に合わせて書き換えること。残業の実態が記載と違う場合はこのカットを定時退勤の訴求に使わない。安く試せる Fast で当たりを探してから本番モデルに上げる。掲載時はイメージである旨を明示する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2V",
+        "step": "単発",
+        "input": "静止画を経由せず、この文章だけを入力する。業種と設備、窓の位置を依頼主の職場に置き換える。参照画像は使わない。人物は入れない",
+        "output": "8秒の縦型動画1本。照明の二段消灯と街明かりへの移行が動く",
+        "next": "ここで完結。採用動画の締めに置き、暗くなった上部三分の一に応募先と締切のテキストを載せて応募導線につなぐ"
+      }
+    },
+    {
+      "id": "recruit-29",
+      "sub": "ads",
+      "title": "横型の会社紹介動画を求人媒体の縦型に作り直す",
+      "purpose": "会社説明に使っている横型動画を、求人媒体とSNSの縦型枠に合わせて作り直す。撮り直しなしで配信面を増やし、顔が写るカットを切り落とす機会にもする。",
+      "model": "Higgsfield の Studio 系（Ad Multiplier 相当）。Unlimited 対象外で常に課金されるため、尺と本数を先に決めてから着手する",
+      "text": "Keep the shot order, the cut timing and the total duration of the reference video exactly as they are. Reframe each shot from 16:9 to vertical 9:16, centering on the working hands, the equipment or the room rather than the empty ceiling, exclude any face that appears in the original framing by recomposing to the hands or the back of the subject, keep the upper third of the vertical frame free of important subject matter so a text overlay can be added later, do not add or remove shots, do not add any person who is not in the reference, do not change the color grade, no text, no logo",
+      "effect": "尺とカット順を固定したまま画角だけを変えるため、横型で検証済みの構成がそのまま縦型に移る。縦型は横幅が狭いので、画角を切る過程で顔を画面外に追い出す余地が生まれ、再編集の手間なく顔を映さない設計に寄せられる。上部三分の一を空けておくと、編集でテキストを載せても作業点に被らない。",
+      "caution": "縦型に切ると、横型では画面端にあった設備や職場の広さが外れて、何の仕事か読めない画になるカットが出る。切り出し後に仕事内容が判別できるかを必ず確認し、読めないカットは使わない。顔が残ったカットは、AI生成の人物であれば破棄し、実在の社員であれば本人の同意の範囲に縦型への作り直しが含まれているかを確認する。Studio 系は常に課金されるため、縦型を作る本数を先に決めてから着手すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに完成している横型の会社紹介・採用動画1本（15〜30秒）。新しく映像は作らない。縦型の配信先と本数を先に決めておく",
+        "output": "カット順と尺が同じ縦型（9:16）の動画1本。顔が画面外に寄った構図になっている",
+        "next": "求人媒体の動画枠と Instagram のリールに出す。テキストは編集工程で上部三分の一に載せる"
+      }
+    },
+    {
+      "id": "recruit-30",
+      "sub": "ads",
+      "title": "条件の訴求文言を差し替えて比較する",
+      "purpose": "映像を固定したまま訴求文言だけを変えた変種を作り、駅からの近さ・シフトの融通・時給と深夜手当・未経験歓迎と正社員登用のどれが応募につながるかを、映像変数を固定して測る。応募が他社に流れる原因を推測で決めないための工程。",
+      "model": "Higgsfield の Studio 系（Ad Multiplier 相当）。Unlimited 対象外で常に課金されるため、検証する文言の数だけコストが積み上がる",
+      "text": "Keep the motion, the framing, the cut timing and the total duration of the reference video exactly as they are. Replace only the on-screen hook text and the closing call to action. The visual content of every shot stays unchanged, including which parts of each person are in frame, no face that was outside the frame may enter it, no change to the color grade, no logo",
+      "effect": "映像を完全に固定して文言だけを変えると、応募数の差が訴求の差として読める。東京では同じ沿線に競合の求人が並ぶため、駅徒歩何分か、週2から入れるか、扶養内に収まるか、深夜手当がいくらか、未経験から正社員になれるかという条件のどれが効くかが、業種と年齢層と沿線で大きく変わり、この比較が訴求設計の根拠になる。",
+      "caution": "1回の検証で変える変数は1つに限定する。フックとCTAを同時に変えると、どちらが効いたか分からなくなる。労働条件に関する文言は求人票の記載と必ず一致させ、徒歩分数、シフトの下限、時給と深夜手当、正社員登用の実績、残業の実態は依頼主に実在を確認してから訴求に使う。実際にない条件を文言だけ差し替えて試すことは絶対にしない。差し替えの過程で画面外にあった顔が入ってきた出力は、AI生成の人物であれば破棄し、実在の社員であれば同意の範囲を確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに配信している縦型の採用動画1本（15〜30秒）と、差し替える文言のリスト。新しく映像は作らない。各文言が求人票の記載と一致しているかを先に確認する",
+        "output": "映像の構造が同一で、文言だけが異なる動画が文言の数だけ",
+        "next": "求人媒体とSNSに同時に出して応募数を比べる。効いた文言は求人票の冒頭と見出しにも反映し、変える変数は1回につき1つに限定する"
+      }
+    }
+  ],
+  "legal": "求人広告には、求人情報を正確に表示する法律上の義務があります。以下は2026年10月11日に公的資料で確認した内容の整理であり、法的助言ではありません。個別の案件は社会保険労務士または弁護士に確認してください。\n\n**1. 職業安定法 第5条の4「求人等に関する情報の的確な表示」（2022年10月1日施行）**\n求人等に関する情報について、虚偽の表示又は誤解を生じさせる表示をしてはならないと定められています。あわせて、**正確かつ最新の内容に保つ義務**（募集終了や内容変更時の速やかな対応）があります。対象となる情報は5分類で、①求人情報 ②求職者情報 ③求人企業に関する情報 ④自社に関する情報 ⑤事業の実績に関する情報 です。\n\n**2. 虚偽でなくても「誤解を生じさせる表示」に該当しうる点が最重要です**\n厚生労働省のQ&Aは、虚偽の情報でなくとも一般的・客観的に誤解を生じさせるような表示は該当するとしています。例として、一人の高給者の基本給を全員に当てはまるかのように表示する、固定残業代を基礎時間を示さずに基本給に含めて表示する、といったものが挙げられています。**AI生成画像が、職場環境・設備・人員構成について実態と異なる印象を与えていないか**を確認してください。\n\n**3. ただし「写真・映像が法律上の対象」と断定はできません**\n厚生労働省のリーフレットおよびQ&Aを確認しましたが、**写真・画像・映像への言及は見当たりませんでした**。一方で明文で除外されてもおらず、「誤解を生じさせる表示」という基準は表示手段を限定していません。したがって「該当しうるため確認が必要」というのが正確な理解です。**「写真も法律上の対象です」と顧客に断定しないでください。**\n\n**4. AI生成の人物を社員として出すことを直接規律する公的指針は確認できませんでした**\n2026年10月時点で、これを名指しで規律する法令・公的指針・業界自主規制は確認できませんでした。全国求人情報協会の倫理綱領・掲載基準にも写真やAI生成への言及はありません。ただし同協会は、求人広告は真実なものであるべきこと、事実に基づかない誇大・虚偽の説明や表示を避けること、実際の労働条件と相違する内容を含むものは掲載を見合わせることを定めています。これらの一般規定の適用可能性は個別に確認してください。\n**本パックが人物カットを「顔を映さない構図」で設計しているのは、この不確実性を回避するためです。**\n\n**5. 実在の従業員を使う場合**\n肖像権は**判例法理**であり、肖像権法という法律があるわけではありません。最高裁判所 平成17年11月10日判決は、人はみだりに自己の容ぼう・姿態を撮影されないということについて法律上保護されるべき人格的利益を有する、と判示しています。利用する媒体・期間・加工の可否・**退職後の取り扱い**を書面で特定して同意を得てください。\nまた、個人情報保護委員会のガイドライン（通則編）は、個人に関する情報は顔画像等個人を識別する情報に限られないとしており、**顔画像は個人情報に該当しうる**ため、利用目的の特定・通知等の取り扱いも確認が必要です。なお、実在の従業員の顔をAI生成の元素材とする場合についての公的な指針は確認できなかったため、同意の範囲にその利用を明示的に含めるかを個別に検討してください。\n\n**出典**：厚生労働省 改正職業安定法および同Q&A／若者雇用促進法 第13条・第14条／全国求人情報協会 倫理綱領と掲載基準／最高裁判所 平成17年11月10日判決／個人情報保護委員会 ガイドライン（通則編）"
+}

@@ -1,16 +1,11 @@
 {
-  "name": "lp-cc",
+  "name": "corebloom-academy",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "Core Bloom AI Video Marketing Academy - 6週間30レッスンの実践型学習サイト",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "node build.js",
+    "serve": "node build.js && node -e \"const h=require('http'),f=require('fs');h.createServer((q,s)=>{s.writeHead(200,{'content-type':'text/html; charset=utf-8'});s.end(f.readFileSync('dist/index.html'))}).listen(4321,()=>console.log('http://localhost:4321'))\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "@anthropic-ai/sdk": "^0.98.0"
-  }
+  "engines": { "node": ">=18" }
 }

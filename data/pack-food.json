@@ -1,0 +1,574 @@
+{
+  "id": "food",
+  "label": "飲食",
+  "lede": "飲食店の素材は、料理の寄り・店内・手元の所作・季節のカットという4種類の組み合わせでほぼ説明がつきます。費用と信用が決まるのは、静止画を何枚作るかではなく、どの1枚を動かすかです。静止画は手持ちのツールで何枚でも試せますが、動画化は1本ごとにクレジットを消費し、液体・湯気・溶けるといった表現は破綻率が高いため、ここで回数を見込み損なうと予算が崩れます。だからこのパックは、T2I で構図と光を確定させてから I2V で動きだけを足す2工程を前提に、30本すべてをペアで設計しています。東京の飲食店の課題は「人が来ない」ではなく「見つけてもらえない」「選ばれない」です。路地裏の店やビルの地下・2階以上の空中階は通りから存在が伝わらず、競合密度が高いため同じ価格帯の隣の店に流れます。家賃が高く回転率を確保しなければならない以上、素材は雰囲気ではなく「何の店で、どこにあり、何が他店と違うか」を数秒で示すものになり、インバウンド客の比率が高い立地では写真だけで判断される前提も織り込む必要があります。",
+  "subcategories": [
+    {
+      "id": "dish",
+      "label": "料理・ドリンク"
+    },
+    {
+      "id": "interior",
+      "label": "店内・外観"
+    },
+    {
+      "id": "people",
+      "label": "スタッフ・手元の所作"
+    },
+    {
+      "id": "seasonal",
+      "label": "季節・イベント・限定"
+    },
+    {
+      "id": "takeout",
+      "label": "テイクアウト・物販・ギフト"
+    },
+    {
+      "id": "ads",
+      "label": "広告用カット・フック"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "food-01",
+      "sub": "dish",
+      "title": "麺を持ち上げた醤油ラーメン（半逆光の下地）",
+      "purpose": "麺類の主力カット。麺の束とスープの照りで食欲を喚起し、次の工程で湯気を動かすための下地にする。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。器と背景の色を先に決めてから書くと歩留まりが上がる",
+      "text": "A bowl of shoyu ramen with chashu, nori and spring onion, a bundle of thin noodles lifted about fifteen centimeters above the broth by chopsticks held from outside the frame, broth clinging to the noodles and one drop about to fall, on a dark walnut counter with a softly blurred warm wooden interior behind, medium close-up at a 40-degree angle slightly above the rim, 85mm equivalent, shallow depth of field with the noodle bundle in focus, backlight from behind and above with strong rim light along the wet noodles and a weak soft fill from the front left so the near side is not crushed, glossy broth surface with specular highlights, matte ceramic bowl, dry nori texture, photorealistic food photography, muted warm grade, slight film grain, no text, no logo",
+      "effect": "半逆光は湿った麺の表面で正反射を起こし、麺の輪郭を1本ずつ光らせる。弱い前方フィルを入れるのは、逆光だけでは手前が黒く潰れて麺の束が1枚の塊に見えてしまうためで、シズル感の物理的な正体はこの反射と後述の湯気の透過光にある。",
+      "caution": "箸を持つ手が入ると指の本数と関節が崩れやすいので、箸はフレーム外から入る指定を外さない。丼の外側の文字や店名は生成させず `no text, no logo` を維持し、実物は編集で合成する。トッピングの内容は実際の提供品と一致させること（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけで作る。麺の種類・トッピング・器の色を依頼主の実物に置き換えてから生成する",
+        "output": "9:16 の静止画1枚。構図・光の方向・麺の照り・器の質感がここで確定する",
+        "next": "気に入った1枚を「ラーメンの湯気を立ち上らせる（I2V）」に渡し、湯気と汁の滴りだけを足す"
+      }
+    },
+    {
+      "id": "food-02",
+      "sub": "dish",
+      "title": "ラーメンの湯気を立ち上らせる（工程2）",
+      "purpose": "確定済みの静止画に湯気と汁の滴りだけを足し、3〜5秒の寄りカットにする。広告の2カット目に置く主力素材。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。流体・湯気・重力表現に最も強く、Unlimited 対象で最安。試行回数を稼げる",
+      "text": "Steam rises from the broth in thin continuous columns and drifts slowly toward the upper right, one drop of broth falls from the lowest noodle and lands on the surface creating a single small ripple, the noodle bundle sways only slightly, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, no new objects entering the frame",
+      "effect": "湯気は後方からの光を透過して白く浮き上がるため、静止画で決めた半逆光がそのまま動きの見せ場になる。カメラを止めて動くものを湯気と滴の2つに限定すると、モデルが余計な要素を作り足す余地が減り破綻率が下がる。",
+      "caution": "湯気は量が増殖して画面が白く飛ぶ破綻が頻発するため `subtle` と `thin continuous columns` を外さない。滴が落ちる表現は液体のため成功率が低く、3回生成して使えなければ湯気だけに絞って作り直す。カメラ移動は足さず1カット1動作に留める。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「麺を持ち上げた醤油ラーメン（T2I）」で作った静止画1枚。新しく画像は作らない。構図と光は触らない",
+        "output": "5秒・720p の動画1本。湯気と1滴の落下だけが動く寄りカット",
+        "next": "15秒広告の2カット目に置く。店内カットと季節カットの間に挟んで食欲の山を作る"
+      }
+    },
+    {
+      "id": "food-03",
+      "sub": "dish",
+      "title": "天丼の寄り（衣の凹凸と段差）",
+      "purpose": "丼ものの主力カット。天ぷらの段差と衣の質感で量感を伝え、次の工程でたれを垂らす下地にする。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。ネタの構成を先に書き出してから生成する",
+      "text": "A tempura rice bowl filled with [prawn, squid, white fish and green pepper] tempura leaning against each other with visible height differences between the pieces, a small ceramic pitcher of dark tendon sauce beside it, on a black lacquer tray over a dark walnut table with a blurred counter behind, close-up at a 30-degree low angle so the stacked pieces do not flatten, 85mm equivalent, shallow depth of field focused on the front piece, backlight from the upper rear with rim light along the ridges of the batter and a weak diffused fill from the front right, crisp uneven batter with visible fried ridges, glossy sauce in the pitcher, matte lacquer, photorealistic food photography, warm neutral grade with restrained saturation, no text, no logo",
+      "effect": "低いアングルを指定するのは、俯瞰にすると天ぷらの段差が完全に潰れて量感が消えるため。衣の凹凸は半逆光で細かい影を作るので、揚げ具合と軽さがリム光と影の粒として読める。",
+      "caution": "衣の揚げ色が均一になると作り物に見えるので `uneven batter` を外さない。ネタの種類と数は実際の提供内容と一致させること（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。彩度を上げすぎると不自然な色になるので `restrained saturation` を維持する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。[ ] のネタ構成を依頼主の実際の品書きに置き換えてから生成する",
+        "output": "9:16 の静止画1枚。アングル・段差の見え方・衣の質感が確定する",
+        "next": "この1枚を「天丼にたれを一筋垂らす（I2V）」に渡し、注ぐ動作だけを足して冒頭フックにする"
+      }
+    },
+    {
+      "id": "food-04",
+      "sub": "dish",
+      "title": "天丼にたれを一筋垂らす（工程2）",
+      "purpose": "注ぐ動作で視線を止める。天丼の静止画を、冒頭フックに使える3秒カットに変える。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。液体の落下と表面張力の表現が最も安定する。Unlimited 対象",
+      "text": "A thin continuous stream of dark tendon sauce is poured onto the tempura from just outside the top of the frame, the stream stays unbroken from start to end, the sauce soaks slowly into the batter where it lands and runs down one piece onto the rice, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, no splashing outside the bowl, no new objects entering the frame",
+      "effect": "落下する液体は画面内で最も速く動く要素になるため、視線が最初にそこへ固定される。これが冒頭1秒のフックとして機能する理屈で、流れが切れずに繋がっていることと、着地点で衣が濡れて反射が増えることの2点が成立すれば成功カットになる。",
+      "caution": "液体は現行モデルが最も苦手とする表現で、流れが途中で消える・逆流する・量が増えるといった破綻が頻発する。`unbroken` と `no splashing outside the bowl` の制約を外さず、3回生成して使えなければ諦めて静止画のまま使う（これ以上回すとクレジットが見合わない）。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「天丼の寄り（T2I）」で作った静止画1枚。新しく画像は作らない。たれの器が写っている1枚を選ぶ",
+        "output": "5秒・720p の動画1本。たれが垂れて衣に染みる3秒前後が使える",
+        "next": "頭の1〜2秒だけを切り出して15秒広告の冒頭フックに置く。残りは中盤の繋ぎに回す"
+      }
+    },
+    {
+      "id": "food-05",
+      "sub": "dish",
+      "title": "炭火の焼鳥台（備長炭と串の列）",
+      "purpose": "焼き物の主力カット。炭の赤と皮の脂を対比させ、次の工程で煙を立てる下地にする。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。焼き台の形状を文章で具体的に指定する",
+      "text": "A row of chicken yakitori skewers searing on a long narrow charcoal grill over glowing white-ash binchotan charcoal, the skin just turning from pale to browned at the edges with rendered fat beading on the surface, a second row of raw skewers resting on the rail at the back, in a dim restaurant interior with a blurred dark wall behind, close-up at a 25-degree low angle along the row of skewers, 50mm equivalent, shallow depth of field focused on the nearest three skewers, low key lighting with the charcoal glow as the main warm 2000K source from below and a weak cool fill from the upper left, matte ash-covered charcoal, glossy rendered fat, charred edges, photorealistic, low key grade with deep shadows and a dark background, no text, no logo",
+      "effect": "炭の赤い下方光を主光源にすると串と皮の凹凸に影が立ち、焼き台の鉄と脂の照りが分離する。背景を暗く落とすのは、串の列の輪郭を光で切り出して奥行きに見せるため。",
+      "caution": "串の列は反復構造なので本数と間隔が崩れやすい。手前3本だけにピントを置く構図を維持すると採用率が上がる。炭火を使っていない店ではこのカットを使わないこと（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。熱源（備長炭・ガス）と部位を依頼主の実物に合わせて書き換える",
+        "output": "静止画1枚。焼き台の形・炭の光の方向・焼き色の段階が確定する",
+        "next": "この1枚を「焼鳥の脂が落ちて煙が上がる（I2V）」に渡し、煙と脂の動きだけを足す"
+      }
+    },
+    {
+      "id": "food-06",
+      "sub": "dish",
+      "title": "焼鳥の脂が落ちて煙が上がる（工程2）",
+      "purpose": "焼いている最中の音と匂いを、煙の動きだけで想像させる。夜営業と宴会の訴求に使う中盤カット。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。煙と流体の挙動が安定し、Unlimited 対象で試行を重ねられる",
+      "text": "Thin white smoke rises from the charcoal where fat drips down and drifts slowly to the left, rendered fat beads and slides along the skin of the nearest skewer, the edge of one piece curls slightly as it sears, the charcoal glow pulses very faintly, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, no flames rising above the skewers, no new objects entering the frame",
+      "effect": "煙は低い炭光を透過して赤みを帯び、暗い背景の前で白く浮く。動くものを煙・脂・皮の縁の3つに限定し、炎を立ち上げさせないことで、画面が白飛びして串のディテールが消える破綻を避けている。",
+      "caution": "炎の指定を入れると一気に燃え上がって別の料理に見える破綻が出るため `no flames rising above the skewers` を外さない。脂が流れる表現は液体なので成功率が低く、3回で見切って煙だけの版に切り替える。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「炭火の焼鳥台（T2I）」で作った静止画1枚。新しく画像は作らない。炭光が写っている1枚を選ぶ",
+        "output": "5秒・720p の動画1本。煙と脂の流れだけが動く中盤カット",
+        "next": "夜の店内カットの直後に繋いで、宴会プランの訴求動画の中盤に置く"
+      }
+    },
+    {
+      "id": "food-07",
+      "sub": "dish",
+      "title": "握り寿司と刺身の盛り（白木カウンター）",
+      "purpose": "寿司・刺身の主力カット。ネタの照りと白木の清潔感を同時に伝える。炙りの動画カットの下地も兼ねる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。ネタの並び順を先に決めておくと再現性が上がる",
+      "text": "Six pieces of nigiri sushi in a single row with two slices of sashimi beside them, on a plain hinoki wood cutting board placed on a pale unfinished wood counter, a blurred dark interior behind, close-up at a 35-degree angle along the row so each piece is separated, 85mm equivalent, shallow depth of field focused on the second and third pieces, backlight from the upper rear with rim light along the wet surface of each topping and a soft diffused fill from the front left, glossy wet fish surface with specular highlights, loose rice grains with visible individual grains, matte pale wood with fine grain, photorealistic, clean neutral grade with cool white balance, no text, no logo",
+      "effect": "斜め35度で列に沿って撮ると各ピースが重ならず、個数と大きさが読める。白木を背景に置くと明度が近い寿司飯との境界が弱くなるため、半逆光のリム光でネタの輪郭を分離させている。",
+      "caution": "シャリの米粒は潰れて白い塊になりやすいので `visible individual grains` を外さない。ネタの種類と貫数は品書きと一致させること（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。ネタの種類と貫数を依頼主の実際の盛り合わせに置き換えてから生成する",
+        "output": "静止画1枚。ネタの並び・白木の質感・リム光の位置が確定する",
+        "next": "この1枚を「バーナーで炙る手元（I2V）」に渡し、炎と脂の泡立ちだけを足して所作カットにする"
+      }
+    },
+    {
+      "id": "food-08",
+      "sub": "dish",
+      "title": "パフェの縦の層（甘味の断面）",
+      "purpose": "甘味の主力カット。層の重なりで素材の数と価値を伝える。溶ける動画カットの下地も兼ねる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。層の順番を下から書き出して指定する",
+      "text": "A tall glass parfait with visible horizontal layers of [sponge cake, berry compote, whipped cream and soft serve] topped with fresh berries and a thin wafer, on a small marble plate against a clean dark background, eye-level shot at the vertical middle of the glass, 85mm equivalent, moderate depth of field so all layers stay readable, soft side light from the right at 5000K with a subtle rim light on the left edge of the glass, glossy compote, matte soft serve with visible ridges, condensation on the glass, photorealistic food photography, neutral grade with restrained saturation, no text, no logo",
+      "effect": "カメラをグラスの縦中央の高さに置くと層が平行線として読め、俯瞰や見上げで起きる層の圧縮が避けられる。側光で各層の境界に細い影が落ちるため、素材の数がそのまま情報として伝わる。",
+      "caution": "被写界深度を浅くしすぎると上下の層がぼけて数が読めないので `moderate depth of field` を維持する。層の内容は実際のメニューと一致させること（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。[ ] の層を下から順に依頼主の実際の構成へ置き換えてから生成する",
+        "output": "静止画1枚。層の境界・グラスの結露・側光の方向が確定する",
+        "next": "この1枚を「ソースが垂れてアイスの角が崩れる（I2V）」に渡し、溶ける動きだけを足す"
+      }
+    },
+    {
+      "id": "food-09",
+      "sub": "dish",
+      "title": "ソースが垂れてアイスの角が崩れる（工程2）",
+      "purpose": "溶けるという時間の経過で、今食べたいという欲求を作る。甘味とカフェメニューの訴求カット。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。溶解と粘性のある液体の流下で最も破綻が少ない。Unlimited 対象",
+      "text": "Berry sauce runs slowly down the inner wall of the glass in one continuous line, the top ridge of the soft serve softens and rounds very slightly, a single bead of condensation slides down the outside of the glass, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, the layers keep their positions, no new objects entering the frame",
+      "effect": "溶けは形状が連続的に変わる表現なので、変化させる箇所を角1つに限定すると層の構造が保たれる。結露の1粒を同時に動かすのは、グラスの表面という別の面に動きを置くことで奥行きが出るため。",
+      "caution": "溶ける・伸びる表現は層全体が流れ出して別物になる破綻が最も多い。`the layers keep their positions` を外さず、3回生成して使えなければ静止画のまま使い切る判断に切り替える。尺は3秒程度で十分なので5秒設定のまま前半だけ使う。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「パフェの縦の層（T2I）」で作った静止画1枚。新しく画像は作らない。結露が写っている1枚を選ぶ",
+        "output": "5秒・720p の動画1本。前半3秒が溶け始めのカットとして使える",
+        "next": "カフェメニューの訴求動画の締め前に置く。夏場の集客用の素材としても回す"
+      }
+    },
+    {
+      "id": "food-10",
+      "sub": "dish",
+      "title": "生ビールの泡と結露（ジョッキの質感）",
+      "purpose": "ドリンクの主力カット。泡の立ち方とジョッキの冷えで、一杯目の価値を伝える。冒頭フックの下地も兼ねる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。泡の高さをミリで指定すると安定する",
+      "text": "A frosted glass beer mug filled with pale amber lager and a dense white foam head about three centimeters tall, heavy condensation beading on the outside of the glass with two drops running down, on a dark wet wooden counter with a blurred dim standing-bar interior behind, close-up at eye level at the height of the foam line, 85mm equivalent, shallow depth of field focused on the foam and the condensation, backlight from the rear left passing through the amber liquid with a weak cool fill from the front right, glossy wet glass, fine dense foam bubbles, matte dark wood, photorealistic, low key grade with a dark background, no text, no logo",
+      "effect": "逆光を液体に通すと琥珀色が透過光として発色し、泡は光を散乱して白く不透明に残る。この透過と散乱の差が泡と液体の境界をはっきり見せ、冷えの印象は結露の粒の正反射が作っている。",
+      "caution": "泡は細かさを指定しないと泡立てた洗剤のような大きな気泡になるため `fine dense foam bubbles` を外さない。ジョッキやコースターの文字・ロゴは崩れるので生成させず、必要なら編集で合成する。提供しているビールの色と泡の量に合わせること（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。ジョッキの形・ビールの色・泡の高さを依頼主の実物に合わせて書き換える",
+        "output": "静止画1枚。泡の密度・結露の粒・逆光の透過がここで確定する",
+        "next": "この1枚を「冒頭1秒のフック：ビールを注ぐ（I2V）」に渡し、注ぐ動作を足して広告の頭に置く"
+      }
+    },
+    {
+      "id": "food-11",
+      "sub": "dish",
+      "title": "バーのシグネチャーカクテル（ローキー）",
+      "purpose": "バー・ダイニングバーの客単価に見合う一杯を、暗い画面と研磨面の反射で表現する。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。ローキーは背景を暗く指定するほど安定する",
+      "text": "A short crystal glass holding an amber cocktail over a single large clear ice sphere, a thin twist of citrus peel resting on the rim, on a polished dark stone bar top with a deeply blurred back bar of bottles behind reduced to small warm points of light, close-up at a 20-degree low angle, 85mm equivalent, very shallow depth of field focused on the ice sphere, low key lighting with one narrow warm 2700K source from the upper rear left creating a bright specular streak across the glass and the ice, no fill so the right side falls into deep shadow, cut crystal facets, clear ice with no internal bubbles, matte dark stone, photorealistic, low key grade with deep shadows and a dark background, no text, no logo",
+      "effect": "高級感は形容詞ではなく、低いキー・深い影・暗い背景・研磨面の細いハイライトという4つの観測可能な条件で作られる。背後のボトルを光の点に還元すると、画面の情報量が落ちてグラス1つに視線が集まる。",
+      "caution": "丸氷は内部に気泡や濁りが出ると安物に見えるため `no internal bubbles` を外さない。背景のボトルのラベル文字は必ず崩れるので、強いボケに置いて読めない状態にしておく。実際に提供していない酒や氷の仕様を描かないこと（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。グラスの形・酒の色・ガーニッシュを依頼主の実際の一杯に置き換える",
+        "output": "静止画1枚。ローキーの光の筋とボケた背景の光点が確定する",
+        "next": "「夜の店内に気配を足す（I2V）」で作った夜の店内カットと同じ編集列に並べ、夜営業の訴求に使う"
+      }
+    },
+    {
+      "id": "food-12",
+      "sub": "interior",
+      "title": "昼のカウンター席（路地の窓光と壁の反射）",
+      "purpose": "ランチ営業と席の雰囲気を伝える。路地に面した店に実際に入ってくる、限られた自然光の条件を再現する。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。席の数と窓の位置を文章で確定させてから生成する",
+      "text": "An eight-seat wooden counter with empty stools, clean place settings and a view through a narrow street-facing window onto the tiled facade of the building across a back alley, a simple open kitchen pass visible behind the counter, wide shot at seated eye level looking along the counter, 24mm equivalent, deep focus so the far end of the counter and the window both stay sharp, soft overcast daylight falling into the alley from a narrow strip of sky and bouncing off the pale wall opposite so it enters the room as a single soft directional source, cool 6000K ambient near the window falling off quickly toward the back of the room and one warm 2700K pendant lamp over the near end, oiled oak counter with visible grain, matte plaster wall, brushed steel pass, photorealistic interior photography with restrained contrast, no text, no logo",
+      "effect": "路地に面した店は空が狭く直射が入らないため、向かいの壁のバウンスが唯一の方向性のある光になる。窓際から奥へ急に暗くなるのが実際の光条件で、これを再現したうえで深い被写界深度を指定すると、暗い奥でも席数という最重要情報が残る。",
+      "caution": "店内カットを浅い被写界深度でぼかすと広さが伝わらなくなるので `deep focus` を外さない。席数・設備・厨房の見え方が実物と違うと誤解を生むため、必ず依頼主に確認する（実物と異なる表現は景品表示法上の問題になりうる）。メニュー板や黒板の文字は生成させず、編集で合成する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。席数・窓の向き・厨房の見え方を依頼主の店の実際のレイアウトに書き換える",
+        "output": "16:9 の静止画1枚。席数と奥行きが読める昼の店内カット",
+        "next": "ランチ訴求の1カット目に置く。動かす必要はほぼないので静止画のまま編集で使い切る"
+      }
+    },
+    {
+      "id": "food-13",
+      "sub": "interior",
+      "title": "夜のテーブル席（ローキーと灯の点）",
+      "purpose": "夜営業・宴会の雰囲気を伝える基本カット。次の工程で人の気配を足す下地にする。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。昼のカウンターカットと同じ内装の語彙で書くとトーンが揃う",
+      "text": "A four-seat wooden table set for dinner with glassware and folded napkins, two more tables receding into the background, a dark window behind reflecting the interior lamps, wide shot at standing eye level at a 30-degree angle to the table, 24mm equivalent, deep focus so the far tables stay readable, low key lighting with two warm 2700K pendant lamps as the only sources creating pools of light on the tables and leaving the walls in shadow, a faint magenta spill from a neon sign on the building across the alley reaching the window edge, oiled oak table, matte plaster wall, polished glassware with small specular highlights, photorealistic interior photography, low key grade with deep shadows, no text, no logo",
+      "effect": "ペンダント灯だけを光源にすると卓上に明るい島ができ、壁が落ちて席が分離して見える。窓が内装を鏡面反射し、向かいの看板の色が窓際にわずかに乗る指定を入れるのは、夜の窓が黒い穴になって画面に穴が空くのを防ぐため。",
+      "caution": "昼のカウンターカットと内装の語彙（木の種類・壁の仕上げ）を揃えないと同じ店に見えない。暗部を落としすぎると席数が読めなくなるので `deep focus` と遠景のテーブルの指定を外さない。席配置が実物と異なると誤解を生むため、必ず依頼主に確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。テーブル数・灯具・壁の仕上げを「昼のカウンター席」と同じ内装設定に合わせて書く",
+        "output": "16:9 の静止画1枚。灯の位置と暗部の落ち方が確定する",
+        "next": "この1枚を「夜の店内に気配を足す（I2V）」に渡し、灯の揺れと湯気程度の微細な動きだけを足す"
+      }
+    },
+    {
+      "id": "food-14",
+      "sub": "interior",
+      "title": "夜の店内に気配を足す（工程2）",
+      "purpose": "無人の店内カットに最小限の動きを入れ、営業中の空気を作る。広告の導入とブランドカットに使う。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。カメラ移動が最も安定し、1080pでも安い。Unlimited 対象で b-roll の主力",
+      "text": "The camera pushes in very slowly toward the near table at a constant speed, the pendant lamps flicker almost imperceptibly, a thin wisp of steam drifts from a cup on the table, the reflections in the dark window shift slightly as the camera moves, no people enter the frame, slow, subtle, constant speed, no cuts, no other movement",
+      "effect": "微速プッシュインは生成動画で最も破綻しにくいカメラ移動で、視差によって奥のテーブルとの距離が出る。灯の微細な揺らぎと湯気という熱源由来の動きを2つだけ置くと、人を映さずに営業中だと伝わる。",
+      "caution": "カメラ移動は1カットに1種類だけにし、プッシュインとパンを同時に指定しない。人物を入れると顔と人数が崩れるので `no people enter the frame` を外さない。プッシュインの速度が上がると壁や天井が歪むため `very slowly` と `constant speed` を併記する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「夜のテーブル席（T2I）」で作った静止画1枚。新しく画像は作らない。奥に引きのあるレイアウトの1枚を選ぶ",
+        "output": "5秒・1080p の動画1本。微速プッシュインと灯の揺れだけが動く導入カット",
+        "next": "15秒広告の1カット目か、料理の寄りカットの前後に挟む繋ぎとして使う"
+      }
+    },
+    {
+      "id": "food-15",
+      "sub": "interior",
+      "title": "実在店舗の外観を東京の夜に置き換える",
+      "purpose": "既存の外観写真をもとに、路地の夜の外観カットを作る。店を探している客に入口の位置を覚えさせる素材。",
+      "model": "静止画（参照画像つき）。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。建物の形を変えないため参照画像は必須",
+      "text": "Use the reference image as the exact source for the building shape, entrance position, window layout and signage placement. Keep the architecture unchanged. Change only the time and weather: the facade stands at night in a narrow back alley just after rain, a paper lantern glowing beside the entrance and a fabric noren curtain at the doorway, warm light spilling from the windows onto wet asphalt that mirrors the entrance as a soft vertical streak, the colored glow of neon signs on the opposite side of the alley reaching the facade as a faint magenta and cyan cast, wide shot at standing eye level from across the alley at a 20-degree angle to the facade, 35mm equivalent, deep focus, the interior lamps and the lantern at 2700K as the only warm sources against a deep blue 8000K night ambient, wet dark asphalt with specular reflections, matte plaster and weathered timber, photorealistic architectural photography with restrained contrast, no text, no logo, leave all sign faces blank",
+      "effect": "濡れたアスファルトは鏡面に近い反射をするため、入口の灯りが路面に縦に伸びて、暗い路地の中で光の量が実質倍になる。これが夜に店を探す客への案内として働く。建物形状を参照画像に固定するのは、外観が別の建物になると案内の役割を果たさなくなるため。",
+      "caution": "看板の文字は必ず崩れるので `leave all sign faces blank` を指定し、実際の看板は編集工程で合成する。建物・入口・階段の位置が実物と異なると現地で見つけられない苦情につながるため、生成結果を必ず依頼主に確認してもらう（実物と異なる表現は景品表示法上の問題になりうる）。提灯や暖簾を実際に出していない店では足さない。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "既存素材を使う。依頼主から外観写真を1枚もらって参照に添付する。建物形状は参照に固定し、時間と天候だけ変える",
+        "output": "静止画1枚。建物は実物のまま、雨上がりの夜の光条件に置き換わった外観カット",
+        "next": "この1枚を「外観の提灯と暖簾が揺れる（I2V）」に渡し、布と反射の揺れだけを足す"
+      }
+    },
+    {
+      "id": "food-16",
+      "sub": "interior",
+      "title": "外観の提灯と暖簾が揺れる（工程2）",
+      "purpose": "外観カットを動かし、路地の夜の空気と営業中の気配を同時に伝える。広告の1カット目に置く素材。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。反射面の揺れとカメラ固定の両立が安定する。Unlimited 対象",
+      "text": "The paper lantern beside the entrance sways very slightly, the fabric noren at the doorway moves gently as if from a draft, the reflections of the entrance light on the wet asphalt ripple slowly, the warm window light stays constant with no flicker, the camera holds still with no movement, slow, subtle, constant speed, no cuts, no people entering the frame, the building and signage stay unchanged",
+      "effect": "濡れた路面の反射はわずかに揺らぐだけで画面全体に動きが広がるため、カメラを止めたままでも絵が死なない。提灯と暖簾の揺れを足すのは、反射だけでは無人の建物に見えてしまい、営業中だと伝わらないため。",
+      "caution": "反射の揺れが大きくなると路面が水面のようになり建物が歪むので `ripple slowly` で量を抑える。窓の光を揺らすと停電のように見えるため `stays constant with no flicker` を外さない。看板部分は動画でも崩れるので、文字の合成は動画編集側で行う。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「実在店舗の外観を東京の夜に置き換える（I2I）」で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒・1080p の動画1本。提灯と暖簾、路面の反射だけが動く外観カット",
+        "next": "15秒広告の1カット目に置き、看板文字とロゴを編集で重ねて店の所在を示す"
+      }
+    },
+    {
+      "id": "food-17",
+      "sub": "people",
+      "title": "まな板の上の角食パン（切る前の下地）",
+      "purpose": "ベーカリー・カフェの手仕事を伝える下地。次の工程で包丁を入れ、断面と湯気を見せる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。手は入れず、まな板と道具だけで構図を作る",
+      "text": "A freshly baked square loaf of white bread resting on a thick wooden cutting board, a long serrated bread knife lying beside it with its blade angled toward the loaf, a linen cloth bunched at the edge of the frame, on a flour-dusted steel work table in a small bakery kitchen with a blurred dark rack of trays behind, close-up at a 30-degree angle from the short end of the loaf, 50mm equivalent, shallow depth of field focused on the near crust, soft window light from the rear left with rim light along the top crust and a weak diffused fill from the front right, glossy crisp crust, matte flour dust, brushed steel, coarse linen weave, photorealistic, warm neutral grade, no text, no logo",
+      "effect": "道具を被写体の近くに置くと、まだ起きていない動作が画面に予告される。半逆光でクラストの凹凸に影が落ち、焼き色と硬さが質感として読めるため、切った瞬間の対比が効く。",
+      "caution": "手を入れると指が崩れるので、この工程では道具だけにしておき、人の要素は次の動画工程か顔を映さない人物スロットで扱う。パンの種類と焼き色は実際の商品に合わせること（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。パンの種類・まな板・道具を依頼主の実物に置き換える。手は入れない",
+        "output": "静止画1枚。まな板の位置・道具の角度・クラストの質感が確定する",
+        "next": "この1枚を「包丁を入れて断面が開く（I2V）」に渡し、切る動作と断面の湯気を足す"
+      }
+    },
+    {
+      "id": "food-18",
+      "sub": "people",
+      "title": "バーナーで炙る手元（工程2）",
+      "purpose": "炙るという所作で職人の手仕事を伝える。顔を映さずにスタッフの存在を見せる中盤カット。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。炎と脂の泡立ちという流体表現に強い。Unlimited 対象で試行を重ねられる",
+      "text": "A hand holding a small kitchen torch enters from the right edge of the frame, only the hand and forearm are visible with the head and body outside the frame, a narrow blue flame passes once slowly across the surface of one topping from left to right, the surface fat bubbles and browns where the flame passes, thin smoke rises and drifts up, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, the other pieces stay unchanged",
+      "effect": "炎が通過した跡だけ表面が褐色に変わるため、一度の通過で変化の前後が同じ画面に並ぶ。顔をフレーム外に置くのは、生成動画で最も崩れるのが顔と視線であり、手元だけなら破綻率が大幅に下がるため。",
+      "caution": "手は指の本数と関節が崩れやすい。`only the hand and forearm are visible` を外さず、生成結果は指を数えて確認する。炎が大きくなって画面が飛ぶ破綻が出るので `narrow blue flame` と `passes once slowly` を維持し、3回で使えなければ炎なしの別カットに切り替える。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「握り寿司と刺身の盛り（T2I）」で作った静止画1枚。新しく画像は作らない。手が入る余白が右側にある1枚を選ぶ",
+        "output": "5秒・720p の動画1本。炎の通過と脂の泡立ちだけが動く所作カット",
+        "next": "料理の寄りカットの直前に置き、調理の手間を見せてから完成品に繋ぐ"
+      }
+    },
+    {
+      "id": "food-19",
+      "sub": "people",
+      "title": "包丁を入れて断面が開く（工程2）",
+      "purpose": "切るという所作で焼き立てを伝える。ベーカリー・カフェの朝の訴求に使う。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。断面から抜ける湯気の表現が安定する。Unlimited 対象",
+      "text": "A hand enters from the right holding the serrated knife, only the hand and forearm are visible with the head and body outside the frame, the knife saws down through the loaf once at a constant speed and the first slice falls open to the left revealing the soft crumb, thin steam escapes from the cut face and drifts upward, a few crumbs scatter on the board, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, no new objects entering the frame",
+      "effect": "断面が開く瞬間は、硬いクラストと柔らかい内相という2つの質感が同時に画面に出る唯一のタイミングで、湯気が抜けることで焼き立てだと伝わる。湯気は切断面という狭い発生源から出るため、ラーメンの湯気より量が制御しやすい。",
+      "caution": "包丁を持つ手の指と刃の位置関係が崩れやすいので `only the hand and forearm are visible` を維持し、1カット1動作に絞る。スライスが落ちる動きは物理的に破綻しやすく、3回で使えなければ湯気だけの版に切り替える。実際に店内で焼いていない場合はこのカットを使わないこと（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「まな板の上の角食パン（T2I）」で作った静止画1枚。新しく画像は作らない。右側に手が入る余白のある1枚を選ぶ",
+        "output": "5秒・720p の動画1本。切る動作と断面の湯気だけが動く所作カット",
+        "next": "朝の時間帯を訴求する動画の冒頭に置く。テイクアウト素材と同じ編集列で使う"
+      }
+    },
+    {
+      "id": "food-20",
+      "sub": "people",
+      "title": "顔を映さない人物指定（差し替え部品）",
+      "purpose": "スタッフを画面に入れつつ、顔と視線の破綻を避ける。全ての人物入りカットに共通で差し込む部品。",
+      "model": "単体では生成しない。T2I / I2I / I2V のプロンプト本文の被写体スロットに差し込む",
+      "text": "HANDS ONLY: only the hands and forearms are visible, the head, face and torso are entirely outside the frame, sleeves rolled to the elbow | BACK VIEW: seen from behind at a three-quarter angle, the face is not visible at any point, plain dark apron over a plain shirt | SILHOUETTE: a figure rendered as a dark silhouette against a bright window with no facial features readable | OUT OF FOCUS: a staff figure in the deep background reduced to a soft blur with no readable features, the foreground subject stays sharp",
+      "effect": "生成物で最も破綻が目立つのは顔・歯・視線・指で、これらをフレーム外か情報量の低い状態に追い込むと採用率が上がる。手元・後ろ姿・シルエット・強いボケの4段階を用意しておけば、人の気配を入れたいほぼ全てのカットを顔なしで組める。",
+      "caution": "4つのうちどれを使っても、手が写る場合は指の本数を目視で数えて確認する。実在のスタッフを撮り直さずに生成で代替する場合は、制服・髪型・体格が実物と大きく違わないか依頼主に確認する。シルエットは背景が明るい構図でしか成立しないので、ローキーのカットには使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "差し込んで使う。既存のプロンプト本文の被写体スロットに、この4行のどれか1つを貼り替える",
+        "output": "それ自体は何も生成しない。差し込んだ先のカットに人の気配が加わる",
+        "next": "他の6スロットを固定したまま、ここだけを入れ替えて4種類を比較生成する"
+      }
+    },
+    {
+      "id": "food-21",
+      "sub": "seasonal",
+      "title": "繁忙期：路地の夜に灯る空中階の窓",
+      "purpose": "12月から1月の忘年会・新年会のピーク時に、予約を促すための引きのカット。満席の気配を人を映さずに作る。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。窓の内側の情報量を落とす指定が要点",
+      "text": "A small restaurant on the second floor of a narrow mixed-use building seen from the opposite side of a back alley at night, warm light filling every window of that floor with the interior reduced to indistinct blurred shapes and glowing lamp points, a blank illuminated sign panel at street level beside a narrow stairway, steam venting from a duct on the facade, wet asphalt below reflecting the window light, neon from the neighboring buildings as out-of-focus colored points at the frame edges, wide shot at standing eye level angled slightly upward, 35mm equivalent, deep focus, the interior lamps at 2700K as the only warm sources against a deep blue 8000K night with no streetlight directly in frame, wet asphalt with specular reflections, matte tiled facade, condensation on the inside of the glass, photorealistic, restrained contrast with a cool exterior and warm interior split, no text, no logo, leave all sign faces blank",
+      "effect": "窓の内側を不定形のぼけと光点に還元すると、人数を描かずに人がいる印象だけが残る。空中階の店は通りから中が見えないため、この一枚が「2階で営業している」ことを示す唯一の手段になり、屋外の青と屋内の暖色の色温度対比だけで画が成立する。",
+      "caution": "窓の内側に人物を描き込むと人数と顔が崩れ、かつ実際の混雑状況と異なる表現になる。ぼけと光点に留めること。看板と階段表示の文字は生成させず編集で合成する。階数・階段の位置・ビルの形が実物と違うと客が入口を見つけられないため、必ず依頼主に確認する（実物と異なる表現は景品表示法上の問題になりうる）。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。階数・窓の数・ビルの立地と階段の位置を依頼主の店に合わせて書き換える",
+        "output": "16:9 の静止画1枚。屋内外の色温度の対比が確定した夜の引きカット",
+        "next": "予約訴求の広告の1カット目に置く。編集で看板文字と予約リンクを重ねる"
+      }
+    },
+    {
+      "id": "food-22",
+      "sub": "seasonal",
+      "title": "閑散期の平日昼：商店街の明るい店先",
+      "purpose": "1〜2月と梅雨の集客用。夜の雰囲気一色になるのを防ぎ、通りから「開いている」「入れる」と分かる一枚を作る。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。夜カットと同じ建材の語彙で書くと同じ店に見える",
+      "text": "The shopfront of a small restaurant in a covered shopping street at midday, the entrance open with a short noren, a blank menu easel standing beside the door, a lunch set and a cold drink plated on a small counter visible just inside the window, passers-by far in the background reduced to soft blur with no readable faces, wide shot at standing eye level at a 30-degree angle to the facade, 24mm equivalent, deep focus so the shopfront and the depth of the arcade both stay readable, bright diffused daylight from the translucent arcade roof at 5600K with soft open shadows and no hard highlights, condensation on the cold glass, oiled wood counter, matte plaster facade, photorealistic, natural grade with restrained saturation, no text, no logo, leave the menu easel blank",
+      "effect": "アーケードの半透明屋根は巨大な拡散光源として働くため影が浅くなり、昼の店先を白飛びも黒潰れもさせずに撮れる。閑散期に必要なのは夜の雰囲気ではなく、通りからの視認性と入りやすさを示す明るい一枚で、通行人を強いボケに置けば顔の破綻も起きない。",
+      "caution": "彩度を上げると人工的な色になるため `restrained saturation` を外さない。アーケードや商店街に面していない店でこのカットを使ってはいけない（実物と異なる表現は景品表示法上の問題になりうるため、必ず依頼主に確認する）。看板・イーゼル・メニューの文字は生成させず、編集で合成する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。立地（アーケード・路面・路地）と店先の見え方を依頼主の店の実態に合わせて書き換える",
+        "output": "16:9 の静止画1枚。昼の光条件と店先の視認性が確定した引きカット",
+        "next": "閑散期の平日ランチ訴求に使う。夜の引きカットと並べて通年の素材セットにする"
+      }
+    },
+    {
+      "id": "food-23",
+      "sub": "seasonal",
+      "title": "雨粒とネオンのボケだけの環境カット（間つなぎ）",
+      "purpose": "カットとカットの間に挟む2秒前後の繋ぎ。静止画を用意せず、テキストから直接作って素材数を稼ぐ。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。画像を経由しない生成でも降雨とボケの表現が安定する。Unlimited 対象",
+      "text": "Rain falling slowly through the dark against a deeply blurred background of neon signs reduced to soft round colored glows, the drops fall at a constant speed with a slight leftward drift, close-up on the falling rain with the signs far out of focus, 85mm equivalent, very shallow depth of field so most drops are soft and only a few near ones are sharp, warm 2700K and magenta sign glows behind the rain against a deep blue 8000K ambient, no other objects in frame, the camera holds still with no movement, slow, subtle, constant speed, no cuts, photorealistic, low key grade, no text, no logo",
+      "effect": "被写体を雨粒とボケた光源だけに絞ると、構図の破綻要素がほぼ存在しなくなるため、静止画を経由しなくても安定する。奥の光点の前を雨粒が横切ると明暗が入れ替わり、短い尺でも画面が動いて見える。看板を読めないほどのボケに置くので文字の破綻も起きない。",
+      "caution": "テキストから直接動画を作る方式は構図を事前に確定できないため、料理や店内といった情報量の多い被写体には使わない。この種の環境カットに限って使うこと。1本で2秒しか使わないので、生成前に本当に必要な繋ぎかどうかを編集構成で確認してからクレジットを使う。配信時期が雨の季節でない場合は、濡れた路面の画と組み合わせないと季節が合わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2V",
+        "step": "単発",
+        "input": "新規。静止画も参照画像も使わず、文章だけから直接動画を作る。被写体は雨粒とボケた光源のみに限定する",
+        "output": "5秒・1080p の動画1本。うち2秒前後を繋ぎとして切り出して使う",
+        "next": "料理カットと店内カットの間に挟む。夜営業の全ての広告で共通して使い回す"
+      }
+    },
+    {
+      "id": "food-24",
+      "sub": "seasonal",
+      "title": "季節と時間帯の差し替えスロット",
+      "purpose": "同じ料理・同じ店内のプロンプトから、四季と時間帯だけを変えた版を作る。年間を通じて素材を作り分ける部品。",
+      "model": "単体では生成しない。T2I / I2I のプロンプト本文の環境スロットと光スロットに差し込む",
+      "text": "SPRING: pale afternoon light at 5000K entering through the window, blurred cherry blossom branches outside, the room set for a group of eight | RAINY JUNE: flat diffused 6500K light from a fully overcast sky, rain streaks on the window glass and wet asphalt outside reflecting the sign light | SUMMER DAY: bright diffused daylight at 5600K with soft open shadows, heavy condensation on cold glassware, the air shimmering faintly above the pavement outside | AUTUMN: warm low west sun at 3500K raking across the room at a shallow angle with long shadows, yellow ginkgo leaves on the pavement outside | WINTER NIGHT: interior lamps at 2700K as the only sources against a deep blue 8000K exterior, neon from the building opposite as faint colored points, condensation on the inside of the glass",
+      "effect": "料理と内装を固定したまま環境と光だけを入れ替えると、同じ店に見える素材が季節ごとに揃う。東京の需要は歓送迎会（3〜4月）、梅雨の客足減（6月）、夏のビールと冷たい麺、紅葉と行楽（11月）、忘年会・新年会（12〜1月）の順に動くため、各時期の2か月前に同じプロンプトから出せる状態にしておくと撮り直しの手間が減る。",
+      "caution": "窓の外の植生と路面の状態は、配信する時期の実際の状況と合わせること。花見の画を梅雨に配信すると実態と乖離する。5つを一度に全部作る必要はなく、配信計画で使う時期のものだけを生成してクレジットを節約する。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "差し込んで使う。既存のプロンプト本文の環境スロットと光スロットを、この5行のどれか1つに貼り替える",
+        "output": "それ自体は何も生成しない。差し込んだ先のカットの季節と時間帯が変わる",
+        "next": "被写体・カメラ・質感を固定したまま、ここだけを入れ替えて同一店舗の季節版を揃える"
+      }
+    },
+    {
+      "id": "food-25",
+      "sub": "takeout",
+      "title": "テイクアウトのコーヒーと焼き菓子（路地で持つ）",
+      "purpose": "テイクアウト需要の訴求。路地で持ち歩く場面を作り、通勤や散策の途中の客に用途を想起させる。",
+      "model": "静止画（参照画像つき）。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実物のカップ形状を合わせるため参照画像を添付する",
+      "text": "Use the reference image as the source for the cup shape, lid type and paper bag proportions. Keep the packaging silhouette unchanged and leave all printed surfaces blank. A hand holds the takeaway coffee cup with a paper bag of baked goods in the other hand, only the hands and forearms visible with the head and body outside the frame, thin steam escaping from the lid vent, standing in a narrow alley outside a timber shopfront just after rain with the background deeply blurred, close-up at a 20-degree angle from slightly below the cup, 50mm equivalent, shallow depth of field focused on the lid, flat diffused daylight from the narrow strip of sky above the alley with a weak bounce from the pale wall opposite, matte paper cup, crisp paper bag, a few raindrops on the back of the hand, photorealistic, cool neutral grade, no text, no logo",
+      "effect": "蓋の通気口から出る細い湯気は、屋外の気温と中身の熱さを1つの画面で成立させる。手の甲の雨粒と背景の濡れた路地は、屋外で持ち歩いているという状況を小さな物証で示すためで、場所の説明をせずに用途が伝わる。",
+      "caution": "カップと紙袋の印字は必ず崩れるため `leave all printed surfaces blank` を指定し、実際のロゴは編集工程で合成する。手は指の本数を目視で確認する。容器の形が実物と違うと店頭で混乱するので参照画像から外れていないか依頼主に確認する（実物と異なる表現は景品表示法上の問題になりうる）。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "既存素材を使う。依頼主の実際のカップ・蓋・紙袋を撮った写真1枚を参照に添付し、容器の形だけを固定する",
+        "output": "静止画1枚。容器は実物の形のまま、雨上がりの路地で持つ場面になったカット",
+        "next": "ロゴを編集で合成してからテイクアウト訴求の投稿と広告に使う。動かす必要はない"
+      }
+    },
+    {
+      "id": "food-26",
+      "sub": "takeout",
+      "title": "土産物・ギフト箱のパックショット",
+      "purpose": "物販と通販の商品カット。広告の締めに置くパックショットとして、商品の形と価値を1枚で示す。",
+      "model": "静止画（参照画像つき）。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。パッケージ形状を変えないため参照画像は必須",
+      "text": "Use the reference image as the exact source for the package shape, proportions and lid construction. Keep the silhouette unchanged and leave every printed surface completely blank. The closed gift box stands centered with one of the wrapped items placed in front of it at a slight angle, on a polished dark stone surface against a seamless dark background, product shot at a 15-degree angle slightly above the box, 100mm equivalent, moderate depth of field so the front face and the near item both stay sharp, low key lighting with one large soft source from the upper rear left producing a broad specular streak along the top edge and a narrow white reflector from the front right to lift the face out of shadow, matte coated board, glossy ribbon, polished stone with a soft reflection of the box, photorealistic product photography, low key grade with deep shadows and a dark background, no text, no logo",
+      "effect": "暗い背景と上後方からの大きな柔らかい光でパッケージの上縁に幅のあるハイライトが走り、箱の角の位置と厚みが読めるようになる。前方の弱い反射板は正面を影から持ち上げるためのもので、これがないと商品の正面が黒く沈んで情報が消える。",
+      "caution": "パッケージの文字は生成では必ず崩れるので全面を無地にしておき、実際の印刷面は編集工程で合成する。中身の個数や内容が実物と異なると通販で問題になるため、必ず依頼主に確認する（実物と異なる表現は景品表示法上の問題になりうる）。参照画像の形から外れたら採用せず作り直す。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "既存素材を使う。依頼主の実際のパッケージを撮った写真1枚を参照に添付し、形と比率を固定して光だけ作り直す",
+        "output": "静止画1枚。形は実物のまま、暗背景のローキーで整えたパックショット",
+        "next": "印刷面を編集で合成し、15秒広告の締めのパックショットと商品ページの主画像に使う"
+      }
+    },
+    {
+      "id": "food-27",
+      "sub": "takeout",
+      "title": "1本の縦動画から正方形と横版を作る",
+      "purpose": "配信面ごとの比率違いを、撮り直しや再生成なしで揃える。制作費を増やさずに掲載面を広げるための工程。",
+      "model": "Higgsfield / 動画のリフレーム機能。元動画1本（4〜30秒）を入力にする。Studio 系の機能は Unlimited 対象外で常に課金されるため、変換本数を先に決めてから着手する",
+      "text": "Keep the motion, cut timing, total duration and color of the reference video exactly as they are. Reframe only: produce a 1:1 version and a 16:9 version of the same footage, keeping the main subject in the center third of the frame in every frame. Do not add new content at the edges beyond what is needed to fill the new aspect ratio. Do not change the speed. Do not add text or logos.",
+      "effect": "縦で作った素材は、中央3分の1に主要被写体を収めておけば比率を変えても情報が落ちない。比率を変えるだけなら動きとタイミングという最も壊れやすい部分に触らずに済むため、再生成よりも結果が安定する。",
+      "caution": "元動画の端に重要な情報（料理の端、看板）がある場合は切り落とされるため、変換前に中央3分の1に収まっているか確認する。横版に広げると左右に不足分が生成されて不自然な壁や床が出ることがあるので、横版は引きのカットだけに限る。文字は変換後に各比率でそれぞれ合成する。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "既存素材を使う。すでに採用した縦動画1本（4〜30秒）を入力にする。新しく映像は作らない",
+        "output": "同じ映像の 1:1 と 16:9 の2本。動きと尺は元のまま",
+        "next": "比率ごとに文字を合成し、縦はリール、1:1 はフィード、16:9 はウェブサイトの掲載に割り振る"
+      }
+    },
+    {
+      "id": "food-28",
+      "sub": "ads",
+      "title": "冒頭1秒のフック：ビールを注ぐ（工程2）",
+      "purpose": "音なし視聴を前提に、最初の1秒で指を止める。15秒広告の1カット目に置く最重要素材。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。注ぐ・泡立つという液体表現で最も破綻が少なく、安いので試行を重ねられる。Unlimited 対象",
+      "text": "Pale amber beer is poured from outside the top of the frame into the mug in one unbroken stream, the foam head builds upward and stops level with the rim without overflowing, condensation drops continue to run down the outside of the glass, the camera holds still with no movement, slow motion, constant speed, subtle, no cuts, no splashing outside the glass, no hands visible, no new objects entering the frame",
+      "effect": "泡が縁まで立ち上がって止まるという上向きの動きは、画面内で最も目を引く変化になり、音がなくても視線を固定できる。泡が縁で止まる条件を明示するのは、あふれる絵は清潔感を損ない広告として使えないため。",
+      "caution": "液体は最も破綻しやすい表現で、流れが切れる・泡が無限に増える・あふれるといった失敗が頻発する。`unbroken` `stops level with the rim without overflowing` `no splashing` の3つを外さず、3回で使えなければ静止画のズームインに切り替える。アルコールの広告表現は配信面の規定を事前に確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「生ビールの泡と結露（T2I）」で作った静止画1枚。新しく画像は作らない。泡の上に余白がある1枚を選ぶ",
+        "output": "5秒・720p の動画1本。頭の1〜1.5秒が冒頭フックとして使える",
+        "next": "15秒広告の1カット目に置き、文字のフックを編集で重ねる。残りは中盤の繋ぎに回す"
+      }
+    },
+    {
+      "id": "food-29",
+      "sub": "ads",
+      "title": "フック文言だけを差し替えた比較版を作る",
+      "purpose": "映像を固定したまま訴求メッセージだけを変え、どの言い方が効くかを正しく比較する。",
+      "model": "Higgsfield / 動画の変種生成機能（Ad Multiplier 相当）。元動画1本（4〜30秒）を入力にする。Studio 系は Unlimited 対象外で常に課金されるため、検証本数とコストを先に見積もる",
+      "text": "Keep the motion, framing, cut timing, total duration, color and all visual content of the reference video exactly as they are. Replace only the opening hook line and the closing call to action. Do not change the order of the shots. Do not change the speed. Do not add or remove any shot.",
+      "effect": "映像という変数を完全に固定するため、差が出たときにそれが文言の効果だと言える。これを守らずに映像も一緒に変えると、どちらが効いたのか分からない結果しか残らない。競合密度の高い立地では「何の店か」「どこにあるか」「他店と何が違うか」のどれを先に言うかで反応が変わるため、この比較が訴求設計の根拠になる。",
+      "caution": "1回の検証で変える変数は1つに限定する。文言とCTAを同時に変えると切り分けができない。文言に価格・待ち時間・在庫といった変動する内容を入れると実態との乖離が起きやすいので、依頼主に現在の提供条件を確認してから作る。成果を断定する文言は使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "既存素材を使う。すでに配信した動画広告1本（4〜30秒）と、差し替える文言の案を2〜3種類用意する。映像は作らない",
+        "output": "映像が同一で文言だけが違う動画が2〜3本",
+        "next": "同一条件で配信して比較する。勝った文言を次の素材の標準にし、負けた版は破棄する"
+      }
+    },
+    {
+      "id": "food-30",
+      "sub": "ads",
+      "title": "15秒広告のカット割り表（生成前に埋める）",
+      "purpose": "生成を始める前にカット数・使うプロンプト・消費クレジットを確定させ、作りながら予算が膨らむのを防ぐ。",
+      "model": "生成AIには投げない。表計算ソフトかテキストで自分が埋める。埋め終わってから画像と動画の生成に着手する",
+      "text": "【15秒広告 カット割り表】\n案件名：　　　／　依頼主：　　　／　配信面（縦・1:1・横）：　　　／　音あり／なし：\n\n| # | 秒数 | 役割 | 使うプロンプトID | 工程 | 推奨モデル | 想定クレジット | 文字（編集で合成） | 再生成の上限 | 確認事項 |\n|---|---|---|---|---|---|---|---|---|---|\n| 1 | 0.0-1.5 | 冒頭フック | food-28 | 工程2（food-10の出力） | Wan 2.7 5秒720p | 8 | フック文言 | 3回 | 配信面のアルコール表現規定 |\n| 2 | 1.5-4.0 | 料理の寄り | food-02 | 工程2（food-01の出力） | Wan 2.7 5秒720p | 8 | なし | 3回 | トッピングが品書きと一致 |\n| 3 | 4.0-6.0 | 所作 | food-18 | 工程2（food-07の出力） | Wan 2.7 5秒720p | 8 | なし | 3回 | 指の本数を目視確認 |\n| 4 | 6.0-8.0 | 繋ぎ | food-23 | 単発 | Kling 3.0 5秒1080p | 12.5 | なし | 2回 | 配信時期と天候（雨・濡れた路面）が合うか |\n| 5 | 8.0-11.0 | 店内 | food-14 | 工程2（food-13の出力） | Kling 3.0 5秒1080p | 12.5 | なし | 2回 | 席数・設備が実物と一致 |\n| 6 | 11.0-13.0 | 外観・所在 | food-16 | 工程2（food-15の出力） | Kling 3.0 5秒1080p | 12.5 | 店名・階数・最寄駅 | 2回 | 看板・階段の位置と建物が実物と一致 |\n| 7 | 13.0-15.0 | 締めのパックショット | food-26 | 単発（静止画のまま） | 静止画のみ | 0 | 商品名・CTA | - | 内容量・個数が実物と一致 |\n\n静止画工程（T2I / I2I）の使用プロンプトID：food-01 / food-07 / food-10 / food-13 / food-15 / food-26\n動画の想定クレジット合計：　　　（1クレジット＝$0.05 で換算した金額：　　　）\n再生成の上限を全て使い切った場合の上限クレジット：\n依頼主の確認が済んだ日付：　　　／　確認した人：",
+      "effect": "カットごとに使うプロンプトID・モデル・再生成の上限クレジットを先に書き出すと、動画生成の総額が着手前に確定する。静止画は手持ちのツールで枚数を気にせず試せる一方、クレジットを使うのは動画工程だけなので、その行数と上限回数が見積もりのすべてになる。",
+      "caution": "再生成の上限を空欄にしたまま着手すると、液体や溶ける表現で無制限に回してしまい見積もりが崩れる。確認事項の列は必ず埋め、実際に提供していない料理・設備・内容量を描いていないか依頼主に確認した日付と担当者を残す（実物と異なる表現は景品表示法上の問題になりうる）。配信面ごとの比率違いは food-27 で後から作る前提で、ここでは1比率だけを設計する。",
+      "status": "未検証",
+      "flow": {
+        "code": "DOC",
+        "step": "単発",
+        "input": "生成AIには入力しない。案件名・配信面・カット数を自分で決めてから、上の表の空欄を埋めていく",
+        "output": "カットごとのプロンプトID・モデル・上限クレジットが確定した1枚の表",
+        "next": "表の静止画工程のIDから順に生成し、確定した1枚ごとに対応する動画工程へ渡していく"
+      }
+    }
+  ],
+  "legal": "飲食の広告表現で中心になるのは景品表示法です。以下は2026年10月11日に公的資料で確認した内容の整理であり、法的助言ではありません。個別の案件は弁護士または消費者庁の相談窓口に確認してください。\n\n**1. 飲食に明示的に及ぶ公式文書があります**\n消費者庁「メニュー・料理等の食品表示に係る景品表示法上の考え方」（2014年3月策定、2016年4月改定）は、**レストラン・ホテル・百貨店のメニューや料理の表示**を明示的に対象としています。判断基準は、表示上の特定の文言や写真から受ける印象ではなく、**表示内容全体から一般消費者が受ける印象・認識**であり、**故意かどうかは問われません。** 写真もメニュー全体の印象を構成する要素として扱われ、料理写真が誤認を招くとされた事例が挙げられています。\n\n**2. 実際に提供しているものと一致させること**\n景品表示法 第5条第1号の優良誤認表示は、商品の内容について実際のものより著しく優良であると示す表示を禁じています。AI生成の料理カットで特に危険なのは次の点です。\n- 実際には使っていない食材が写り込む\n- 量・サイズ・盛り付けが実物と大きく違う\n- 実際には提供していない品が画面に入る\n- 店内の設備や席数が実態と異なる\n生成後に**依頼主と一緒に実物と突き合わせる工程**を必ず入れてください。\n\n**3. 注意書きで打ち消せる前提にしないこと**\n消費者庁の打消し表示に関する実態調査（2017年）によれば、動画広告の打消し表示のうち**42.4%が画面表示2秒以下**、99.2%が文字のみで、ある検証動画では**6つの打消し表示のうち1つ以上を見落とした回答者が97.6%**でした。「写真はイメージです」と小さく出せば済む、という設計は実務上機能しません。表示するなら、読める大きさと読める時間を確保してください。\n\n**4. ステルスマーケティング規制（2023年10月1日施行）**\n事業者が表示内容を決定していれば、第三者による投稿に見えても事業者の表示として扱われます。規制の対象は広告主である事業者で、インフルエンサー等は対象外です。運用基準は不適切な例として、**動画で表示時間が短すぎる**、末尾にのみ表示、ハッシュタグに埋没している、小さすぎる、を挙げています。公式Q&Aは、動画について冒頭のみの表示では不十分な場合があり、継続的な画面表示が望ましいとしています。\n\n**5. AI生成であることの表示義務は、確認した範囲では存在しません**\n2026年10月時点で、広告にAI生成である旨の表示を義務づける日本の法令は確認できませんでした。存在するのは非拘束のソフトローのみです。ただし、表示の有無にかかわらず、実際の料理や店舗について誤認させれば景品表示法が適用されます。\n\n**出典**：消費者庁「メニュー・料理等の食品表示に係る景品表示法上の考え方」／同「不当な表示」／同「打消し表示に関する実態調査報告書」／同 ステルスマーケティング規制の運用基準およびQ&A"
+}

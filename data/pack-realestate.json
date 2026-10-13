@@ -1,0 +1,574 @@
+{
+  "id": "realestate",
+  "label": "不動産",
+  "lede": "不動産の素材は、空室期間と成約価格に直接効きます。東京の賃貸は1月から3月が繁忙期、夏が閑散期という年間サイクルがあり、繁忙期の初週で反応が取れなかった物件はそのまま夏まで動かないことが起きます。売買でも掲載画像の情報量が内見予約の歩留まりを左右します。ただしこの業種には、広告に使う写真は原則として取引しようとする物件そのものを撮影したものを使うという業界の規律があり、AI生成画像を「その物件の写真」として出すことはできません。したがってこのパックのプロンプトは、空室に家具を置くバーチャルステージング、未着工・工事前の完成予想、周辺環境の紹介、暮らしの情景、広告の装飾という五つの用途に限定して設計しています。東京では駅徒歩分数と沿線、採光と方角、隣棟間隔と視線の抜け、天井高と収納量、宅配ボックスやオートロックといった設備、二重サッシの遮音、在宅勤務用のスペースが価格以外の判断材料になり、築古物件はリノベーション後の姿を見せられるかどうかで売り方が変わります。費用は桜と新緑の時期にしか撮れないカットがあることに効き、信用は「イメージ」と「物件写真」を混ぜないという一点に効きます。",
+  "subcategories": [
+    {
+      "id": "exterior",
+      "label": "外観・アプローチ"
+    },
+    {
+      "id": "interior",
+      "label": "室内・間取り"
+    },
+    {
+      "id": "lifestyle",
+      "label": "暮らしの情景"
+    },
+    {
+      "id": "area",
+      "label": "周辺環境・立地"
+    },
+    {
+      "id": "commercial",
+      "label": "事業用・投資用"
+    },
+    {
+      "id": "ads",
+      "label": "広告用カット・フック"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "realestate-01",
+      "sub": "exterior",
+      "title": "未着工の低層マンション完成予想外観（ブルーアワー）",
+      "purpose": "用途は「完成予想のイメージ」。まだ建っていない新築賃貸や建て替え計画の外観を、図面と仕様書だけでは伝わらない形で示す。着工前の先行募集と事業計画の資料に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。階数と開口の整合を優先するなら、同じプランの立面図を参照として添えると寸法感が安定する",
+      "text": "An architectural visualization of an unbuilt [five-story] low-rise rental apartment building planned for an inner-city Tokyo site, no people and no vehicles, a [matte light grey] tiled facade with flush aluminum sash windows, continuous steel balcony railings with frosted glass panels, a recessed ground-floor entrance with a glazed auto-lock door and a parcel locker bank set into the side wall, a narrow planted setback along the street with two [zelkova] street trees, neighbouring four-story buildings tight against both side boundaries, three-quarter view from standing eye level at about 1.5m on the opposite side of a narrow street, 24mm equivalent, deep focus so the parapet line and the entrance floor both stay sharp, blue hour with an 8000K deep blue sky and no direct sun, warm 2700K light from inside the dwelling windows and one 3000K downlight at the entrance soffit as the only warm sources, the glazed facade of the building across the street returning a faint cool reflection onto the near wall, matte ceramic tile, anodized aluminum sash, frosted glass, wet dark asphalt, photorealistic architectural visualization, restrained contrast, no text, no logo, no signage, no nameplate, no room numbers",
+      "effect": "ブルーアワーは空の青と室内の暖色という色温度差が生まれるため、窓の配置と住戸数が輝度の違いだけで読める。直射日光がない時間帯なので外壁面に強い影が落ちず、タイルの目地やサッシの納まりといった仕様の細部が潰れずに残る。",
+      "caution": "完成予想のイメージであることを図版の近くに明示し、既存物件の実際の外観写真と同じ並びに混在させない。実際のプランにない階数・バルコニー・植栽を足さないこと。階高、開口の位置、隣棟との離隔は立面図と必ず突き合わせる。仕様が設計図と異なると優良誤認につながるため、依頼主と図面で確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。階数・外壁仕上げ・街路樹・隣棟の状況を実際のプランと敷地に書き換える。実在の建物は描かせない",
+        "output": "16:9 の静止画1枚。外観の立体、窓の配置、夕暮れの光がここで確定する",
+        "next": "図面と整合した1枚を「完成予想外観に街の時間を足す」に渡して動かす。開口位置や階数が図面と違う枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-02",
+      "sub": "exterior",
+      "title": "完成予想外観に街の時間を足す",
+      "purpose": "用途は「完成予想のイメージ」。静止画の完成予想を5秒の動画にして、その建物が建つ通りの時間帯の空気ごと伝える。先行募集ページの冒頭と事業計画の提示に使う。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。建物の直線とカメラの安定性が両立し、外観カットの主力になる",
+      "text": "The warm light inside the dwelling windows holds steady without flickering, one window on an upper floor brightens slightly as if a light is switched on, the street trees sway very slightly as if from a weak breeze, a faint reflection moves slowly across the wet asphalt, the building geometry stays unchanged, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing, the lighting or the facade",
+      "effect": "窓の点灯という一点の輝度変化は、建物の輪郭や開口の形を保ったまま時間の流れだけを足せる。路面の反射が緩やかに動くことで、通りが使われている状態であることが動きだけで示される。",
+      "caution": "完成予想のイメージであることを動画内の静止テキストではなく、投稿文や資料側で明示する。窓の数が途中で増える、パラペットの線が歪む、バルコニーの手すりが消えるといった破綻が出た出力は破棄する。実際には存在しない階や設備が生えた枚数も使わない。等倍でパラペットと開口の輪郭を確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「未着工の低層マンション完成予想外観（ブルーアワー）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・仕様は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。窓の点灯、街路樹のわずかな揺れ、路面の反射だけが動く",
+        "next": "先行募集ページの冒頭ループに置く。3回試してパラペットの線が保たれなければ静止画のまま使い切る"
+      }
+    },
+    {
+      "id": "realestate-03",
+      "sub": "exterior",
+      "title": "築古木造アパートの外観リノベ完成予想",
+      "purpose": "用途は「リフォーム後のイメージ」。現況の外観写真を参照にして、外壁の張り替えと共用階段の更新、サイン計画を入れた工事後の状態を示す。オーナーへの改修提案と工事前の先行募集に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。現況写真を参照として渡すこと自体が精度の条件になる",
+      "text": "Keep the building volume, the roof shape, the number of floors, the window and door positions and sizes, the exterior stair location, the lot boundaries and the camera viewpoint of the reference photograph exactly as they are. Change only the finishes and the added equipment: [replace the faded stucco wall with matte dark grey fiber-cement board in a vertical pattern], [repaint the exterior steel stair and railing in the same dark grey], [replace the corroded aluminum sash with slim same-size aluminum sash in matte black], [add a parcel locker bank and a plain mailbox run in the existing entrance recess], [replace the gravel strip along the street with a planted band of low evergreen shrubs], remove all parked bicycles, air-conditioner covers, hanging laundry and stored items, no people, three-quarter view from standing eye level matching the reference, 24mm equivalent, deep focus so the near wall joints and the far stair edge both stay sharp, flat diffused 6500K light from a uniformly overcast sky with no hard shadows, exposure held so the dark wall keeps surface texture instead of crushing to flat black, matte board siding, painted steel, anodized aluminum, photorealistic architectural visualization, restrained contrast, no text, no logo, no signage, no nameplate, no room numbers",
+      "effect": "建物のボリュームと撮影位置を参照画像に固定したまま仕上げだけを置き換えると、現況写真と並べたときに同じ建物だと認識される。曇天の平坦な光を指定すると影の方向が参照画像と食い違わず、合成に見える違和感が出にくい。",
+      "caution": "元の写真の間取り・窓の位置・建具・外壁の開口を変えていないか、生成後に必ず元写真と並べて確認する。階数や窓の数が変わった出力はビフォーアフターとして成立しないので破棄する。工事範囲外まで変わっていないかを重ねて確認すること。工事後のイメージである旨を明示し、現況写真と同じギャラリーに混ぜない。仕様が実際の見積と異なると優良誤認につながるため、見積と突き合わせる。号室番号や表札の文字は生成させず、必要なら編集工程で実物を合成する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "現況の外観写真1枚を参照として必ず添付する。工事後に同じ位置から撮り直せる立ち位置を選んでおく。[ ] 内を実際の工事内容に書き換える",
+        "output": "現況と同じ視点・同じ建物形状の外装工事後イメージ1枚",
+        "next": "ここで完結。現況写真と左右に並べてオーナー提案資料と募集図面に載せる。対応関係は「生成素材の用途区分・対応管理表」で記録する"
+      }
+    },
+    {
+      "id": "realestate-04",
+      "sub": "exterior",
+      "title": "共用部改修の完成予想（エントランス・宅配ボックス・オートロック）",
+      "purpose": "用途は「リフォーム後のイメージ」。管理会社が提案する共用部改修を、オーナーや管理組合に向けて示す。入居率対策と更新時の賃料維持の説明資料に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。現況写真を参照として渡すこと自体が精度の条件になる",
+      "text": "Keep the building structure, the ceiling height, the opening positions, the floor plan, the stair and lift positions and the camera viewpoint of the reference photograph exactly as they are. Change only the finishes and the added equipment: [replace the aged tile floor with large-format matte porcelain tile], [replace the painted wall above the mailboxes with a wood-veneer panel], [replace the existing door with a glazed auto-lock door of the same opening size, with a slim intercom panel beside it], [add a parcel locker bank in the existing wall recess], [replace the surface ceiling fixtures with recessed downlights], [add a wall-mounted bench and a mirror on the side wall], remove all posted notices, bicycles, umbrellas and stored items, no people, wide interior shot at standing eye level matching the reference, 24mm equivalent, deep focus so the far door and the ceiling edge both stay sharp, daylight entering only through the existing entrance glazing at 6500K, balanced against 3000K recessed downlights, no mixed colored lighting, matte porcelain, wood veneer, anodized aluminum, brushed stainless, photorealistic architectural interior visualization, restrained contrast, no text, no logo, no signage, no room numbers, no nameplates",
+      "effect": "共用部は天井高と開口位置が建物の個性そのものなので、そこを参照画像に固定したまま仕上げと設備だけを置き換えると、同じ建物の改修案として読める。掲示物を取り除く指定は、文字生成の破綻を避ける目的も兼ねる。",
+      "caution": "元の写真の間取り・開口の位置・建具・床材を変えていないか、生成後に必ず元写真と並べて確認する。エントランスを実際より広く、天井を実際より高く見せた出力は破棄する。実際には存在しない設備や広さを足さないこと。集合郵便受けの号室番号や表札の文字は生成させず、必要なら編集工程で実物を合成する。改修後のイメージである旨を明示し、現況写真と同じ並びに混ぜない。工事範囲と仕様は管理組合の決議内容またはオーナーの発注内容と突き合わせること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "現況のエントランスまたは共用廊下の写真1枚を参照として必ず添付する。[ ] 内を実際の改修仕様に書き換える。掲示物が写り込んだ現況写真でも参照として使える",
+        "output": "現況と同じ視点・同じ開口位置の改修後イメージ1枚",
+        "next": "ここで完結。現況写真と左右に並べて管理提案資料と募集図面に載せる。対応関係は「生成素材の用途区分・対応管理表」で記録する"
+      }
+    },
+    {
+      "id": "realestate-05",
+      "sub": "interior",
+      "title": "空室LDKのバーチャルステージング（ファミリー向け）",
+      "purpose": "用途は「バーチャルステージング」。実際に撮影した空室のLDK写真に家具を置き、生活したときの寸法感を示す。繁忙期の空室対策と中古売買の初動に使う、このパックの中心となる1本。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実際の空室写真を参照として渡すことが必須条件で、文章だけでは成立しない",
+      "text": "Keep the room geometry, the window and door positions, the ceiling height, the floor material, the wall finish, the sash and casing details and the camera viewpoint of the reference photograph of an empty room exactly as they are, and keep the view outside the window exactly as the reference shows it. Add only furniture and soft goods standing on the existing floor, nothing fixed to the walls, the ceiling or the sash, and nothing covering the air conditioner, the intercom panel or the switch plates: [a three-seat fabric sofa against the long wall], [a low wooden coffee table], [a dining table with four chairs near the window], [a flat floor rug], [one floor lamp switched off], [two potted plants], no people, no television, no branded packaging, wide interior shot at seated eye level matching the reference, 24mm equivalent, deep focus so the far wall, the ceiling edge and the floor joints all stay sharp, daylight entering only through the existing window at 6500K, no ceiling fixture switched on, every furniture shadow falling away from the window consistent with that single source, woven fabric, oiled wood, matte vinyl wallcovering, photorealistic architectural interior photography, restrained contrast, no text, no logo",
+      "effect": "家具は寸法の基準物として働くため、ソファとダイニングテーブルが入った時点で部屋の広さが数値より早く伝わる。窓光だけを単一光源にして天井照明を切ると、影の向きが一方向に揃い、家具が後から置かれたものに見えにくくなる。deep focus と広角24mmは、奥行きという最重要情報を保つための必須条件になる。",
+      "caution": "元の写真の間取り・窓の位置・建具・床材を変えていないか、生成後に必ず元写真と並べて確認する。壁が動いた、窓が増えた、床材が変わった出力は破棄する。実際には存在しない収納・設備・広さを足さないこと。バーチャルステージングであることを画像の近くに明示し、加工していない空室写真と同じ並びに混在させない。家具が実際の寸法で入らない配置を描かせると、内見時に落差が生じるので、間取り図で置けるか先に確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "実際に撮影した空室のLDK写真1枚を参照として必ず添付する。新しく部屋は作らない。広角で部屋の二面が入り、窓が画面内にある1枚を選ぶ。[ ] 内の家具を実際に置ける寸法のものに書き換える",
+        "output": "元写真と同じ部屋形状・同じ視点の家具配置イメージ1枚",
+        "next": "この1枚を「ステージングしたLDKに光の時間経過を足す」に渡して動かす。元の空室写真は加工なしの状態で別に保管する"
+      }
+    },
+    {
+      "id": "realestate-06",
+      "sub": "interior",
+      "title": "ステージングしたLDKに光の時間経過を足す",
+      "purpose": "用途は「バーチャルステージング」。家具を置いたLDKに、カーテン越しの光の揺れという最小の動きだけを足す。物件ページとSNSで、静止画より滞在時間を稼ぐための短尺カットにする。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。室内の直線構造が崩れにくく、1080pでも単価が低いため内観の主力になる",
+      "text": "The sheer curtain at the window moves with a very slight continuous sway as if from a weak draft, the daylight on the floor brightens and dims very slowly as if thin cloud passes outside, fine dust motes drift slowly through the light near the window, the furniture stays completely still, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing, the room geometry or the furniture positions",
+      "effect": "布の揺れと光量のゆるい変化は、部屋の形状や家具の輪郭に干渉しない種類の動きなので、室内の直線が破綻しにくい。光が動くことで窓の位置と採光の方向が静止画より明確に読め、部屋の方角という東京の賃貸でもっとも問われる判断材料が増える。",
+      "caution": "バーチャルステージングであることを投稿文や資料側で明示し、加工していない室内動画と混在させない。家具が滑る、壁が波打つ、窓の外の景色が別のものに変わる、天井照明が勝手に点くといった破綻が出た出力は破棄する。窓外の眺望が元写真から変化した出力は、実際にはない抜けや眺望を見せることになるので特に注意して確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「空室LDKのバーチャルステージング（ファミリー向け）」（I2I）で作った静止画1枚。新しく画像は作らない。部屋の形状・家具配置・光は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。カーテンの揺れ、光量のゆるい変化、埃の粒子だけが動く",
+        "next": "物件ページのトップと縦型投稿の2カット目に置く。3回試して壁や窓枠の直線が保たれなければ静止画のまま使い切る"
+      }
+    },
+    {
+      "id": "realestate-07",
+      "sub": "interior",
+      "title": "ワンルームのバーチャルステージング（在宅勤務の机まで入る寸法感）",
+      "purpose": "用途は「バーチャルステージング」。狭小のワンルームや1Kで、ベッドと机が同時に置けるという空間効率を示す。単身向け物件の繁忙期の募集に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実際の空室写真を参照として渡すことが必須条件で、文章だけでは成立しない",
+      "text": "Keep the room geometry, the window and door positions, the ceiling height, the floor material, the wall finish, the sash and casing details, the position of the built-in closet and the camera viewpoint of the reference photograph of an empty single-room apartment exactly as they are, and keep the view outside the window exactly as the reference shows it. Add only furniture standing on the existing floor, nothing fixed to the walls, the ceiling or the sash, and nothing covering the air conditioner, the intercom panel or the switch plates, and nothing blocking the closet doors or the room door swing: [a single bed with a plain cover against the side wall], [a narrow desk about 100cm wide facing the window with one task chair], [a slim two-shelf bookcase beside the desk], [a small flat rug], [one desk lamp switched off], no people, no television, no branded packaging, wide interior shot from the doorway at standing eye level matching the reference, 24mm equivalent, deep focus so the window sash, the far corner and the floor joints all stay sharp, daylight entering only through the existing window at 6500K, no ceiling fixture switched on, every furniture shadow falling away from the window consistent with that single source, woven fabric, laminate desk top, matte vinyl wallcovering, photorealistic architectural interior photography, restrained contrast, no text, no logo",
+      "effect": "ベッドと机という二つの寸法基準を同時に置くと、面積の数値だけでは判断できない「両方置けるか」という単身入居者の最大の論点が一枚で解ける。扉の開き代と収納の前を塞がない指定は、実際の使用時に成立する配置だけを描かせるための条件になる。",
+      "caution": "元の写真の間取り・窓の位置・建具・床材・収納の位置を変えていないか、生成後に必ず元写真と並べて確認する。部屋が実際より広くなった出力、収納扉が消えた出力は破棄する。実際には存在しない収納や広さを足さないこと。机とベッドの寸法は間取り図で置けるか先に確認する。バーチャルステージングであることを明示し、加工していない空室写真と同じ並びに混在させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "実際に撮影した空室のワンルーム写真1枚を参照として必ず添付する。新しく部屋は作らない。玄関側から部屋の全体と窓が入った1枚を選ぶ。[ ] 内の家具を実際に置ける寸法のものに書き換える",
+        "output": "元写真と同じ部屋形状・同じ視点の家具配置イメージ1枚",
+        "next": "ここで完結。元の空室写真と並べて募集図面とポータル掲載に載せる。対応関係は「生成素材の用途区分・対応管理表」で記録する"
+      }
+    },
+    {
+      "id": "realestate-08",
+      "sub": "interior",
+      "title": "未着工住戸のモデルプラン完成予想（南向きLDK）",
+      "purpose": "用途は「完成予想のイメージ」。まだ内装が入っていない新築分譲や建て替え計画のLDKを、間取り図と仕様書だけでは伝わらない形で示す。着工前の先行販売資料に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。同じプランの平面図を参照として添えると、開口位置と奥行きの整合が取りやすい",
+      "text": "An architectural visualization of the interior of an unbuilt [2LDK] apartment plan in Tokyo, an open living and dining space with a [peninsula] kitchen facing the room, [wide oak] flooring, matte white walls, a flush white ceiling at [2.45m], a full-height south-facing aluminum sash window onto a balcony with a frosted glass railing, a low-rise neighbouring roofline visible beyond the railing, a wall-mounted air conditioner high on the far wall, an intercom panel beside the room door, no furniture other than a dining table with four chairs, no people, no branded packaging, wide interior shot at seated eye level, 24mm equivalent, deep focus so the kitchen counter edge, the far wall and the ceiling line all stay sharp, soft diffused 6500K daylight entering only through the south window with a thin sheer curtain drawn across it, no ceiling fixture switched on, matte vinyl wallcovering, oiled oak, brushed stainless counter, anodized aluminum sash, frosted glass, photorealistic architectural interior visualization, restrained contrast, no text, no logo",
+      "effect": "窓を一面に限定して天井照明を切ると、光が一方向から入る現実の部屋の条件になり、床面の輝度勾配で奥行きが読める。レースカーテン越しの拡散光を指定すると南向きの採光量が過剰に見えず、隣棟の屋根が見える高さの抜けまで同時に示せる。",
+      "caution": "完成予想のイメージであることを図版の近くに明示し、既存住戸の実際の室内写真と同じ並びに混在させない。実際には存在しない広さ・天井高・眺望を足さないこと。窓外の景色は特定の階数と向きを示唆するので、実際の計画と隣棟の状況に整合しない景色が出た枚数は使わない。天井高・間口・キッチン形式は平面図と必ず突き合わせる。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。間取り・天井高・床材・キッチン形式・窓の方角を実際のプランに書き換える。既存住戸の室内は描かせない",
+        "output": "16:9 の静止画1枚。部屋の奥行き、窓の位置、採光の量とキッチンの向きがここで確定する",
+        "next": "平面図と整合した1枚を「完成予想LDKの微速ドリーイン」に渡して動かす。間口や天井高が図面と違う枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-09",
+      "sub": "interior",
+      "title": "完成予想LDKの微速ドリーイン",
+      "purpose": "用途は「完成予想のイメージ」。完成予想のLDKにごく微速の前進だけを足し、奥行きを体感として伝える。先行販売の物件ページと商談時の提示に使う。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。カメラ移動がもっとも安定し、室内の直線が崩れにくい",
+      "text": "The camera dollies forward very slowly along the floor axis toward the window at a constant speed, nothing in the room moves, the sheer curtain stays still, the daylight holds steady, no pan, no tilt, no zoom, slow, subtle, constant speed, no cuts, no change to the lighting, the room geometry or the finishes",
+      "effect": "前進のみの一方向移動は、壁と天井の線が同じ消失点に向かって動くため、部屋の奥行きが視差として直接伝わる。カメラの動きを1種類に限定することで、室内の直線構造が破綻する確率が下がる。",
+      "caution": "完成予想のイメージであることを投稿文や資料側で明示し、実際の室内動画と混在させない。パンやズームを混ぜると壁の線が湾曲するので、前進以外の動きは書かない。移動中に壁が伸びて部屋が実際より長く見える出力は、広さの誤認につながるので破棄する。平面図の奥行きと見比べて違和感がある枚数は使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「未着工住戸のモデルプラン完成予想（南向きLDK）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・仕上げは静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。カメラの微速前進のみが動き、室内の要素は静止する",
+        "next": "先行販売ページの冒頭に置く。3回試して壁の線が真っすぐ保たれなければ静止画のまま使い切る"
+      }
+    },
+    {
+      "id": "realestate-10",
+      "sub": "interior",
+      "title": "室内リフォーム完成予想の差し替え型（浴室・洗面・玄関収納・寝室・バルコニー）",
+      "purpose": "用途は「完成予想・リフォーム後のイメージ」。工事前の各室について、同じ光と同じカメラ設定で完成後の状態を揃えて示す。リノベーション提案と工事前の先行募集に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。現況写真があれば参照として渡すほうが寸法感が安定する",
+      "text": "An architectural visualization of an unbuilt renovation of a [bathroom] in a Tokyo apartment, swap this block for one of the following: [A bathroom: a one-piece unit bath with a [1216] tub, a thermostatic shower mixer, a wall-mounted towel rail and a ceiling ventilation dryer] / [B washroom: a single-bowl vanity with a wide mirror cabinet, a tiled splashback, a drum washing machine in the existing alcove and a tall linen cupboard] / [C entrance storage: a floor-to-ceiling shoe cupboard with an open bench, a full-height mirror on the side wall and a tiled step-down floor] / [D bedroom: a double bed on a low wooden base, a wall-to-wall wardrobe with sliding doors, a slim secondary inner sash fitted inside the existing window opening] / [E balcony: a slatted wooden deck over the existing slab, a frosted glass railing, two folding chairs and a small side table, with a low-rise neighbouring roofline beyond] — no people, no branded packaging, no toiletries with printed labels, wide shot at standing eye level for A, B and C and at seated eye level for D and E, 24mm equivalent, deep focus so the far corner, the ceiling edge and the floor joints all stay sharp, soft diffused 6500K daylight from a single existing window plus one 3000K recessed downlight, no mixed colored lighting, matte tile, laminate panel, brushed stainless, oiled wood, photorealistic architectural interior visualization, restrained contrast, no text, no logo",
+      "effect": "A〜Eで光とカメラの指定を共通にしているため、別々に生成しても1件の物件資料として並べたときにトーンが揃う。水まわりは照明の色温度を混ぜると清潔感が落ちるので、単一の色温度に固定することが見え方を決める。Dの内窓は遮音という東京の訴求を画面に載せる手段になる。",
+      "caution": "完成予想・工事後のイメージであることを各図版に明示し、現況写真と同じ並びに混在させない。実際には存在しない設備・広さ・眺望を足さないこと。浴槽サイズ、洗面の間口、洗濯機置き場の寸法、収納の内寸は実際の採寸と必ず突き合わせる。シャンプーボトルやタオルのロゴなど文字が入る要素は描かせず、必要なら編集工程で合成する。Eのバルコニーは、手すり越しに見える景色が実際の方位と階数と隣棟の状況で成立するかを確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。A〜Eから1つを選び、他を削って使う。サイズと仕様を実際の見積に書き換える。現況写真があれば参照として添えると寸法感が安定する",
+        "output": "選んだ室の完成予想イメージ1枚。A〜Eを揃えると光とトーンが統一された一組になる",
+        "next": "ここで完結。現況写真と左右に並べて提案資料に載せる。採用した仕様は「生成素材の用途区分・対応管理表」に根拠ごと記録する"
+      }
+    },
+    {
+      "id": "realestate-11",
+      "sub": "interior",
+      "title": "ステージング家具の差し替え型（LDK・寝室・子供室・ワークスペース・和室）",
+      "purpose": "用途は「バーチャルステージング」。部屋の種類ごとに置く家具一式を部品として用意し、どの空室写真にも同じ密度で差し込めるようにする。繁忙期に空室1件あたりの作業を短くするための部品。",
+      "model": "静止画のバーチャルステージングプロンプトの、家具を列挙しているスロットに差し込む。他のスロットは変えない",
+      "text": "Add only loose furniture and soft goods standing on the existing floor, nothing fixed to the walls, the ceiling or the sash, nothing covering the air conditioner, the intercom panel or the switch plates, nothing blocking a closet door or a room door swing, and choose one set: LDK — a three-seat fabric sofa, a low wooden coffee table, a flat rug, a dining table with four chairs, one floor lamp switched off, two potted plants | BEDROOM — a double bed with a plain quilt and two pillows, two low nightstands, one reading lamp switched off, a flat rug, a plain mirror leaning against the wall | CHILDREN'S ROOM — a single bed with a plain cover, a small study desk and chair, a low open shelf with a few books, a soft floor mat, one storage box | WORKSPACE — a desk about 120cm wide facing the window, one task chair, a slim two-shelf bookcase, a desk lamp switched off, a closed laptop, a wastebasket | WASHITSU — a low wooden table on the existing tatami, two flat floor cushions, a folded cotton throw, one ceramic vase with a single bare branch | no people, no television, no branded packaging, no framed photographs of identifiable people, no text, no logo",
+      "effect": "家具を可動物だけに限定し、壁・天井・サッシに固定するものを禁止すると、生成が元写真の構造に手を入れる余地が減る。エアコン、インターホン、スイッチプレートを覆わず、扉の開き代も塞がない指定は、設備の位置と使える動線という募集時の判断材料を隠さないためのもの。",
+      "caution": "差し込む先の空室写真で、その家具が実寸で置けるかを間取り図で先に確認する。置けない量を描かせると内見時に落差が生じる。バーチャルステージングであることを明示し、加工していない空室写真と同じ並びに混在させない。実際には存在しない収納や広さを足さないこと。生成後は必ず元写真と並べ、壁位置・窓位置・床材が変わっていないかを確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "バーチャルステージングのプロンプト（realestate-05 や realestate-07）の家具列挙部分に、5つのうち1組だけを差し込む。参照する空室写真と幾何固定の記述は変えない",
+        "output": "それ自体は何も生成しない。差し込んだ先の部屋に、その用途に合った家具一式が置かれる確率が上がる",
+        "next": "1物件の全室で同じ組み方を使い、家具のトーンを統一する。実寸の確認は間取り図で先に済ませる"
+      }
+    },
+    {
+      "id": "realestate-12",
+      "sub": "lifestyle",
+      "title": "朝の玄関と通勤の支度（暮らしの情景）",
+      "purpose": "用途は「暮らしの情景イメージ」。物件そのものではなく、駅まで歩いて通勤する暮らしの一場面を示す。玄関収納や宅配ボックスの価値を言葉以外で伝える素材に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。人物の手元が主題なので、顔が入らない構図で出るまで試す",
+      "text": "The entrance hall of a Tokyo apartment on a weekday morning, one adult seen from behind at shoulder level with the head and face outside the frame, reaching for a tote bag on a low bench with one hand while the other holds a thin coat, a pair of plain leather shoes on the tiled step-down floor, a full-height shoe cupboard with its door half open on the right, a closed front door with an intercom panel and a parcel locker key hook beside it, no nameplate and no room number visible, medium close shot from behind at chest height, 35mm equivalent, deep focus so the bag surface and the front door both stay sharp, soft 6500K daylight entering from a corridor opening behind the camera as the main source, one dim 3000K ceiling fixture as a weak fill, woven tote fabric, polished leather, matte floor tile, laminate cupboard panel, photorealistic documentary lifestyle photography, restrained natural grade, no text, no logo, no nameplate, no room numbers",
+      "effect": "後ろからの弱い順光で手元だけを明るく置くと、持ち出す物と収納という動作の関係が静止画でも読める。靴の位置、土間の段差、収納の開き方という三つの要素を同じ奥行きに収めることで、玄関の広さと使い勝手が面積の数値より早く伝わる。",
+      "caution": "暮らしの情景イメージであり、特定物件の玄関写真ではないことを明示し、物件写真と同じ並びに混在させない。実際には土間収納や宅配ボックスのない物件の広告にこのカットを使うと、存在しない設備を見せることになるので使い回さない。顔が写った出力は使わず破棄する。表札や号室番号の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。実在物件の玄関は描かせない。服装と季節を募集時期に合わせて書き換える",
+        "output": "静止画1枚。顔の入らない後ろ姿、手元の位置、玄関の建具と収納の見え方がここで確定する",
+        "next": "顔が入っていない1枚を「玄関で荷物を持ち上げて出ていく動き」に渡して動かす。顔が写った枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-13",
+      "sub": "lifestyle",
+      "title": "玄関で荷物を持ち上げて出ていく動き",
+      "purpose": "用途は「暮らしの情景イメージ」。朝の出発という一動作を短尺にして、玄関の動線の広さを無音でも伝わる形にする。縦型投稿の冒頭に使う。",
+      "model": "Higgsfield / Seedance 2.0 Fast、8秒・720p（約28クレジット）で当たりを探し、採用カットだけ Seedance 2.0、8秒・720p（約36クレジット）で作り直す",
+      "text": "The hand lifts the tote bag off the bench in one smooth motion and the shoulder turns slightly toward the front door, the half-open cupboard door stays where it is, the shoes and the bench stay still, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing or the lighting, the head and face stay outside the frame",
+      "effect": "持ち上げてから向きを変えるという二段の短い動作に限定すると、指の本数や腕の関節が破綻する区間が短くなる。玄関の中で体の向きが変わることで、動線に必要な幅が動きとして伝わる。",
+      "caution": "暮らしの情景イメージであることを投稿文や資料側で明示し、物件の実写動画と混在させない。途中で顔が画面に入った出力、指が増えた出力、荷物が手をすり抜けた出力は破棄する。玄関収納のない物件の広告には転用しない。人物が特定できる出力は使わないこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「朝の玄関と通勤の支度（暮らしの情景）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・顔の入らない角度は静止画で確定済みのものを使う",
+        "output": "8秒の動画1本。手の持ち上げと肩の向きの変化だけが動く",
+        "next": "縦型投稿の1カット目に置く。画面上部にテキストを載せる前提で、手元が下側三分の二に収まった出力を選ぶ"
+      }
+    },
+    {
+      "id": "realestate-14",
+      "sub": "lifestyle",
+      "title": "夜のワークスペース（在宅勤務の手元）",
+      "purpose": "用途は「暮らしの情景イメージ」。在宅勤務ができる一角があるという使い方を示す。ワークスペース訴求の物件や、リノベーションで机を造作する提案の素材に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。低いキーの光を扱うので、暗部が潰れない露出で出るまで試す",
+      "text": "A desk against a window in a Tokyo apartment at night, a pair of hands seen from the wrists down resting beside a closed notebook and a plain ceramic mug, the face and body outside the frame, an open laptop at a shallow angle with a blank screen, a slim bookcase at the frame edge, the window behind showing out-of-focus city lights in the distance with no identifiable building, medium close shot at seated eye level from slightly above, 35mm equivalent, deep focus so the mug surface and the window sash both stay sharp while only the distant lights fall out of focus, a warm 3000K desk lamp from the left as the main source and the faint cool glow of the window as a weak rim, no ceiling fixture switched on, glazed ceramic, laminate desk top, paper, brushed aluminum, photorealistic documentary lifestyle photography, low key with deep shadows that still hold detail, no text, no logo, no screen content",
+      "effect": "卓上のランプだけを主光源にすると照らされる範囲が机の上に限定され、部屋の他の部分が落ちることで一人の作業空間という状態が明暗の構成だけで伝わる。遠景の街明かりだけをボケに置くと、窓の外に抜けがあるという東京の論点を、特定の建物を描かずに示せる。",
+      "caution": "暮らしの情景イメージであり、特定物件の室内写真ではないことを明示し、物件写真と同じ並びに混在させない。窓外の街明かりを特定の階数や眺望の根拠として提示しないこと。実際には存在しない眺望や抜けを足さない。画面の表示内容やノートの文字は生成させない。暗部が完全に潰れた出力は、何が写っているか読めないので使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。実在物件の室内や特定できる夜景は描かせない。机の幅と置く物を提案する造作の寸法に書き換える",
+        "output": "静止画1枚。ランプの光の向き、手元の位置、窓外のボケ方と暗部の残り方がここで確定する",
+        "next": "顔が入っていない1枚を「卓上ランプの光と湯気の立ちのぼり」に渡して動かす。暗部が潰れた枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-15",
+      "sub": "lifestyle",
+      "title": "卓上ランプの光と湯気の立ちのぼり",
+      "purpose": "用途は「暮らしの情景イメージ」。湯気と窓外の明かりという最小の動きだけを足し、夜に働ける一角があるという空気を短尺で伝える。ワークスペース訴求の紹介ページの導入に使う。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。湯気・流体・粒子の表現にもっとも強く、単価がもっとも安い",
+      "text": "A thin wisp of steam rises steadily from the mug and bends slowly to the right, one distant out-of-focus city light behind the window dims very slightly and returns, the hands stay still, the laptop, the notebook and the bookcase stay still, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing or the lighting",
+      "effect": "湯気の一定した上昇は周囲の物体の輪郭に干渉しない動きなので、短尺でも破綻が出にくい。遠景の明かりがわずかに変化することで、窓の外に街があるという情報が、特定の建物を映さずに時間の経過として伝わる。",
+      "caution": "暮らしの情景イメージであることを投稿文や資料側で明示し、物件の実写動画と混在させない。手指が動いて本数が変わった出力、湯気が下方向に流れた出力、窓外が別の景色に置き換わった出力は破棄する。窓外の明かりを特定物件の眺望として提示しないこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「夜のワークスペース（在宅勤務の手元）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・暗部の残り方は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。湯気の上昇と遠景の明かりのわずかな変化だけが動く",
+        "next": "ワークスペース訴求ページの導入ループに置く。3回試して手指の形が保たれなければ静止画のまま使い切る"
+      }
+    },
+    {
+      "id": "realestate-16",
+      "sub": "area",
+      "title": "駅から物件までの道（商店街のエリア紹介）",
+      "purpose": "用途は「周辺環境・エリアの紹介」。物件の内外観ではなく、駅から歩く道がどういう環境かという地域の条件を示す。遠隔の検討者と転勤者向けの資料に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。人物が入るので顔が読めない距離と向きで出るまで試す",
+      "text": "A local shopping street in a Tokyo residential district in the early evening, low two- and three-story mixed-use buildings on both sides with plain awnings and no readable signage, one adult in a light coat walking away from the camera so the face is not visible, a few more people at a distance with faces not readable, a cyclist passing at the far end, a planted street tree and a bicycle parking rail along the kerb, no vehicles close to the camera, medium wide shot from standing eye level at the centre of the street, 35mm equivalent, deep focus so the near kerb and the far end of the street both stay sharp, blue hour with an 8000K deep blue sky and no direct sun, warm 2700K light spilling from the shopfronts and 4000K street lights as the only direct sources, dry dark asphalt returning that light faintly upward, painted awning fabric, tiled shopfront bases, bare pavement, photorealistic documentary street photography, restrained natural grade, no text, no logo, no signage, no shop names, no license plates",
+      "effect": "ブルーアワーは店先から漏れる暖色光と街灯だけが直接光になるため、通りのどこが明るいかという夜道の条件が輝度分布として読める。人と自転車を遠景に置くことで、生活に使われている通りであることが、個人を特定せずに伝わる。",
+      "caution": "地域の雰囲気を伝えるイメージであり、特定物件の周辺写真ではないことを明示し、物件写真と同じ並びに混在させない。実在の商店街・店舗・看板が読める形にしないこと。駅までの距離や徒歩分数をこの画像に添えて示す場合は、必ず実測値と突き合わせる。顔が読める出力やナンバープレートの文字が出た出力は使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。実在の街区や店舗は描かせない。建物の階数と通りの幅を担当エリアの実情に書き換える",
+        "output": "静止画1枚。通りの明るさの分布、人の位置、夜道の見え方がここで確定する",
+        "next": "顔が読めない1枚を「商店街の往来が流れる」に渡して動かす。店名の文字が出た枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-17",
+      "sub": "area",
+      "title": "商店街の往来が流れる",
+      "purpose": "用途は「周辺環境・エリアの紹介」。帰り道に人通りがあることを短尺で示し、単身者やファミリーが気にする夜道の条件を伝える。エリア紹介動画の1カットに使う。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。建物の直線とカメラの安定性が両立し、街のカットの主力になる",
+      "text": "The people on the street continue walking past at a steady pace in both directions, the cyclist at the far end crosses the frame once and leaves, the warm light from the shopfronts holds steady without flickering, the awnings and the street tree move very slightly as if from a weak breeze, the buildings stay unchanged, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing or the lighting, no face turns toward the camera",
+      "effect": "人が双方向に歩く状態は、人通りという情報を数字より早く伝える。カメラを固定して建物を静止させることで、動くのは人と自転車だけになり、通りの条件そのものに視線が残る。",
+      "caution": "地域の雰囲気を伝えるイメージであることを投稿文や資料側で明示し、物件の実写動画と混在させない。人物が途中でこちらを向いた出力、脚が増えた出力、店名の文字が浮き出た出力は破棄する。特定の住所や物件の前の道として提示しないこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「駅から物件までの道（商店街のエリア紹介）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・人物の向きは静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。人の歩行と自転車の通過、庇のわずかな揺れだけが動く",
+        "next": "エリア紹介動画の2カット目に置く。画面上部に駅からの実測分数を載せる前提で、人物が下側三分の二に収まった出力を選ぶ"
+      }
+    },
+    {
+      "id": "realestate-18",
+      "sub": "area",
+      "title": "生活利便施設の差し替え型（スーパー・保育園・公園・桜並木・再開発の通り）",
+      "purpose": "用途は「周辺環境・エリアの紹介」。生活利便の要素を同じ光と同じカメラ設定で揃えて示し、エリアの条件を一組の素材として伝える。物件ページの周辺環境欄と遠隔向け資料に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実在の店舗や園は描かせないので、文章だけで作る",
+      "text": "A [supermarket] in a Tokyo residential district seen from across a narrow street, swap this block for one of the following: [A a two-story supermarket with a row of shopping carts under a canopy and a bicycle parking area in front] / [B a small nursery school behind a low fence with a cleared play yard and a covered entrance walkway] / [C a neighbourhood park with a lawn, mature zelkova trees, a play structure and one paved path cutting through it] / [D a residential street lined with cherry trees in full bloom, petals on the pavement, low apartment buildings behind] / [E a wide redeveloped avenue with a new mid-rise building, a planted median and a broad paved sidewalk] — a few people in everyday clothes at a distance with faces not readable, no vehicles close to the camera, medium wide shot from the opposite side of the street at standing eye level, 35mm equivalent, deep focus so the near kerb and the far building or treeline both stay sharp, flat diffused 6500K light from a uniformly overcast sky with no hard shadows, exposure held so the sky keeps a faint tone instead of clipping to flat white, dry asphalt, painted metal cladding, tree bark, fresh foliage, photorealistic documentary street photography, restrained natural grade, no text, no logo, no signage, no store names, no license plates",
+      "effect": "曇天の均一な光を全カットで共通にすると、A〜Eを別々に生成しても一組の資料として並べられる。影が出ないので建物の形と通りの幅という立地の条件だけが残り、施設の種類が入れ替わってもトーンが揺れない。Dの桜は、実写では年に数日しか撮れない時期の素材を代替する。",
+      "caution": "地域の雰囲気を伝えるイメージであり、実在の店舗・保育園・公園を写したものではないことを明示する。物件写真と同じ並びに混在させない。実在施設の名称や外観を特定できる形にしないこと。施設までの距離や徒歩分数を添える場合は実測値と突き合わせる。Dの桜並木を物件の前の道として提示しないこと。実際には存在しない環境を足さない。看板や店名の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。A〜Eから1つを選び、他を削って使う。実在の施設名や特定できる外観は描かせない。建物の階数と通りの幅を担当エリアの実情に書き換える",
+        "output": "選んだ施設種別のエリア紹介イメージ1枚。A〜Eを揃えると光が統一された一組になる",
+        "next": "ここで完結。物件ページの周辺環境欄に、距離の実測値と「イメージ」の表記を添えて載せる"
+      }
+    },
+    {
+      "id": "realestate-19",
+      "sub": "area",
+      "title": "沿線の高架と電車が通る（直接動画）",
+      "purpose": "用途は「周辺環境・エリアの紹介」。沿線という東京の最大の訴求軸を、特定の路線や駅を特定させない形で示す。エリア紹介動画の導入カットに使う。静止画を経由せず直接動画にして試行回数を稼ぐ。",
+      "model": "Higgsfield / Seedance 2.0 Fast、8秒・720p（約28クレジット）で当たりを探し、採用カットだけ Seedance 2.0、8秒・720p（約36クレジット）で作り直す",
+      "text": "An elevated railway viaduct over a residential street in Tokyo in the early evening, a plain commuter train with unmarked silver carriages and lit windows passes along the viaduct from left to right at a steady speed, low apartment buildings and utility poles on both sides of the street below, no people close to the camera, medium wide shot from the street at standing eye level looking up slightly at the viaduct, 35mm equivalent, deep focus so the near kerb and the viaduct underside both stay sharp, blue hour with an 8000K deep blue sky and no direct sun, warm 2700K window light from the surrounding apartments and 4000K street lights as the only direct sources, the lit train windows reading as a moving band of warm light, concrete viaduct, painted steel, dry asphalt, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no text, no logo, no signage, no train livery, no route numbers",
+      "effect": "明かりの入った車両が横切ると、画面内に一度だけ強い輝度の帯が通るため、無音視聴でも視線が止まる。カメラを固定して電車だけを動かすと、高架の梁と架線という細い直線構造が壊れにくい。",
+      "caution": "地域の雰囲気を伝えるイメージであり、実在の路線・駅・車両を写したものではないことを明示する。物件写真や実写動画と混在させない。実在の鉄道事業者を特定できる塗装・ロゴ・路線記号を描かせないこと。沿線や所要時間を添える場合は時刻表の実数と突き合わせる。画像を経由しないため構図を制御できないので、安く試せる Fast で当たりを探してから本番モデルに上げる。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2V",
+        "step": "単発",
+        "input": "静止画を経由せず、この文章だけを入力する。参照画像は使わない。建物の階数と通りの幅を担当エリアの実情に書き換える。実在の路線と車両は描かせない",
+        "output": "8秒の動画1本。電車の通過だけが動き、高架と街は静止する",
+        "next": "ここで完結。エリア紹介動画の1カット目に置く。沿線名と所要時間は編集工程でテキストとして載せる"
+      }
+    },
+    {
+      "id": "realestate-20",
+      "sub": "commercial",
+      "title": "テナント立地のエリア紹介（通りの人通りと視認性・夕景）",
+      "purpose": "用途は「周辺環境・エリアの紹介」。事業用テナントの募集で、区画そのものではなく通りの人通りと視認性という立地条件を示す。出店検討者向けの資料に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実在の店舗名や看板は描かせないので、文章だけで作る",
+      "text": "A commercial street in central Tokyo at dusk, mid-rise mixed-use buildings with glazed ground floors on both sides, a vacant ground-floor tenant unit with plain glazing and no signage at the centre of the frame, several people in business and everyday clothes walking past at a distance with faces not readable, a bicycle parked at the kerb, no vehicles close to the camera, medium wide shot from the opposite sidewalk at standing eye level, 35mm equivalent, deep focus so the vacant unit's glazing and the far end of the street both stay sharp, dusk with an 8000K deep blue sky and no direct sun, warm 2700K light spilling from the neighbouring shopfronts and 4000K street lights as the only direct sources, the glazed facade across the street returning a faint cool reflection onto the near pavement, wet dark asphalt, plain glazing, polished stone building base, photorealistic documentary street photography, restrained natural grade, no text, no logo, no signage, no shop names, no license plates",
+      "effect": "夕景は隣の区画から漏れる暖色光と街灯だけが直接光になるため、通りのどこが明るいかという視認性の条件が輝度分布として読める。空室区画を無地のガラスにして周囲を点灯状態にすることで、出店後の見え方を想像する余地が画面に残る。",
+      "caution": "地域の雰囲気を伝えるイメージであり、募集中の区画やその前の通りを写したものではないことを明示する。実際の物件写真と同じ並びに混在させない。実在の店舗名・看板・ロゴが読める形にしないこと。通行量を数値で示す場合は、この画像を根拠にせず実測調査の数字を使う。顔が読める出力は使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。実在の通りや店舗は描かせない。建物の階数と通りの幅を担当エリアの実情に書き換える",
+        "output": "静止画1枚。通りの明るさの分布、人の位置、空室区画の見え方がここで確定する",
+        "next": "顔が読めない1枚を「通りの往来が流れる（立地の人通りを見せる）」に渡して動かす。店名の文字が出た枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-21",
+      "sub": "commercial",
+      "title": "通りの往来が流れる（立地の人通りを見せる）",
+      "purpose": "用途は「周辺環境・エリアの紹介」。通りに人の流れがあることを短尺で示し、事業用テナントの立地説明に使う。出店検討者に送る資料の導入カットにする。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。建物の直線とカメラの安定性が両立し、街のカットの主力になる",
+      "text": "The people on the sidewalk continue walking past at a steady pace in both directions, the warm light from the neighbouring shopfronts holds steady without flickering, a faint reflection moves slowly across the wet asphalt, the vacant unit and the buildings stay unchanged, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing or the lighting, no face turns toward the camera",
+      "effect": "人が双方向に歩く状態は、通行量という情報を数字より早く伝える。カメラを固定して建物を静止させることで、動くのは人と路面の反射だけになり、立地の条件そのものに視線が残る。",
+      "caution": "地域の雰囲気を伝えるイメージであることを投稿文や資料側で明示し、募集区画の実写動画と混在させない。人物が途中でこちらを向いた出力、脚が増えた出力、店名の文字が浮き出た出力は破棄する。この動画を通行量の根拠として提示しないこと。実測調査の数字と併記する場合も、画像はあくまでイメージとして扱う。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「テナント立地のエリア紹介（通りの人通りと視認性・夕景）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・人物の位置は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。人の歩行と路面の反射だけが動き、建物は静止する",
+        "next": "テナント募集資料の冒頭に置く。3回試して建物の直線が保たれなければ静止画のまま使い切る"
+      }
+    },
+    {
+      "id": "realestate-22",
+      "sub": "commercial",
+      "title": "スケルトン区画の内装完成予想（カフェ・事務所・物販の差し替え型）",
+      "purpose": "用途は「完成予想のイメージ」。内装が入っていないスケルトン区画について、業種ごとの使い方を未施工の前提で示す。事業用テナントの募集で、面積と形状だけでは想像しにくい相手に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。区画の現況写真を参照として添えると、間口と天井高の整合が取りやすい",
+      "text": "An architectural visualization of an unbuilt fit-out of a bare ground-floor tenant unit in Tokyo, [about 60 square metres] with an exposed concrete slab, exposed ceiling services and a full-height glazed shopfront facing a narrow street, swap the fit-out for one of the following: [A cafe: a timber counter along the right wall, ten loose seats at five small tables, a counter stool run along the shopfront glazing] / [B office: eight desks in two rows, a glazed meeting room at the rear, linear pendants under the open ceiling] / [C retail: perimeter shelving on three walls, two freestanding display tables, a wrapping counter near the entrance] — no people, no branded packaging, no printed menus or price cards, wide interior shot from the rear of the unit at standing eye level, 24mm equivalent, deep focus so the shopfront glazing and the rear wall both stay sharp, daylight entering only through the shopfront at 6500K, balanced against 3000K linear fixtures, no mixed colored lighting, sealed concrete, oiled timber, exposed galvanized duct, photorealistic architectural interior visualization, restrained contrast, no text, no logo, no signage",
+      "effect": "区画の奥から店先に向かって撮る配置にすると、間口の広さと奥行きの比率が一枚で読める。天井の設備を露出させたまま描かせると、スケルトン引渡しという条件が画面の情報として残り、工事範囲の誤解が起きにくい。",
+      "caution": "未施工の完成予想イメージであることを各図版に明示し、現況写真と同じ並びに混在させない。実際には存在しない面積・天井高・設備を足さないこと。内装工事費の負担区分、原状回復の条件、排気と給排水の引き込み位置は画像で示せないので、文章側で必ず併記する。メニューや値札の文字は生成させない。間口・天井高・設備位置は区画図と突き合わせる。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。A〜Cから1つを選び、他を削って使う。面積と天井の状態を実際の区画に書き換える。現況のスケルトン写真があれば参照として添える",
+        "output": "選んだ業種の内装完成予想イメージ1枚。A〜Cを揃えると同じ区画の使い方の比較になる",
+        "next": "ここで完結。区画図と現況写真に添えて募集資料に載せる。工事範囲の条件は文章で併記する"
+      }
+    },
+    {
+      "id": "realestate-23",
+      "sub": "commercial",
+      "title": "機械式駐車場と月極の車室（狭小地の運用）",
+      "purpose": "用途は「周辺環境・エリアの紹介」。投資用区分マンションと事業用物件で、駐車場がどう運用されているかという条件を示す。駐車場収入や付置義務が判断材料になる相手に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実在の物件や車室番号は描かせないので、文章だけで作る",
+      "text": "A [two-tier] mechanical car stacker in a narrow open lot beside a low-rise building in Tokyo, [six] steel pallets in a plain grey frame with a control box on a post at the entrance side, the painted lines of [three] flat monthly bays on dry asphalt in the foreground, a low concrete boundary wall and a neighbouring building tight against the far side, no people and no parked cars, wide shot from standing eye level at the lot entrance, 24mm equivalent, deep focus so the near painted line and the top pallet of the stacker both stay sharp, flat diffused 6500K light from a uniformly overcast sky with no hard shadows, exposure held so the grey steel keeps surface texture instead of flattening out, dry asphalt, worn line paint, galvanized steel frame, painted control box, photorealistic documentary architecture photography, restrained natural grade, no text, no logo, no signage, no license plates, no bay numbers",
+      "effect": "機械式のパレットと平面の区画線を同じ画面に収めると、狭い敷地で何台取れているかという空間効率が一枚で伝わる。曇天の均一な光は鉄骨の面に影を落とさないので、段数と枠の構成が数えられる状態で残る。",
+      "caution": "運用を伝えるイメージであり、特定物件の駐車場写真ではないことを明示する。物件写真と同じ並びに混在させない。実際の台数・段数・車両サイズ制限と異なる表現にしないこと。実際には存在しない設備や台数を足さない。車室番号やナンバープレートの文字は生成させない。収入や稼働率を示す場合は、この画像を根拠にせず実際の契約状況の数字を使う。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけから作る。実在物件は描かせない。段数・台数・平面区画の数を実際の運用に書き換える",
+        "output": "静止画1枚。パレットの段数、区画の台数、敷地の広さの見え方がここで確定する",
+        "next": "この1枚を「機械式駐車場のパレットが降りてくる」に渡して動かす。車室番号の文字が出た枚数は使わない"
+      }
+    },
+    {
+      "id": "realestate-24",
+      "sub": "commercial",
+      "title": "機械式駐車場のパレットが降りてくる",
+      "purpose": "用途は「周辺環境・エリアの紹介」。機械式駐車場が稼働している状態を短尺で示し、投資用・事業用物件の設備の説明に使う。管理会社の提案資料に使う。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。機械の動きと直線構造が同時に安定し、設備のカットに向く",
+      "text": "The upper pallet of the stacker descends slowly and steadily to ground level and stops, the steel frame stays rigid with no sway, the other pallets stay where they are, no one walks into the machine's path, the lot, the building and the light stay unchanged, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing or the lighting",
+      "effect": "下降という一方向の運動だけに限定すると、鉄骨の枠とパレットの形状が維持されやすい。動く要素がパレット一枚に絞られることで、どの段が降りてくるかという設備の使い方が動きだけで伝わる。",
+      "caution": "設備の状態を伝えるイメージであり、特定物件での実際の稼働記録ではないことを明示し、実写動画と混在させない。枠が歪む、パレットが途中で消える、人が機械の可動範囲に入るといった破綻が出た出力は破棄する。実際には設置されていない形式の機械に書き換えないこと。存在しない設備を見せることになる。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「機械式駐車場と月極の車室（狭小地の運用）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・機械の位置は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。パレットの下降だけが動き、枠と敷地は静止する",
+        "next": "管理提案資料と投資用物件の紹介ページに置く。3回試して鉄骨の枠が保たれなければ静止画のまま使い切る"
+      }
+    },
+    {
+      "id": "realestate-25",
+      "sub": "ads",
+      "title": "利回り訴求の広告背景（文字を載せる余白つき）",
+      "purpose": "用途は「広告の装飾要素」。投資用区分マンションの利回りや価格といった数値を載せるための背景を作る。物件の画像を使わずに広告枠を成立させ、物件写真の使用を数値訴求から切り離すために使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。数値や文字は生成させず、編集工程で載せる前提で作る",
+      "text": "A flat-lay abstract background for an advertisement, no property and no people, arranged on a [matte charcoal] surface: a sheet of pale oak veneer along the lower left, a pane of clear glass over it at the lower right, a short length of brushed stainless flat bar across the bottom edge, a single [zelkova] twig with a few fresh leaves along the left margin, the upper two thirds of the frame left as empty flat surface, straight-down overhead shot, 50mm equivalent, deep focus so every texture stays sharp, a single large soft 5000K source from the upper left at about 30 degrees giving shallow raking shadows and keeping the empty upper area even in brightness, oak grain, clear glass, brushed stainless, matte painted board, fresh foliage, photorealistic product-style still life, restrained contrast, no text, no logo, no numbers, no charts",
+      "effect": "上部三分の二を均一な輝度の無地に保つと、後から載せる数値が背景の模様に干渉されず読める。木・ガラス・ステンレスという素材を低い斜光で当てることで、質感の差だけで都市の不動産という文脈が付き、物件画像を使わずに広告面が成立する。",
+      "caution": "広告の装飾要素であり、物件を示す画像ではない。物件写真と並べる場合も、この背景が特定物件を表すかのような配置にしないこと。利回り・価格・満室想定といった数値は生成させず、必ず編集工程で実数を載せる。数値の算出根拠と前提条件は広告面に併記し、依頼主と数字を確認すること。グラフらしい図形が出た出力は、根拠のない数値に見えるので破棄する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わず文章だけから作る。物件は描かせない。背景色と素材を自社のブランドカラーに書き換える。載せる文字数を先に決めて余白の広さを調整する",
+        "output": "正方形または16:9の静止画1枚。上部三分の二が無地の広告背景",
+        "next": "ここで完結。編集工程で利回り・価格・所在エリアのテキストを上部に載せる。数値の根拠は広告面に併記する"
+      }
+    },
+    {
+      "id": "realestate-26",
+      "sub": "ads",
+      "title": "横型の内見動画を縦型に作り直す",
+      "purpose": "用途は「広告の装飾要素」としての再編集。横型で作った物件紹介動画を、SNSと賃貸ポータルの縦型枠に合わせて作り直す。撮り直しなしで配信面を増やす。",
+      "model": "Higgsfield の Studio 系（Ad Multiplier 相当）。Unlimited 対象外で常に課金されるため、尺と本数を先に決めてから着手する",
+      "text": "Keep the shot order, the cut timing and the total duration of the reference video exactly as they are. Reframe each shot from 16:9 to vertical 9:16, centering on the room's depth axis or the window rather than the ceiling, keep the floor line and the far wall corner inside the frame in every interior shot, keep the whole window opening inside the frame, keep the upper third of the vertical frame free of important subject matter so a caption can be added later, do not add or remove shots, do not change the color grade, do not crop into the subject so that the room looks narrower than the original, no text, no logo",
+      "effect": "尺とカット順を固定したまま画角だけを変えるため、横型で検証済みの構成がそのまま縦型に移る。床の線と奥の壁の角を必ず残す指定は、縦に切ったときに失われやすい奥行きの手がかりを保つためのもので、部屋の広さの印象が変わるのを防ぐ。",
+      "caution": "縦型に切ると部屋が実際より狭く見える、または窓が切れて採光と方角が判断できなくなるという変化が起きる。切り出し後に、元の横型と並べて広さの印象が変わっていないかを必ず確認し、変わったカットは使わない。実際の広さや眺望が誤認される切り方をしないこと。Studio 系は常に課金されるため、縦型を作る本数を先に決めてから着手する。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに完成している横型の物件紹介動画1本（15〜30秒）。新しく映像は作らない。縦型の配信先と本数を先に決めておく",
+        "output": "カット順と尺が同じ縦型（9:16）の動画1本",
+        "next": "Instagram のリールと賃貸ポータルの動画枠に出す。テキストは編集工程で上部三分の一に載せる"
+      }
+    },
+    {
+      "id": "realestate-27",
+      "sub": "ads",
+      "title": "内見動画の冒頭フックと締めを差し替える",
+      "purpose": "用途は「広告の装飾要素」としての再編集。物件カットには一切触れず、冒頭のフックと最後の締めだけを差し替えて、同じ素材から複数の訴求を作る。繁忙期の配信面ごとの出し分けとA/B検証に使う。",
+      "model": "Higgsfield の Studio 系（Ad Multiplier 相当）。Unlimited 対象外で常に課金されるため、作る本数を先に決めてから着手する",
+      "text": "Keep every property shot, the shot order and the color grade of the reference video exactly as they are. Replace only the first shot and the last shot: the opening becomes [a 1.5 second shot of sunlight moving across a plain pale floor with no property or window detail visible], the closing becomes [a 2 second shot of a matte dark surface with an even empty area in the upper two thirds for a caption], hold the total duration within [0.5 seconds] of the original, do not re-time or re-order the shots in between, do not change the color grade, do not alter any property shot, no text, no logo",
+      "effect": "物件カットを固定して前後だけを差し替えると、訴求の違いだけを変数にした比較ができ、どの入り方が止まるかを少ない本数で判断できる。最初の1.5秒に物件を出さないことで、同じ本編を違う層に向けて配信できる。",
+      "caution": "差し替えた冒頭と締めは生成物なので、物件の実写カットと視覚的に連続して見えないよう、質感か明るさを明確に変える。物件カットが1フレームでも変化した出力は破棄する。締めに載せる文字は生成させず編集工程で入れること。訴求文の内容が物件の実態と異なると優良誤認につながるため、依頼主に文面を確認する。Studio 系は常に課金されるため本数を先に決める。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに完成している内見動画1本（15〜30秒）。新しく物件映像は作らない。差し替える冒頭と締めの案を先に文章で決めておく",
+        "output": "本編が同一で冒頭と締めだけが違う動画が、案の数だけできる",
+        "next": "同一予算で同時に配信し、3秒視聴率で入り方を比較する。採用した組み合わせを以後の既定にする"
+      }
+    },
+    {
+      "id": "realestate-28",
+      "sub": "ads",
+      "title": "元写真の幾何を変えない必須記述（全I2Iに差し込む）",
+      "purpose": "用途を問わず、実際の物件写真を参照にするすべての生成に同じ文言を差し込み、間取り・開口・床材・窓外の抜けが勝手に変わる確率を下げる。このパックでもっとも重要な部品。",
+      "model": "参照画像を使う静止画・動画のプロンプト冒頭に共通で挿入する。他のスロットは変えない",
+      "text": "Keep the room or building geometry, the window and door positions, the ceiling height, the floor material, the wall finish, the sash and casing details, the tatami layout where present, the built-in closet positions, the lot boundaries and the camera viewpoint of the reference photograph exactly as they are. Keep the view outside every window exactly as the reference shows it, including the distance and height of the neighbouring buildings. Do not widen the room, do not raise the ceiling, do not straighten a sloping ceiling, do not add or move windows, skylights, balconies, storage, fixtures or equipment that are not in the reference, do not remove the air conditioner, the intercom panel or the switch plates. Add or change only what the instruction above lists, and nothing else. no text, no logo, no signage, no nameplate, no room numbers",
+      "effect": "変えてはいけない要素を個別の名詞として列挙すると、モデルが参照画像を雰囲気の手本として扱う余地が減り、幾何の情報として扱うようになる。隣棟の距離と高さまで名指しで固定するのは、窓外が置き換わって視線の抜けや採光が実際より良く見える破綻が、東京の賃貸と売買でもっとも重い誤認につながるため。",
+      "caution": "この文言を入れても指定どおりに出ない枚数が必ず混ざる。生成後は必ず元写真と並べて、間取り・窓の位置・建具・床材・窓外の景色が変わっていないかを等倍で確認し、変わった枚数は作り直さずに破棄する。実際には存在しない設備・眺望・広さを足した出力は、どれほど見栄えが良くても使わない。元の写真は加工なしの状態で必ず別に保管すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "参照画像を使うすべてのプロンプト（realestate-03 / 04 / 05 / 07 など）の冒頭に、この文言を差し込む。差し替えたい内容の記述はこの後ろに続ける",
+        "output": "それ自体は何も生成しない。差し込んだ先の出力が、元写真の幾何と窓外の状況を保つ確率が上がる",
+        "next": "不動産パックの全I2Iの既定値にする。検品は元写真との並べ比較で行い、満たさない枚は破棄する"
+      }
+    },
+    {
+      "id": "realestate-29",
+      "sub": "ads",
+      "title": "東京の光（曇天・西日・ブルーアワー・隣棟の影）",
+      "purpose": "東京の物件と街を東京の光で見せる。方角と階数、隣棟との関係という訴求軸が、光の条件として画面に出るようにする。室内と屋外のどちらにも使う部品。",
+      "model": "静止画・動画の両方で、光のスロットに共通で挿入する。4つのうち1つを選んで使う",
+      "text": "A — fully overcast: flat diffused 6500K light from a uniformly grey sky, no hard shadows, even illumination across the whole frame, exposure held so the sky keeps a faint tone instead of clipping to flat white | B — late-afternoon west light: direct 3400K sunlight from a low angle of about 15 degrees entering through one window only, a long hard-edged patch of light thrown across the floor and up the opposite wall, the rest of the room falling off into soft shadow that still holds detail, no ceiling fixture switched on | C — blue hour with city light: 8000K deep blue ambient with no direct sun, warm 2700K window light from the surrounding buildings and 4000K street lights as the only direct sources, dry or wet asphalt returning that light faintly upward | D — shaded lower floor: no direct sun at all, soft 6800K skylight entering from above the frame as the only source, a faint cool reflection bounced off the glazed facade of the building opposite filling the near surfaces, exposure held so the shaded wall keeps surface texture instead of crushing to flat grey",
+      "effect": "東京の光は空の明るさより、隣の建物に何が遮られ何が返ってくるかで決まる。Bの西日は床と壁に硬い光の帯を作るので方角が一目で読め、Dの天空光と向かいのガラス面からの反射は、直射が入らない低層階や北向き住戸の実際の明るさを正確に示す。どれを選ぶかで方角と階数、時刻が同時に決まる。",
+      "caution": "AとBを混ぜると、硬い光の帯がありながら影の輪郭がないという物理的に成立しない画になる。1カットにつき1つだけを選ぶこと。Bの西日は夏の暑さという負の要素とも結びつくので、使う物件と季節を選ぶ。Dを使うべき低層階や北向き住戸にBやCを当てると、実際には入らない光を見せることになるので、方角と階数を確認してから選ぶ。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "静止画または動画プロンプトの光のスロットに、A・B・C・D のうち1つだけを差し込む。他のスロットは変えない。物件の方角と階数を先に確認して選ぶ",
+        "output": "それ自体は何も生成しない。差し込んだ先の画の光が、その方角と階数で実際に起きる条件になる",
+        "next": "1物件の全カットで同じ記号を使い、方角と時刻を統一する。最終的なトーンの統一は編集のカラーグレーディングで担保する"
+      }
+    },
+    {
+      "id": "realestate-30",
+      "sub": "ads",
+      "title": "生成素材の用途区分・対応管理表",
+      "purpose": "生成した素材がどの用途で作られたか、どの元写真に対応するか、イメージ表記が付いているかを一元管理する。物件写真とイメージの混在事故を入力段階で止めるための帳票。",
+      "model": "生成AIに投げるものではない。表計算ソフトで作り、物件ごとに1シートで運用する",
+      "text": "【生成素材 用途区分・対応管理表】物件ごとに1シート。列は次の12項目。\n1. 素材ID（物件コード＋連番。例 SG2601-03）\n2. 用途区分（1 バーチャルステージング / 2 完成予想・リフォーム後 / 3 周辺環境・エリア紹介 / 4 暮らしの情景 / 5 広告の装飾。必須入力）\n3. 区分の根拠（用途2なら「未着工」または「工事前」のどちらかを記入。空欄の行は掲載しない）\n4. 種別（物件実写 / AI生成 / 物件実写をAIで加工）\n5. 元素材ID（参照に使った実写のID。種別が「加工」なら必須）\n6. 元素材の保管先（加工前の原本のファイルパス。必須）\n7. 使用プロンプトID（本パックのID。例 realestate-05）\n8. 幾何確認（元写真と並べて間取り・窓位置・建具・床材・窓外の抜けを確認した日と担当者。種別が「加工」なら必須）\n9. 実在性の確認（描かれた設備・広さ・眺望・採光が実際に存在するか。「実在 / 計画あり / 存在しない」。「存在しない」の行は掲載しない）\n10. 「イメージ」表記（用途1〜5すべてで必須。表記文と掲載位置を記入。空欄の行は掲載しない）\n11. 依頼主・所有者確認（未 / 送付済 / 承諾済。承諾日を記入）\n12. 掲載面（自社サイト / ポータル / 紙媒体 / 商談資料。面ごとに表記ルールが違うため個別に記録）\n\n運用の規則を表の上部に固定で書いておく。「種別が AI生成 または 物件実写をAIで加工 の素材は、物件実写と同じギャラリー・同じスライド順に置かない」「用途区分と『イメージ』表記のどちらかが空欄の素材は社外に出さない」「実在性の確認が『存在しない』の素材は破棄する」「加工前の原本を保管していない素材は使わない」。\n\n繁忙期の運用として、1月から3月に使う素材は前年の秋までに作って11列を埋めておく。桜や新緑のエリア紹介カットは撮影できる時期が限られるため、実写の有無をこの表で先に確認し、足りない分だけを生成に回す。",
+      "effect": "用途区分とイメージ表記を必須入力の列にすることで、物件実写との混在が掲載前の入力段階で検出できる。元素材IDと原本の保管先を必須にしておくと、後から幾何の確認をやり直せるため、問い合わせや指摘があったときに元写真と並べて即答できる。",
+      "caution": "この表を作らずにAI生成画像を物件ギャラリーに入れると、後から実写と区別できなくなり、全件の見直しが必要になる。用途区分と種別の2列だけは物件の受託時点で必須入力にすること。依頼主確認の列は承諾の記録を残すこと自体が目的なので、口頭了解で埋めない。掲載面ごとに表記の置き方が変わるため、面を増やすたびに行を複製して個別に管理する。",
+      "status": "未検証",
+      "flow": {
+        "code": "DOC",
+        "step": "単発",
+        "input": "生成AIには投げない。既存の物件管理表に12列を足すか、受託時に新規シートを作る。自社の物件コード体系に合わせる",
+        "output": "物件ごとの素材一覧1シート。物件実写とAI生成の区別、用途区分、表記の有無がその場で判断できる状態",
+        "next": "ここで完結。制作着手の最初の作業にする。生成を始めてから作ると用途区分と原本の記録が抜ける"
+      }
+    }
+  ],
+  "legal": "不動産広告は、本教材が扱う4業種のなかで**写真・動画の規制が突出して厳しい分野**です。着手前に必ず読んでください。以下は2026年10月11日に公的資料で確認した内容の整理であり、法的助言ではありません。個別の案件は所管の公正取引協議会または弁護士に確認してください。\n\n**1. 物件の写真・動画は、原則としてその物件そのものでなければなりません**\n不動産の表示に関する公正競争規約 施行規則 第9条第22号は、宅地又は建物の写真又は動画は取引するものを表示することと定めています。**動画も条文に明記されています。** 例外は、工事完了前などでその建物の写真・動画を用いることができない事情がある場合に限られ、しかも「取引する建物を施工する者が過去に施工した建物」でなければなりません。外観は構造・階数・仕様が同一で規模・形状・色等が類似するもの、内部は写される部分の規模・仕様・形状等が同一のものに限定されます。\nこの例外を使う場合は、他の建物である旨と、外観なら取引する建物と異なる部位を明示する必要があり、**明示する位置まで指定されています**（写真は写真に接する位置、動画は画像中）。さらに、大きく掲載するなど取引する建物であると誤認されるおそれのある表示は禁止されています。\n**実物に基づかないAI生成の建物外観・内観は、この実物要件を満たしません。** したがって本パックのプロンプトは、物件そのものの写真・動画として使う用途を想定していません。\n\n**2. CG・完成予想図として使うなら「その旨」の明示が必須です**\n同 施行規則 第9条第23号は、コンピュータグラフィックス、見取図、完成図、完成予想図はその旨を明示して用い、周囲の状況について表示するときは現況に反する表示をしないことと定めています。AIが隣地・街並み・眺望を創作していないか、生成後に必ず現況と突き合わせてください。\n\n**3. 規模・形状・構造と、眺望・景観は特に厳しく見られます**\n規約第23条(42)は、写真・動画・CG・完成予想図による表示で、物件の規模、形状、構造等について事実に相違する表示や実際より優良と誤認されるおそれのある表示を禁じています。同(43)は眺望・景観について同様に定めています。\n\n**4. 宅地建物取引業法 第32条（誇大広告等の禁止）**\n著しく事実に相違する表示、実際より著しく優良・有利と誤認させる表示が禁止されています。媒体は問わず、インターネットも対象です。対象となる8項目には**形質**（構造・材料・性能・経過年数等）と**現在又は将来の環境**（周囲の状況、静寂さ、快適さ、方位等の立地条件、周辺施設）が含まれており、AI生成画像が最も誤認を生みやすい領域です。違反は業務停止処分の対象となり、第81条により六月以下の懲役若しくは百万円以下の罰金、又はその併科と定められています。\n\n**5. AI生成であることの表示義務は、確認した範囲では存在しません**\n不動産の表示規約にも、AI生成物の表示を義務づける規定は見当たりませんでした。義務づけられているのは「他の建物である旨」「CG・完成予想図である旨」の明示です。**ただし表示義務がないことは、自由に使えることを意味しません。** 規律は「AI生成かどうか」ではなく「表示内容が実際と異なるか、優良と誤認させるか」で働きます。\n\n**出典**：不動産の表示に関する公正競争規約および施行規則（首都圏不動産公正取引協議会）／宅地建物取引業法の解釈・運用の考え方 第32条関係／消費者庁「不当な表示」"
+}

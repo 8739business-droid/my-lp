@@ -1,0 +1,574 @@
+{
+  "id": "construction",
+  "label": "建設",
+  "lede": "建設業の素材は、受注と採用の二つを同時に担います。受注側では、施工中の現場で技術力を、竣工物件で仕上がりの水準を示すことが判断材料になり、東京では近隣への配慮（騒音・振動・養生）、既存建物を使いながらの改修、夜間や休日の工事に対応できること、エレベーターのない建物での搬入段取りといった段取りの力が、価格以外の差別化点として機能します。採用側では、人手不足を背景に「どんな人が、どんな環境で働き、何が身につくか」を見せる素材の価値が上がっており、同じ現場カットを両方の用途に使い回せるかどうかで制作単価の見え方が変わります。都心ではマンションのリノベーション、店舗の居抜き改装、オフィス内装、原状回復、耐震補強、設備更新、狭小地の新築が主な案件で、図面と見積だけでは伝わらない仕上がりのイメージを示す必要が出てきます。費用は工期の制約と撮影機会の少なさに効き、信用は安全管理の見え方に効きます。安全基準を満たさない描写を一枚でも出せば、受注も採用も同時に失う種類の素材だと理解して使ってください。",
+  "subcategories": [
+    {
+      "id": "site",
+      "label": "現場・施工中"
+    },
+    {
+      "id": "finished",
+      "label": "竣工・完成物件"
+    },
+    {
+      "id": "people",
+      "label": "職人・技術・手元"
+    },
+    {
+      "id": "equipment",
+      "label": "重機・設備・資材"
+    },
+    {
+      "id": "process",
+      "label": "工程・ビフォーアフター"
+    },
+    {
+      "id": "ads",
+      "label": "広告用カット・採用訴求"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "construction-01",
+      "sub": "site",
+      "title": "狭小地の建て方・朝の現場（全景）",
+      "purpose": "狭小地での木造建て方という、工期中もっとも見栄えのする一日を記録風に見せる。技術力の提示と採用訴求の両方に使う基本カット。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。文字を正確に出したい場合は後述の注意を参照",
+      "text": "A three-story wooden post-and-beam house frame under construction on a narrow infill lot in central Tokyo, hemmed in by existing buildings on both sides with less than a meter of clearance, four carpenters working on the beams and the ground, all wearing white hard hats with chin straps fastened, high-visibility jackets, full-body fall-arrest harnesses with lanyards clipped to a taut lifeline, and steel-toed safety boots, the perimeter scaffolding fitted with continuous double guardrails and toe boards and wrapped in gray protective mesh netting, protective sheeting laid over the neighboring boundary wall and the public footpath, wide shot from slightly below eye level on the street side, 24mm equivalent, deep focus so every joint and brace is readable, low early-morning sun entering from the one open end of the street at a shallow angle, 4000K direct light raking across the upper timbers while the hard-edged shadow of the adjacent building falls across the lower half of the frame, soft bounce from the pale tiled wall opposite lifting the shaded faces, rough-sawn structural lumber with visible grain and saw marks, galvanized steel connectors, photorealistic documentary architecture photography, restrained natural grade, no text, no logo",
+      "effect": "ビルに挟まれた現場は直射が入る時間が短く、隣棟の影が画面を上下に切る。この境界を構図に取り込むと、上半分の斜光で架構の立体構造が読め、下半分は向かいの壁のバウンスで黒く潰れずに足場と養生の状態が残る。",
+      "caution": "ヘルメット未着用、ハーネス未装着、手すりのない足場といった安全基準を満たさない描写が出た場合は、生成し直すのではなく破棄する。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。梁の通り、柱の間隔、足場の格子、養生ネットの目といった直線と反復構造はAIが破綻させやすいので、等倍に拡大して平行と等間隔を必ず確認すること。隣地との離隔や道路の養生が実際の現場と違わないかも見る。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけで作る。階数・構法・隣棟との離隔・道路の養生の仕方を自社の現場に置き換える",
+        "output": "16:9 の静止画1枚。架構の見え方、朝の斜光と隣棟の影の境界、安全装備の状態がここで確定する",
+        "next": "安全装備が揃っている1枚を「ラフタークレーンが梁を吊る（狭小地の建て方）」に渡して動かす。崩れた足場の枚数は使わない"
+      }
+    },
+    {
+      "id": "construction-02",
+      "sub": "site",
+      "title": "ラフタークレーンが梁を吊る（狭小地の建て方）",
+      "purpose": "狭小地での建て方の一瞬を動画にして、技術力と現場の統制が同時に伝わる3〜5秒のカットを作る。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。カメラ移動が安定し、直線構造の崩れが比較的少ない",
+      "text": "The suspended beam descends slowly and steadily toward the post, the slings stay taut and straight, the rough-terrain crane boom holds its angle without swinging, one carpenter on the ground guides the beam with both hands raised while standing clear of the load, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no change to the framing or lighting",
+      "effect": "吊り荷の下降という一方向の運動だけに限定すると、ブームやワイヤーの形状が維持されやすい。カメラを固定することで、動く要素が梁一本に絞られ、見る側の視線が作業の核心に留まる。",
+      "caution": "ブームの伸縮、ワイヤーの増減、梁が途中で消える、人物が吊り荷の真下に移動するといった破綻が出る。吊り荷の直下に人が入った出力は、安全上ありえない作業の描写なので破棄する。狭小地では吊り荷が隣棟に接触して見える出力も使えない。生成し直して使えるものを探すのではなく、その枚数を捨てる判断を先に決めておくこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「狭小地の建て方・朝の現場（全景）」（T2I）で作った静止画1枚。新しく画像は作らない。構図・光・安全装備は静止画で確定済みのものを使う",
+        "output": "5秒の動画1本。梁の下降とそれを誘導する手の動きだけが動く",
+        "next": "施工実績ページの冒頭、または採用動画の2カット目に置く。3回試して吊り荷の形が保たれなければ固定画で使い切る"
+      }
+    },
+    {
+      "id": "construction-03",
+      "sub": "site",
+      "title": "狭小地の基礎配筋の俯瞰（検査前）",
+      "purpose": "配筋検査前の基礎を真上から見せ、ピッチと継手の施工精度を根拠として提示する。隣棟との離隔が狭い敷地での段取りも同時に伝わる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。直線の反復が多いので、生成後の拡大確認が前提",
+      "text": "A narrow urban residential foundation with completed rebar cage seen from directly above, the lot wedged between two existing buildings whose walls run along both long edges of the frame, orthogonal grid of deformed reinforcing bars tied at regular intervals with black annealed wire, plastic spacers lifting the bars off the formwork base, plywood formwork panels defining the outline, two workers in white hard hats with chin straps, high-visibility vests and steel-toed safety boots standing at the edge of the excavation, protective sheeting over the neighboring boundary walls and the footpath, top-down aerial view from about fifteen meters, 35mm equivalent, deep focus so the entire grid stays sharp corner to corner, flat diffused light from a fully overcast sky with no hard shadows and even illumination across the whole slab, matte rust-tinted steel surface, damp plywood, photorealistic aerial documentation photography, neutral grade, no text, no logo",
+      "effect": "曇天の拡散光は影を作らないため、鉄筋の格子が影に隠れず全面が同じ明るさで読める。狭小地は晴天だと隣棟の影が斜めに入って半分が暗くなるので、全面を均一に見せたいこの用途では曇天を選ぶのが合理的。真俯瞰は遠近による歪みが最小になり、ピッチの均一さが情報として伝わる。",
+      "caution": "鉄筋の格子は反復構造の典型で、ピッチが途中で変わる、交点が溶け合う、継手の重ね長さが不自然になるといった破綻が高確率で出る。等倍で四隅と中央を確認し、配筋検査の根拠写真と誤認されないようイメージである旨を明示すること。立ち入る作業員にヘルメットと安全靴が付いていない出力は破棄する。隣地の養生が外れた出力も近隣配慮の訴求に使えない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。基礎の形状（ベタ基礎・布基礎）と敷地の間口・隣棟との離隔・養生の方法を自社の仕様に置き換える",
+        "output": "真俯瞰の静止画1枚。格子のピッチと基礎の輪郭がここで決まる",
+        "next": "格子が破綻していない1枚を「俯瞰からのゆるい上昇（敷地と周辺を見せる）」に渡し、引きの動きを足す"
+      }
+    },
+    {
+      "id": "construction-04",
+      "sub": "site",
+      "title": "俯瞰からのゆるい上昇（敷地と周辺を見せる）",
+      "purpose": "基礎の俯瞰から高度を上げ、敷地条件と周辺環境まで一息で見せる。狭小地でどう段取りしたかが一目で伝わる、施工実績の冒頭に置くエスタブリッシングカット。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。垂直移動は水平の回り込みより破綻が少ない",
+      "text": "The camera rises straight up at a constant slow speed, keeping the foundation centered in frame, revealing more of the surrounding lot, the rooftops of the adjoining buildings and the dense low-rise blocks beyond, no rotation, no tilt change, slow, subtle, constant speed, no cuts",
+      "effect": "上昇のみの一軸移動は、被写体との距離関係が単調に変化するだけなので、モデルが画面外の情報を捏造する量が少ない。周辺の屋根が徐々に見えることで、間口の狭さと隣棟との距離という敷地条件がそのまま説明される。",
+      "caution": "回転やチルトを同時に指定すると周辺の建物と街並みが作り変えられる。カメラの動きは1カットにつき1種類に限定すること。鉄筋の格子は移動中に溶けやすいので、上昇量を抑えめにし、格子が保たれる範囲で止める。実在の周辺建物が特定できるほど写り込んだ出力は、近隣の了解なく掲載しないこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「狭小地の基礎配筋の俯瞰（検査前）」（T2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の動画1本。高度が上がり、敷地と周辺の街並みが入ってくる",
+        "next": "施工実績動画の1カット目に使う。周辺が作り変えられていたら上昇量を減らして再生成する"
+      }
+    },
+    {
+      "id": "construction-05",
+      "sub": "site",
+      "title": "朝礼と安全確認（採用向けの集合カット）",
+      "purpose": "作業開始前の安全確認と近隣への配慮の指示を情景として見せ、採用応募者に「管理された現場で働ける」ことを伝える。安全管理体制の提示そのものが受注材料にもなる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。複数人の顔は小さく扱い、個人が特定される描写は避ける",
+      "text": "Six construction workers of mixed ages standing in a loose semicircle at the start of the workday on a tight urban renovation site in Tokyo, all wearing white hard hats with chin straps fastened, high-visibility jackets, full-body fall-arrest harnesses worn but not yet clipped in, and steel-toed safety boots, one older foreman facing the group with a clipboard, two workers in their twenties listening, scaffolding behind them fitted with continuous double guardrails and toe boards and wrapped in gray protective mesh netting, protective sheeting over the adjacent boundary wall and a cone line along the footpath, medium wide shot at eye level, 35mm equivalent, moderate depth of field with the group sharp and the scaffolding softly separated, soft diffused morning light filtered through the mesh netting at 5600K with a weak bounce from the pale building wall opposite lifting the shadows under the hard hat brims, matte nylon work wear, scuffed boots, photorealistic documentary photography, restrained natural grade, no text, no logo",
+      "effect": "足場のネットを通った光は拡散して方向性が弱まるため、ヘルメットのつばで落ちる顔の影が浅くなり、表情が読める。養生シートとコーンが同じ画面に入ることで、近隣に配慮して段取りしている現場であることが言葉なしで伝わる。",
+      "caution": "ヘルメットのあご紐が外れている、ハーネスを着けていない人が混ざる、足場の手すりが欠けているといった描写は一枚でも使えない。生成し直すのではなく破棄すること。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。実在の社員に見える顔を出さず、ヘルメットの社名やロゴは生成させないこと。背後に実在の建物や住居が特定できる形で写り込んでいないかも確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。人数・年齢構成・養生の範囲を自社の実情に合わせて置き換える",
+        "output": "16:9 の静止画1枚。安全装備の状態と現場の空気感がここで確定する",
+        "next": "ここで完結。採用ページの冒頭とハローワーク求人票の添付画像に使う。イメージである旨を併記する"
+      }
+    },
+    {
+      "id": "construction-06",
+      "sub": "finished",
+      "title": "竣工した狭小住宅の外観・ブルーアワー",
+      "purpose": "密集地に建てた竣工物件を、窓の明かりが最も効く時間帯で見せる。受注前の施主に仕上がりの水準を示す主力カット。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。文字を正確に出したい場合は後述の注意を参照",
+      "text": "A newly completed three-story narrow detached house on a tight urban lot in Tokyo with dark charcoal vertical metal siding, a flat parapet roof, tall slot windows glowing warm from inside, a recessed entrance with a concrete approach of three steps, the neighboring buildings pressing close on both sides and a utility pole at the curb, wide exterior shot from across the street from slightly below eye level at the corner so two facades are visible, 24mm equivalent, deep focus from the foreground pavement to the parapet, deep blue 8000K twilight ambient outside with no direct sun, warm 2700K interior light spilling from the windows onto the pavement and a faint reflection of the lit windows in the glass of the building opposite, ribbed metal panel texture, damp asphalt with soft specular reflections, photorealistic architectural photography, muted cool grade with the window light as the only warm element, no text, no logo",
+      "effect": "ブルーアワーは空の輝度と窓の輝度が近づく唯一の時間帯で、窓を飛ばさずに室内の暖色を見せられる。密集地では隣棟の影がなくなるこの時間だけ建物の全形が均一な明るさで見えるため、狭小住宅の外観撮影はこの時間に集まる。",
+      "caution": "隣棟や電柱を消した画にすると、現地で見たときの印象と大きく違って誤認につながる。周辺の密度は実際の立地に合わせること。実在物件を扱う場合、外壁材・窓の割付・開口位置が実物と異なると誤認につながるため、実績紹介に使う場合はイメージである旨を明示し、実際の施工写真と同じ並びに混在させない。隣家が特定できる形で写った出力は近隣の了解なく掲載しない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わず文章だけで作る。外壁材・階数・窓の仕様・隣棟との離隔を自社の標準仕様に置き換える",
+        "output": "16:9 の静止画1枚。建物の輪郭、窓の明るさ、路面への光の広がりがここで確定する",
+        "next": "この1枚を「窓灯りと街明かり（竣工外観を動かす）」に渡し、灯りと路面の反射の微細な変化だけを足す"
+      }
+    },
+    {
+      "id": "construction-07",
+      "sub": "finished",
+      "title": "窓灯りと街明かり（竣工外観を動かす）",
+      "purpose": "竣工外観の静止画に灯りの揺らぎと路面の反射だけを足し、建物を動かさずに時間を感じさせる。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。粒子と流体の表現に強く、最安で試せる",
+      "text": "The interior window light flickers almost imperceptibly as if someone moved inside, the reflections of the lit windows on the damp asphalt ripple very slowly, a distant car light passes far behind the building and fades, the building, the facade panels and the camera all stay completely still, slow, subtle, constant speed, no cuts, no people entering the frame",
+      "effect": "反射面だけが動く構成は、建物の輪郭や窓の割付が作り変えられるリスクを最小にできる。室内光のごく弱い揺らぎが加わると、空き家ではなく人が住む家として読まれる。",
+      "caution": "路面の反射の揺れが大きくなると道路が水面のようになり建物が歪む。very slowly を外さず、揺れが増えた出力は捨てる。外壁の目地が動き出した、窓の割付が変わった、通行人が湧いたといった変化は竣工物件の描写として使えないため、等倍で確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「竣工した狭小住宅の外観・ブルーアワー」（T2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の動画1本。室内灯のごく弱い揺らぎと路面の反射だけが動く",
+        "next": "施工実績動画の締めカット、またはウェブサイトのトップの背景ループに使う"
+      }
+    },
+    {
+      "id": "construction-08",
+      "sub": "finished",
+      "title": "マンションリノベーションの内観（LDKと抜け）",
+      "purpose": "竣工した都心マンションのリノベーション内部を、採光と間取りの変更が伝わる形で見せる。図面では伝わらない体感を施主に示す。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実在物件を扱うなら現況写真を参照として渡したほうが寸法感が安定する",
+      "text": "The interior of a completed renovated apartment in central Tokyo, a single open living and dining space created by removing a partition wall, a kitchen island with a stainless counter against the left wall, exposed painted concrete ceiling with surface-mounted conduit, white plastered walls and wide oak floorboards, a full-height sliding window on the right opening to a narrow balcony with the facade of the building opposite visible beyond, an air conditioning unit and a floor outlet visible, no people, wide interior shot at seated eye level, 24mm equivalent, deep focus so the far wall and the ceiling edge both stay sharp, soft daylight entering only through the balcony window, bounced off the pale wall of the building opposite so it arrives as one soft directional 6500K source falling off toward the back of the room, balanced against one warm 2700K pendant over the dining table, matte plaster, oiled oak, brushed stainless, photorealistic architectural interior photography, restrained contrast, no text, no logo",
+      "effect": "都心のマンションは直射が入る時間が限られ、実際の採光は向かいの建物の壁からのバウンスが主になる。窓際から奥へ急に暗くなるのが本当の光条件で、これを再現したうえで deep focus を指定すると、暗い奥でも部屋の広さという最重要情報が潰れずに読める。",
+      "caution": "内観は deep focus が必須で、背景をぼかすと部屋の広さという最重要情報が失われる。実在物件の場合、窓からの眺望・設備・間取りの変更範囲が実物と異なると優良誤認につながるため、必ず施主と施工内容を確認する。管理規約で変更できない共用部（サッシ・バルコニー・PS）を変えた画を作らないこと。実績紹介に使う場合はイメージである旨を明示し、実際の施工写真と同じ並びに混在させないこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "実在物件なら竣工時または現況の内観写真1枚を参照として添付する。架空の仕様でも、間取りと天井高がわかる1枚を渡したほうが寸法感が安定する",
+        "output": "16:9 の静止画1枚。部屋の広さ、窓の位置、設備の見え方がここで確定する",
+        "next": "この1枚を「内観のドリーイン（開口の抜けを見せる）」に渡し、ごく微速の前進だけを足す"
+      }
+    },
+    {
+      "id": "construction-09",
+      "sub": "finished",
+      "title": "内観のドリーイン（開口の抜けを見せる）",
+      "purpose": "内観の静止画をごく微速で前進させ、間仕切りを抜いた後の奥行きと窓までの距離を体感として伝える。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。室内の直線が多いため、カメラ移動が安定するモデルを選ぶ",
+      "text": "The camera pushes in very slowly and steadily toward the sliding window at the far end of the room, keeping the horizon level and the vertical lines vertical, the daylight on the floorboards stays constant, nothing else in the room moves, slow, subtle, constant speed, no cuts, no people entering the frame",
+      "effect": "前進移動は手前の要素が画面外に抜け、奥の要素が大きくなるという視差を生むため、静止画では出ない奥行きが知覚される。開口に向かって寄ることで、間仕切りを抜いた後の一室の長さがそのまま尺の中に現れる。",
+      "caution": "室内の直線は移動中に曲がりやすい。壁の交線、柱の垂直、床板の目地が歪んでいないかを等倍で確認すること。移動量を欲張るとバルコニーの外の景色と間取りが作り変えられるため、前進はごく微速に留める。窓の外に実在の建物が特定できる形で現れた出力は掲載前に確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「マンションリノベーションの内観（LDKと抜け）」（I2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の動画1本。微速の前進だけが動く",
+        "next": "物件紹介動画の中盤に置く。壁の直線が歪んだ出力は使わず、移動量を減らして再生成する"
+      }
+    },
+    {
+      "id": "construction-10",
+      "sub": "finished",
+      "title": "店舗の居抜き改装・竣工外観（朝）",
+      "purpose": "店舗・事務所などのテナント工事の竣工カット。法人案件の受注に向けて、住宅以外の実績があることを示す。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。看板やテナント名の文字は生成させず、編集工程で合成する",
+      "text": "A newly renovated ground-floor cafe tenant in a four-story mixed-use building on a Tokyo back street, dark stained timber cladding above a full-height glazed shopfront, a slim steel-framed entrance door, a blank signboard panel with no lettering above the entrance and a blank sandwich board beside it, the upper floors of the existing building left unchanged above, a cleaned pavement with a utility pole and a bicycle rack at the curb, no people, wide exterior shot from across the street at eye level, 28mm equivalent, deep focus, low morning sun entering from the open end of the street at about 20 degrees elevation raking across the timber cladding while the hard shadow of the building opposite cuts across the lower third of the facade, cool 7000K sky reflected in the glazing, rough stained timber, clear glass with faint reflections, photorealistic architectural photography, neutral grade, no text, no logo",
+      "effect": "低い朝の斜光は縦張りの外壁に細かい陰影を作り、素材の質感が読める。向かいの建物の影が下三分の一を切る条件をあえて構図に入れると、実際の路面店の見え方に近くなり、ガラス面の反射と影の境界が店の輪郭を際立たせる。",
+      "caution": "看板・テナント名・営業時間の文字は高確率で崩れるため、空白のパネルとして生成し、実物のデータを編集工程で合成する。実在施設を扱う場合は建物の形状と開口の割付を実物と変えないこと。居抜き改装では上階や共用部を変えた画を作らないよう、施工範囲の外を変えていないか確認する。実績紹介に使う場合はイメージである旨を明示し、実際の施工写真と同じ並びに混在させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。用途（店舗・事務所・クリニック）、階数、外壁材、施工範囲を実案件に置き換える。看板は空白のまま生成する",
+        "output": "16:9 の静止画1枚。建物の輪郭、朝の斜光と隣棟の影の境界、ガラス面の反射がここで確定する",
+        "next": "この1枚を「店舗の夕景・明かりが灯る」に渡し、時間の移行と灯りの変化を足す"
+      }
+    },
+    {
+      "id": "construction-11",
+      "sub": "finished",
+      "title": "店舗の夕景・明かりが灯る",
+      "purpose": "竣工した店舗が営業している状態を動画で示し、法人施主に完成後の使われ方を見せる。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。人物の表情まで要る最終カットだけ Seedance 2.5、8秒・1080p（約72クレジット、Unlimited 対象外で常に課金）",
+      "text": "The interior lights of the shopfront come up gradually and evenly, two pedestrians walk past the entrance from left to right at a natural pace, the warm interior light begins to reflect on the pavement as the ambient light drops, the building, the upper floors and the camera all stay completely still, slow, subtle, constant speed, no cuts",
+      "effect": "照明の立ち上がりは画面全体の輝度分布を変えるため、短い尺でも時間が経過した印象が出る。歩行者が手前を横切ることで、建物のスケールが人体を基準に読めるようになる。",
+      "caution": "歩行者は脚の数や歩行周期が破綻しやすく、顔が近いほど目立つ。遠景の小さい人物に留め、顔が判別できるサイズでは使わない。建物の輪郭、開口の割付、看板の空白パネルに文字が湧いていないかを等倍で確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「店舗の居抜き改装・竣工外観（朝）」（T2I）で作った静止画1枚。新しく画像は作らない。朝のカットを夕景に転じさせる前提で使う",
+        "output": "5秒の動画1本。照明の点灯、歩行者の通過、路面の反射が動く",
+        "next": "法人向けの実績紹介動画の締めに使う。看板に文字が湧いた出力は破棄する"
+      }
+    },
+    {
+      "id": "construction-12",
+      "sub": "people",
+      "title": "溶接の手元（耐震補強のブレース接合部）",
+      "purpose": "技術力をもっとも直接的に示す寄りのカット。受注側では施工品質の根拠、採用側では身につく技術の具体像として使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。スパークの粒子は静止画で止めたほうが形が整う",
+      "text": "A close-up of a welder's gloved hands running an arc weld along the gusset plate of a steel seismic brace fitted inside an existing building, the welder wearing a full auto-darkening welding helmet over a hard hat liner, flame-resistant leather gauntlets, a leather apron and steel-toed safety boots, a bright white arc at the weld pool with a tight spray of orange sparks falling downward onto a fire-resistant spark blanket spread on the floor, a finished bead with regular ripple marks trailing behind the torch, high-strength bolts in the adjacent holes, the existing concrete wall and a scaffold guardrail blurred behind, close-up at a 45-degree angle, 85mm equivalent, shallow depth of field with the weld pool sharp and the brace falling off into blur, the arc itself as the dominant light source at roughly 6500K throwing hard short shadows, a weak cool 5000K ambient fill from a work light, scaled mill steel, charred flux, worn leather, photorealistic industrial photography, high contrast with crushed shadows, no text, no logo",
+      "effect": "アークは点光源に近いため、硬い影と鋭いハイライトが出て金属の質感が強調される。被写界深度を浅くして溶接池だけを合わせると、視線が作業点に固定され、技術の細部が主題になる。既存躯体を背後に入れることで、使いながらの改修工事だと分かる。",
+      "caution": "溶接面を着けずに溶接している、素手である、保護具が欠けている、火花の受け材がないといった描写は安全基準を満たさないため、生成し直すのではなく破棄する。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。鉄骨の接合部、ボルト孔の列、ビードの等間隔の波は反復構造として破綻しやすいので等倍で確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。接合部の形式（ガセット・突合せ）と作業環境（既存建物内・工場）を自社の実情に置き換える",
+        "output": "寄りの静止画1枚。アークの明るさ、保護具の状態、ビードの質感がここで確定する",
+        "next": "保護具が揃っている1枚を「溶接のスパークと溶接面の上下」に渡し、アークと火花の動きを足す"
+      }
+    },
+    {
+      "id": "construction-13",
+      "sub": "people",
+      "title": "溶接のスパークと溶接面の上下",
+      "purpose": "溶接の寄りを動かし、冒頭1〜3秒で視線を止めるフックを作る。採用動画の開始カットに使う。",
+      "model": "Higgsfield / Seedance 2.0、8秒・720p（約36クレジット）。火花の粒子が多いので、まず Wan 2.7（5秒・720p 約8クレジット）で当たりを見てから上げる",
+      "text": "The torch advances slowly along the joint at a constant speed, the arc flickers rapidly and sparks spray downward and fade before reaching the floor, the welder's helmet stays down throughout, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts",
+      "effect": "アークの高速な明滅と火花の落下という二つの速度が同じ画面にあると、短い尺でも密度が高く見える。トーチを一定速度で進めるだけに動きを絞ることで、手の形の破綻が減る。",
+      "caution": "火花が増殖して画面を覆う、溶接面が途中で上がる、ビードが後ろに残らず消えるといった破綻が出る。溶接面が上がった出力は保護具未着用の描写になるため破棄する。生成し直して探すより、破棄する基準を先に決めておくほうが早い。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「溶接の手元（耐震補強のブレース接合部）」（T2I）で作った静止画1枚。新しく画像は作らない。保護具が揃っている枚のみを入力にする",
+        "output": "5〜8秒の動画1本。アークの明滅、火花の落下、トーチの前進が動く",
+        "next": "採用動画の1カット目、または15秒広告の冒頭フックに使う。音なし視聴前提でテキストを上部に載せる"
+      }
+    },
+    {
+      "id": "construction-14",
+      "sub": "people",
+      "title": "パテ処理の鏝さばき（ボードの継目）",
+      "purpose": "内装仕上げの技術を、継目の消え方と鏝跡で示す。クロス・塗装前の下地づくりの受注と、職人採用の両方に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。斜光の指定を外すと鏝跡が消える",
+      "text": "A close-up of a finisher's hands holding a wide stainless steel joint knife against a plasterboard wall, feathering white joint compound over a taped board seam, the worker wearing a white hard hat with chin strap, cotton work gloves, long sleeves and steel-toed safety boots, a hawk board loaded with compound in the other hand, the already-finished area to the left showing a flat surface where the seam has disappeared and the unfinished area to the right still showing the taped joint and screw heads, the bare interior of a tenant fit-out blurred behind, close-up from the side at a shallow angle to the wall surface, 85mm equivalent, shallow depth of field with the knife edge sharp, hard raking light skimming the wall almost parallel to its surface from the left at 5000K from a single work light, deliberately no frontal fill so surface relief reads as shadow, wet compound sheen, brushed stainless steel, photorealistic trade documentation photography, neutral grade, no text, no logo",
+      "effect": "壁面にほぼ平行な角度から光を当てると、わずかな凹凸が長い影になって可視化される。仕上げ済みと未処理の領域を同じ画面に入れることで、鏝一本で継目がどこまで消えるかが比較で伝わる。この斜光は内装現場で実際に下地の精度を確認するときの光の当て方そのもの。",
+      "caution": "正面からフィル光を足すと鏝跡と凹凸が完全に消え、技術の提示にならない。raking light の指定を外さないこと。ヘルメット未着用や素手の描写は安全基準を満たさないため、生成し直すのではなく破棄する。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。ビス頭の列は反復構造なので等倍で間隔を確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。下地材（石膏ボード・ケイカル板）と仕上げ（クロス・塗装）を自社の施工品目に置き換える",
+        "output": "寄りの静止画1枚。斜光の角度と仕上げ面の質感がここで確定する",
+        "next": "この1枚を「パテの塗り付け（粘性のある材料の動き）」に渡し、材料が伸びる動きを足す"
+      }
+    },
+    {
+      "id": "construction-15",
+      "sub": "people",
+      "title": "パテの塗り付け（粘性のある材料の動き）",
+      "purpose": "鏝の一引きで継目が消える過程を動画にする。技術の説明を言葉なしで成立させるカット。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。粘性のある材料の変形は流体表現に強いモデルが有利",
+      "text": "The joint knife sweeps slowly upward across the wall in one continuous stroke at a constant speed, the compound behind the blade flattens into a smooth surface and the taped seam disappears, a thin ridge of excess material gathers at the leading edge of the blade, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts",
+      "effect": "鏝の後ろで面が平滑に変わるという前後の差が同じカット内に出るため、作業の意味が一目で伝わる。刃先に材料が溜まる挙動が入ると、粘性という物性が画面上で説明される。",
+      "caution": "材料が逆流する、鏝が壁をすり抜ける、既に仕上がった面が粗く戻るといった破綻が頻発する。粘性材料は生成モデルが苦手な領域なので、採用率が低い前提で生成回数を見込むこと。ヘルメットや手袋が消えた出力は破棄する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「パテ処理の鏝さばき（ボードの継目）」（T2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の動画1本。鏝の一引きと材料の変形が動く",
+        "next": "内装仕上げの技術紹介、または採用動画の技術パートに置く。3回で当たらなければ静止画で見せ切る"
+      }
+    },
+    {
+      "id": "construction-16",
+      "sub": "people",
+      "title": "職人の手元・差し替え型（墨出し・配管・配線）",
+      "purpose": "職種を入れ替えて同じ構図で撮り揃えるための型。採用訴求で「どの技術が身につくか」を職種別に並べて見せる。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。職種だけを差し替えて同じ型で数点作る",
+      "text": "A close-up of the hands of a [trade: carpenter snapping a chalk line across a bare concrete floor for a partition layout / plumber tightening a threaded copper fitting with two pipe wrenches inside a shaft / electrician terminating stranded wires into a flush-mount outlet box in a stud wall], the worker wearing a white hard hat with chin strap, fitted work gloves, long sleeves and steel-toed safety boots, the tool and the workpiece filling the frame with the stripped tenant interior blurred behind, close-up at a 45-degree angle from slightly above the hands, 85mm equivalent, shallow depth of field with the contact point between tool and material sharp, soft 5000K side light from a work light on the left with a weak bounce from the right so tool steel reads as a gradient rather than a blown highlight, [material: dusty concrete and blue chalk line / brushed copper and thread cutting oil / colored insulation and galvanized box], photorealistic trade documentation photography, neutral grade, no text, no logo",
+      "effect": "工具と材料の接点だけにピントを置き、他を同じ条件でぼかすと、職種が違っても同じシリーズのカットとして並ぶ。側光とバウンスの組み合わせは、工具の鋼材を白飛びさせずに階調として見せる。内装・改修の工種で揃えると、実際に配属される仕事の具体像になる。",
+      "caution": "ヘルメット・手袋・安全靴の指定を職種ごとに書き換えないこと。保護具が欠けた描写は安全基準を満たさないため、生成し直すのではなく破棄する。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。手指の本数と関節の向きは必ず等倍で確認し、工具の目盛や刻印に文字が湧いていないかも見ること。電気配線は結線の状態が実際の施工方法と違わないか有資格者に確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。参照画像は使わない。[trade] と [material] を自社の職種に差し替え、同じ型で3〜5点まとめて生成する",
+        "output": "同じ構図・同じ光の寄りカットが職種分。採用ページに横並びで置ける状態",
+        "next": "ここで完結。採用ページの職種紹介と求人票の添付に使う。動かす必要があれば「パテの塗り付け」と同じ要領で反復動作だけを足す"
+      }
+    },
+    {
+      "id": "construction-17",
+      "sub": "equipment",
+      "title": "小型油圧ショベルの掘削（狭小地の基礎工事）",
+      "purpose": "狭小地に入る小型重機の保有と運用能力を示すカット。間口の狭い敷地でも自社施工できることを法人・個人の双方に伝える。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。ブームとアームの直線は生成後の拡大確認が前提",
+      "text": "A compact zero-tail-swing hydraulic excavator digging a foundation trench on a narrow infill lot in Tokyo, the machine fitting between the existing buildings on either side with little clearance, the boom extended forward and the bucket biting into brown soil with a spoil pile beside the trench, the operator visible in the cab wearing a white hard hat, a ground worker standing well clear of the swing radius in a white hard hat with chin strap, high-visibility jacket and steel-toed safety boots, orange safety cones and barrier netting along the street edge with protective sheeting over the neighboring boundary wall, medium wide shot from slightly below eye level on the bucket side, 35mm equivalent, deep focus so the boom, the bucket teeth and the trench edge all stay sharp, flat diffused light from a fully overcast sky at 6500K with no hard shadows so the machine reads evenly against the surrounding walls, scratched painted steel, hydraulic cylinder chrome, wet clumped soil, photorealistic documentary photography, neutral grade, no text, no logo",
+      "effect": "曇天の拡散光は機体のどの面にも均等に当たるため、ブームとアームの輪郭が隣棟の影に隠れず全体の姿勢が読める。後方小旋回の機体が隣棟との隙間に収まっている構図そのものが、狭小地に対応できる設備を持っているという情報になる。",
+      "caution": "ブーム、アーム、油圧シリンダー、バケットの歯列は直線と反復構造の典型で、関節が二重になる、シリンダーが貫通する、歯の本数が合わないといった破綻が高確率で出る。等倍で関節とバケットを必ず確認すること。作業員が旋回半径の内側に入った出力、ヘルメットがない出力、機体が隣棟に接触して見える出力は安全基準を満たさないため破棄する。機体のメーカー名と型式の文字は生成させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。機体の規格（0.1m3 クラスなど）、掘削対象、養生と交通誘導の方法を自社の保有機と工法に置き換える",
+        "output": "16:9 の静止画1枚。機体の姿勢、ブームの形、現場の養生状態がここで確定する",
+        "next": "ブームとバケットが破綻していない1枚を「バケットの掘削動作（重機の動きを見せる）」に渡す"
+      }
+    },
+    {
+      "id": "construction-18",
+      "sub": "equipment",
+      "title": "バケットの掘削動作（重機の動きを見せる）",
+      "purpose": "重機の動きを5秒で示し、保有設備の訴求を静止画より強くする。",
+      "model": "Higgsfield / Kling 3.0、5秒・1080p（約12.5クレジット）。機械の直線構造が比較的保たれる",
+      "text": "The bucket curls slowly into the soil, lifts a full load clear of the trench at a constant speed and starts to swing toward the spoil pile, the boom keeps its length without extending or retracting, loose soil falls from the bucket teeth, the ground worker stays in the same position outside the swing radius, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts",
+      "effect": "掘る・上げる・振るという連続した一連の動作に限定すると、各関節の動く順序が決まり、姿勢の破綻が起きにくい。土が歯からこぼれる細部が入ると、荷の重さが画面で説明される。",
+      "caution": "ブームが伸縮する、アームの関節が増える、バケットが地面をすり抜けるといった破綻が出る。等倍で関節とシリンダーを確認すること。作業員が旋回半径の内側に動いた出力、旋回で機体が隣棟に接触する出力は、安全上ありえない作業の描写なので破棄する。生成し直して使えるものを探すのではなく、破棄する判断を先に決めておく。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「小型油圧ショベルの掘削（狭小地の基礎工事）」（T2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の動画1本。バケットの掘削から旋回開始までが動く",
+        "next": "会社紹介動画の設備パート、または狭小地案件の提案資料に埋め込む"
+      }
+    },
+    {
+      "id": "construction-19",
+      "sub": "equipment",
+      "title": "高所作業車によるビル外壁改修（保有設備）",
+      "purpose": "高所作業車を使った外壁改修の体制を示すカット。足場を組まない小規模改修の受注と、設備を持つ事業者としての信用の提示に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。ブームの直線とネットの目は生成後の拡大確認が前提",
+      "text": "A truck-mounted articulating boom lift positioned on a Tokyo street beside a five-story tiled office building, the boom raised to the third floor with one worker in the basket wearing a white hard hat with chin strap, a full-body fall-arrest harness with the lanyard clipped to the designated anchor point inside the basket, a high-visibility jacket and steel-toed safety boots, the basket guardrail and toe board clearly visible, the outriggers deployed on steel pads with cones and a traffic guard standing at the curb, a partial drop sheet hung over the repair area of the tile facade, medium wide shot from the opposite footpath at eye level looking slightly up, 35mm equivalent, deep focus from the truck to the top of the boom, flat diffused light from an overcast sky at 6500K with the hard shadow of the building opposite cutting across the lower floors, exposure held so the pale tile facade keeps surface texture instead of clipping to flat white, painted steel boom, hydraulic chrome, matte tile with grout lines, photorealistic documentary photography, neutral grade, no text, no logo",
+      "effect": "明るいタイル面は露出を下げないと階調が飛ぶため、keeps surface texture の指定で目地と補修範囲を残す。隣棟の影が下層階を切る条件を構図に入れると、ブームが影の外へ伸びて上がっている高さが対比で読め、作業階が数字なしで伝わる。",
+      "caution": "タイル面が白飛びすると補修範囲が見えなくなり、改修の仕上がりが伝わらない。露出の指定を外さないこと。バスケット内のハーネスの固定先、手すり、幅木、アウトリガーの設置状態が欠けた出力は安全基準を満たさないため破棄する。ブームの関節、タイルの目地、ネットの目といった反復構造が破綻しやすいので等倍で確認する。機体のメーカー名と型式の文字は生成させない。道路使用の体制（交通誘導員・コーン）が実際の段取りと違わないか確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。機種（高所作業車・ラフタークレーン・搬入用リフト）、作業階、道路使用の段取りを自社の業務に置き換える",
+        "output": "16:9 の静止画1枚。ブームの姿勢、外壁面の階調、養生と交通誘導の状態がここで確定する",
+        "next": "この1枚を「作業床が上がる（高所作業車の動き）」に渡し、ブームの上昇だけを足す"
+      }
+    },
+    {
+      "id": "construction-20",
+      "sub": "equipment",
+      "title": "作業床が上がる（高所作業車の動き）",
+      "purpose": "ブームの上昇という動きの強い現象を5秒で見せ、外壁改修の受注訴求に使うフックを作る。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。機械の単調な一軸移動を最安で試せる",
+      "text": "The boom extends upward slowly and steadily at a constant speed, the basket rises past the third floor toward the fourth while staying level, the worker in the basket stays in the same position holding the guardrail, the outriggers and the truck body stay completely still, the drop sheet on the facade sways very slightly, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts",
+      "effect": "上昇という一軸の運動は軌道が単調なため、steadily と constant speed を指定すると関節の形が保たれやすい。バスケットが水平を保ったまま階を一つ越える変化が入ると、作業できる高さが画面で説明される。",
+      "caution": "ブームの節が増える、バスケットが傾く、アウトリガーが浮く、作業員が手すりから身を乗り出すといった破綻が出る。バスケットが傾いた出力とハーネスの固定が外れた出力は安全上ありえない描写なので破棄する。タイルの目地が移動中に溶けやすいので、上昇量を抑えめにする。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「高所作業車によるビル外壁改修（保有設備）」（T2I）で作った静止画1枚。新しく画像は作らない",
+        "output": "5秒の動画1本。ブームの上昇とバスケットの水平移動が動く",
+        "next": "外壁改修の告知広告の冒頭フックに使う。足場を組まない小規模改修の提案資料にも回す"
+      }
+    },
+    {
+      "id": "construction-21",
+      "sub": "process",
+      "title": "階段での資材搬入（エレベーターのない建物）",
+      "purpose": "工期と段取りを左右するのに説明が難しい搬入の実態を一枚で見せる。既存建物の改修・原状回復の提案に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。階段の反復と養生の継ぎ目は生成後の拡大確認が前提",
+      "text": "Two workers carrying a stack of plasterboard up the narrow common stairway of an older Tokyo building with no elevator, the stair treads, landing and handrail wrapped in protective sheeting and corner guards taped at every edge, both workers wearing white hard hats with chin straps fastened, fitted work gloves, long sleeves and steel-toed safety boots, the continuous handrail clearly visible along the wall, a second stack of boards staged on the landing below, medium shot from the landing above looking down the flight at a 30-degree angle, 35mm equivalent, deep focus so the whole flight and both workers stay sharp, soft diffused daylight falling from a small landing window above at 5600K with a weak bounce off the pale protected wall so the lower treads are not lost to shadow, matte protective sheeting with taped seams, scuffed steel handrail, chalky board edges, photorealistic documentation photography, neutral grade, no text, no logo",
+      "effect": "階段室は窓が小さく光源が一つしかないため、踊り場の窓から落ちる光と養生シートの白いバウンスだけで階段の段鼻が読める。養生の範囲が画面に全部入ることで、共用部を傷めない段取りをしているという最も伝えにくい情報が一枚で示せる。",
+      "caution": "階段の段鼻と手すりの支柱は反復構造の典型で、段数が途中で変わる、手すりが途切れる、養生の継ぎ目が消えるといった破綻が出る。等倍で上下端と中央を確認すること。ヘルメットのあご紐・手袋・安全靴が欠けた出力、手すりが欠落した出力は破棄する。無理な体勢で重量物を持つ描写は作らない。共用部の養生範囲は実際に管理組合やオーナーと取り決めた範囲に合わせること。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像は使わない。建物の階数、階段の形式、養生の範囲、搬入する資材を自社の実案件に置き換える",
+        "output": "16:9 の静止画1枚。階段の見え方、養生の範囲、安全装備の状態がここで確定する",
+        "next": "この1枚を「資材を一段ずつ上げる（搬入の説明カット）」に渡し、搬入の動きを足す"
+      }
+    },
+    {
+      "id": "construction-22",
+      "sub": "process",
+      "title": "資材を一段ずつ上げる（搬入の説明カット）",
+      "purpose": "エレベーターのない建物で搬入に何時間かかるかを、動きで説明する。言葉では伝わらない工期の根拠を5秒に圧縮する。",
+      "model": "Higgsfield / Wan 2.7、5秒・720p（約8クレジット）。単調な反復動作を最安で試せる",
+      "text": "The two workers step up the flight one tread at a time at a slow constant pace, the stack of boards stays horizontal and does not tilt, the leading worker's gloved hand keeps contact with the handrail, the protective sheeting on the treads stays in place, the stairway, the handrail and the camera all stay completely still, slow, subtle, constant speed, no cuts, no new objects entering the frame",
+      "effect": "一段ずつ上がる反復運動は周期が決まっているため、pace を遅く固定すると脚と荷の関係が保たれやすい。荷が水平を保ったまま進む様子が入ることで、二人で呼吸を合わせる作業だという段取りの実態が説明なしで理解される。",
+      "caution": "荷が傾いて落ちる、脚の本数や歩行周期が崩れる、手すりが途中で消える、養生がめくれるといった破綻が出る。手すりから手が離れた出力と荷が傾いた出力は安全上ありえない描写なので、使わずに破棄する。人物の全身が動くカットは破綻率が高いので、顔が判別できない距離と角度を入力の静止画段階で確保しておくこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "「階段での資材搬入（エレベーターのない建物）」（T2I）で作った静止画1枚。新しく画像は作らない。顔が判別できない距離の1枚を選ぶ",
+        "output": "5秒の動画1本。一段ずつ上がる反復動作と荷の水平移動が動く",
+        "next": "改修提案の説明動画に組み込み、工期と搬入費の根拠として示す。縦型に切り出して採用訴求にも回す"
+      }
+    },
+    {
+      "id": "construction-23",
+      "sub": "process",
+      "title": "現況写真から施工後イメージを作る",
+      "purpose": "リノベーションの提案段階で、図面と見積だけでは伝わらない完成後の状態を見せる。受注前の合意形成に使う。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。現況写真を参照として渡すこと自体が精度の条件になる",
+      "text": "Keep the room geometry, the window positions, the ceiling height and the camera viewpoint of the reference photograph exactly as they are. Replace only the finishes: [floor: worn vinyl sheet becomes wide oiled oak boards], [walls: aged cloth becomes white plaster], [ceiling: stained board becomes flat white], [opening: the existing aluminum sash stays unchanged and gains an inner resin sash of the same size], remove all existing furniture and clutter, no people, wide interior shot at seated eye level matching the reference, 24mm equivalent, deep focus so the far wall and the ceiling edge both stay sharp, soft daylight entering only through the existing window, bounced off the facade of the building opposite so it arrives as one soft directional 6500K source, balanced by one warm 2700K pendant for contrast, matte plaster, oiled oak, resin sash frame, photorealistic architectural interior photography, restrained contrast, no text, no logo",
+      "effect": "部屋の形状と撮影位置を参照画像に固定したまま仕上げ材だけを置き換えると、現況写真と並べたときに同じ部屋だと認識される。同一視点でないビフォーアフターは比較として成立しないため、視点の固定が効果の前提になる。",
+      "caution": "窓の位置や天井高が変わった出力はビフォーアフターとして使えないので破棄する。施工範囲外の部分まで変わっていないかを現況写真と重ねて確認すること。分譲マンションでは共用部にあたるサッシ・バルコニー・PS を変えた画を作らないこと（管理規約で変更できない部分を描くと提案そのものが成立しない）。提案に使う場合は完成予想のイメージである旨を明示し、実際の施工写真と同じ並びに混在させない。仕様が実際の見積内容と異なると優良誤認につながるため、必ず見積と突き合わせる。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "現況の室内写真1枚を参照として必ず添付する。撮影位置は施工後に同じ位置から撮れる場所を選んでおく。[floor][walls][ceiling][opening] を見積の仕様に書き換える",
+        "output": "現況と同じ視点・同じ部屋形状の施工後イメージ1枚",
+        "next": "ここで完結。現況写真と左右に並べて提案資料に載せる。対応関係は「ビフォーアフター素材の管理表」で記録する"
+      }
+    },
+    {
+      "id": "construction-24",
+      "sub": "process",
+      "title": "壁内の配管・配線の施工状況（隠蔽部の根拠）",
+      "purpose": "仕上げたら見えなくなる設備工事の中身を、ボードを貼る前の状態として示す。設備更新の説明を価格の根拠に変えるためのカット。",
+      "model": "静止画。手持ちのツールで可（ChatGPT / Gemini / Higgsfield の Soul 2.0 など）。実案件なら施工写真か施工図を参照として渡すと取り回しが安定する",
+      "text": "A close-up of a wall under construction in a Tokyo apartment renovation before the boards go on, light-gauge steel studs at regular centers, [services: new cross-linked polyethylene water supply pipes in red and blue sleeves routed through the studs with grommets at every penetration / new electrical cables run in flexible conduit with a flush-mount box fixed to a stud at outlet height], a drain pipe with a visible slope strapped to the floor at the left, the existing concrete wall behind with the furring channel already set, no finish materials installed yet, medium close-up at a 45-degree angle to the wall plane, 50mm equivalent, moderate depth of field with the full layer stack in focus, soft diffused daylight from the window opening at 6000K with a weak bounce fill from a work light so the depth behind the studs is not lost to shadow, galvanized steel finish, matte pipe sleeves, ribbed flexible conduit, photorealistic technical documentation photography, neutral grade, no text, no logo",
+      "effect": "壁面に対して45度の角度に置くと、面と奥行きの両方が同じ画面に入り、スタッド越しに配管の取り回しが読める。弱いバウンスを足すことで壁の奥が黒く潰れず、貫通部の処理と支持の間隔が確認できる状態になる。",
+      "caution": "配管の種類、貫通部の処理、支持の間隔、電線の管の使い方が実際の仕様と異なると、性能と施工品質の説明そのものが崩れる。必ず施工図と突き合わせ、電気と給排水は有資格者に確認すること。実績紹介に使う場合はイメージである旨を明示し、実際の施工写真と同じ並びに混在させない。作業員を入れる場合はあご紐付きヘルメット・防塵マスク・手袋・安全靴を明示し、保護具が欠けた出力は生成し直すのではなく破棄する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "実案件なら施工中の写真か施工図を参照として添付する。[services] を自社の標準工法に書き換える",
+        "output": "取り回しが読める寄りの静止画1枚。配管・配線の経路と貫通部の処理が見える",
+        "next": "ここで完結。設備更新の説明資料とウェブサイトの技術ページに使う。口径や品番の数値は画像に焼き込まず、文章側で書く"
+      }
+    },
+    {
+      "id": "construction-25",
+      "sub": "process",
+      "title": "ビフォーアフター素材の管理表",
+      "purpose": "現況写真と施工後イメージの対応関係、生成物か実写かの区別、施主の確認状況を一元管理する。実績紹介での混在事故を防ぐための帳票。",
+      "model": "生成AIに投げるものではない。表計算ソフトで作り、案件ごとに1シートで運用する",
+      "text": "【ビフォーアフター素材 管理表】案件ごとに1シート。列は次の11項目。\n1. 素材ID（案件コード＋連番。例 TK2601-03）\n2. 対応ペアID（ビフォーとアフターに同じIDを振る。未対応なら空欄）\n3. 区分（ビフォー / アフター / 単独）\n4. 種別（実写 / AI生成 / 実写をAIで加工）\n5. 撮影位置・視点（部屋名と立ち位置。施工後に同位置から撮れるかを「可 / 不可」で併記）\n6. 使用プロンプトID（本パックのID。例 construction-23）\n7. 参照に使った元素材のID（I2I の場合は必須）\n8. 仕様の根拠（見積書の項目番号・施工図の図番。AI生成の場合は必須）\n9. 施主確認（未 / 送付済 / 承諾済。承諾日を記入）\n10. 掲載可否（可 / 不可 / 顔・社名・近隣の映り込みのマスク後に可）\n11. 「完成イメージ」表記の有無（AI生成・加工は必ず「有」。無の行は掲載しない）\n\n運用の規則を表の上部に固定で書いておく。「種別が AI生成 または 実写をAIで加工 の素材は、実写の施工写真と同じギャラリー・同じ並びに置かない」「施主確認が承諾済でない素材は社外に出さない」「ペアIDが揃っていない素材をビフォーアフターとして並べない」「隣家や通行人が特定できる映り込みがある素材は、マスクするまで掲載しない」。",
+      "effect": "AI生成物と実写を同じ列で管理し、種別と表記の有無を必須入力にすることで、掲載時の混在が入力段階で検出できる。視点の「可 / 不可」を先に記録しておくと、施工後に同じ位置から撮り直せる物件を選別でき、生成に頼る枚数そのものを減らせる。密集地では隣家の映り込みが避けられないため、掲載可否の列にマスクの要否まで持たせておく。",
+      "caution": "この表を作らずにAI生成画像を実績ギャラリーに入れると、後から実写と区別できなくなり、全件の見直しが必要になる。種別の列だけは案件開始時点で必須入力にすること。施主確認の列は、承諾の記録を残すこと自体が目的なので、口頭了解で埋めない。",
+      "status": "未検証",
+      "flow": {
+        "code": "DOC",
+        "step": "単発",
+        "input": "生成AIには投げない。既存の案件管理表に11列を足すか、案件着手時に新規シートを作る。自社の案件コード体系に合わせる",
+        "output": "案件ごとの素材一覧1シート。実写とAI生成の区別と掲載可否がその場で判断できる状態",
+        "next": "ここで完結。制作着手の最初の作業にする。生成を始めてから作ると種別の記録が抜ける"
+      }
+    },
+    {
+      "id": "construction-26",
+      "sub": "ads",
+      "title": "夜間工事・投光器が点く（直接動画）",
+      "purpose": "営業中の建物を使いながら夜間に施工する体制を短尺で見せ、採用動画と法人向けの訴求の冒頭に置く。静止画を作らず直接動画にして試行回数を稼ぐ。",
+      "model": "Higgsfield / Seedance 2.0 Fast、8秒・720p（約28クレジット）で当たりを探し、採用カットだけ Seedance 2.0、8秒・720p（約36クレジット）で作り直す",
+      "text": "A tenant renovation site inside a Tokyo commercial building at night, two portable LED work lights on tripods switch on and flood the stripped interior and the light-gauge steel stud walls with cool white light, two workers in white hard hats with chin straps, high-visibility jackets, full-body fall-arrest harnesses clipped to a lifeline and steel-toed safety boots continue working at a natural pace, a rolling scaffold tower beside them fitted with continuous double guardrails and toe boards, the floor and the common corridor doorway wrapped in protective sheeting, the windows behind showing the lit windows and street glow of the surrounding buildings, medium wide shot at eye level, 35mm equivalent, deep focus, deep blue 8000K night outside the glass with 5600K work lights as the only direct source inside, the camera stays locked off with no movement, slow, subtle, constant speed, no cuts, no text, no logo",
+      "effect": "投光器が点く瞬間は画面全体の輝度が切り替わるため、音なし視聴でも冒頭で視線が止まる。窓の外の青い街明かりと5600Kの投光器という色温度差が、夜間工事であることを言葉なしで指定する。",
+      "caution": "画像を経由しないため構図と光を制御できず、安全装備も指定どおりに出ない確率が高い。ヘルメット未着用、ハーネス未装着、手すりのない足場が出た出力は、生成し直すのではなく破棄する。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。軽量鉄骨下地の格子と足場の直線が破綻しやすいので、安く試せる Fast で当たりを探してから本番モデルに上げること。夜間作業は届出と近隣への周知が前提の工事なので、実際に対応していない会社の素材として使わない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2V",
+        "step": "単発",
+        "input": "静止画を経由せず、この文章だけを入力する。職種・人数・施工の内容を自社の現場に置き換える。参照画像は使わない",
+        "output": "8秒の動画1本。投光器の点灯と作業の継続が動く",
+        "next": "ここで完結。採用動画の1カット目に置く。画面上部にテキストを載せる前提で、人物は下側三分の二に収まった出力を選ぶ"
+      }
+    },
+    {
+      "id": "construction-27",
+      "sub": "ads",
+      "title": "横型の施工動画から縦型に作り直す",
+      "purpose": "横型で作った施工実績動画を、SNSと求人媒体の縦型枠に合わせて作り直す。撮り直しなしで配信面を増やす。",
+      "model": "Higgsfield の Studio 系（Ad Multiplier 相当）。Unlimited 対象外で常に課金されるため、尺と本数を先に決めてから着手する",
+      "text": "Keep the shot order, the cut timing and the total duration of the reference video exactly as they are. Reframe each shot from 16:9 to vertical 9:16, centering on the working hands or the machine rather than the empty ceiling, keep the upper third of the vertical frame free of important subject matter so a text overlay can be added later, do not add or remove shots, do not change the color grade, no text, no logo",
+      "effect": "尺とカット順を固定したまま画角だけを変えるため、横型で検証済みの構成がそのまま縦型に移る。上部三分の一を空けておくと、編集でテキストを載せたときに作業点に被らない。",
+      "caution": "縦型に切ると、横型では画面端にあった足場の手すりや安全標識、養生の範囲が外れて、安全管理と近隣配慮が見えない画になることがある。切り出し後に安全装備と手すりが残っているかを必ず確認し、外れた場合はそのカットを使わない。Studio 系は常に課金されるため、縦型を作る本数を先に決めてから着手すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに完成している横型の施工実績動画1本（15〜30秒）。新しく映像は作らない。縦型の配信先と本数を先に決めておく",
+        "output": "カット順と尺が同じ縦型（9:16）の動画1本",
+        "next": "Instagram のリールと求人媒体の動画枠に出す。テキストは編集工程で上部三分の一に載せる"
+      }
+    },
+    {
+      "id": "construction-28",
+      "sub": "ads",
+      "title": "採用動画の訴求メッセージを差し替える",
+      "purpose": "採用動画の映像を固定したまま、訴求メッセージだけを変えた比較検証用の変種を作る。何が応募につながるかを映像変数を固定して測る。",
+      "model": "Higgsfield の Studio 系（Ad Multiplier 相当）。Unlimited 対象外で常に課金されるため、検証する文言の数だけコストが積み上がる",
+      "text": "Keep the motion, the framing, the cut timing and the total duration of the reference video exactly as they are. Replace only the on-screen hook text and the closing call to action. The visual content of every shot stays unchanged, including the safety equipment visible on the workers, no change to the color grade, no logo",
+      "effect": "映像を完全に固定してメッセージだけを変えると、応募数の差が文言の差として読める。東京の建設業の採用では「技術が身につく」「現場が近くて通いやすい」「土日が取れる」「残業が少ない」のどれが効くかが沿線と年齢層で変わるため、この比較が設計の根拠になる。",
+      "caution": "1回の検証で変える変数は1つに限定する。フックとCTAを同時に変えると、どちらが効いたか分からなくなる。差し替えの過程で人物の安全装備が変化した出力は、採用訴求としても施工実績としても使えないため破棄する。労働条件に関する文言は求人票の記載と一致させ、実際の条件と異なる訴求は作らない。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに配信している採用動画1本（15〜30秒）と、差し替える文言のリスト。新しく映像は作らない",
+        "output": "映像の構造が同一で、文言だけが異なる動画が文言の数だけ",
+        "next": "求人媒体とSNSに同時に出して応募数を比べる。変える変数は1回につき1つに限定する"
+      }
+    },
+    {
+      "id": "construction-29",
+      "sub": "ads",
+      "title": "安全装備の必須記述（全カットに差し込む）",
+      "purpose": "人物が写るすべての生成に同じ文言を差し込み、安全基準を満たさない描写が出る確率を下げる。建設業の素材でもっとも重要な部品。",
+      "model": "静止画・動画の両方で、被写体スロットまたは動作スロットに共通で挿入する",
+      "text": "All workers wearing white hard hats with chin straps fastened, high-visibility jackets, and steel-toed safety boots; anyone working at height wearing a full-body fall-arrest harness with the lanyard clipped to a taut lifeline or a designated anchor point; all scaffolding fitted with continuous double guardrails and toe boards; no one standing under a suspended load or inside the swing radius of machinery; hands protected by fitted work gloves, eye and face protection worn for welding, cutting and grinding, no text, no logo",
+      "effect": "装備を個別の名詞として列挙すると、モデルが「作業員」という曖昧な概念から補完する余地が減る。あご紐、ランヤードの固定先、幅木といった細部まで名指しすることで、形だけ装備が付いた描写を避けられる。",
+      "caution": "この文言を入れても指定どおりに出ない枚数が必ず混ざる。安全基準を満たさない描写は、生成し直すのではなく破棄する。顧客の安全管理体制を疑わせる素材は、それ自体が営業上の損失になる。装備の有無は縮小表示では判別できないため、必ず等倍であご紐とランヤードの固定先を確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "人物が写るすべての静止画・動画プロンプトの被写体または動作の記述に、この文言を差し込む。他のスロットは変えない",
+        "output": "それ自体は何も生成しない。差し込んだ先の作業員に保護具と安全設備が付く確率が上がる",
+        "next": "建設業の全カットの既定値にする。出力の検品は等倍で行い、満たさない枚は破棄する"
+      }
+    },
+    {
+      "id": "construction-30",
+      "sub": "ads",
+      "title": "東京の現場の光（隣棟の影・ネット越し・投光器）",
+      "purpose": "東京の現場を東京の光で見せる。他地域の素材と並べたときに、密集地で施工している事業者であることが画面から伝わるようにする。",
+      "model": "静止画・動画の両方で、光のスロットに共通で挿入する。3つのうち1つを選んで使う",
+      "text": "A — morning raking light between buildings: direct 4000K sunlight entering from the one open end of the street at a shallow angle, the hard-edged shadow of the adjacent building cutting across the lower part of the frame, soft bounce from the pale wall opposite lifting the shaded faces so nothing crushes to black | B — diffused through netting and sheeting: flat 5600K light filtered through the scaffold mesh and the protective sheeting, no hard shadows, even illumination with a slight loss of contrast, exposure held so pale tile and plaster keep surface texture instead of clipping to flat white | C — night work lights: deep blue 8000K ambient outside the glass with no daylight, 5600K portable LED work lights as the only direct source inside, hard short shadows close to the lights and a rapid falloff into darkness beyond",
+      "effect": "ビルに挟まれた現場では直射が入る時間が短く、隣棟の影が画面を斜めに切る。足場のネットと養生シートは巨大な拡散板として働いて影を消し、夜間工事では投光器が唯一の光源になって近くは硬い影、遠くは急に暗く落ちる。この3つが東京の現場の光の実体で、どれを選ぶかで時刻と工事の種類が決まる。",
+      "caution": "AとBを混ぜると、長い影がありながら影の輪郭がないという物理的に成立しない画になる。1カットにつき1つだけを選ぶこと。Bで露出を抑える記述を外すとタイルや石膏ボードの白い面が飛び、施工の仕上がりが読めなくなる。Cは光源から離れた部分が落ちるため、見せたい作業点を投光器の近くに置く構図にしておく。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "静止画または動画プロンプトの光のスロットに、A・B・C のうち1つだけを差し込む。他のスロットは変えない",
+        "output": "それ自体は何も生成しない。差し込んだ先の画の光が東京の現場の条件になる",
+        "next": "1案件の全カットで同じ記号を使い、時刻と工事の種類を統一する。最終的なトーンの統一は編集のカラーグレーディングで担保する"
+      }
+    }
+  ],
+  "legal": "建設業の広告で中心になるのは景品表示法です。以下は2026年10月11日に公的資料で確認した内容の整理であり、法的助言ではありません。個別の案件は弁護士に確認してください。\n\n**1. 「施工実績」「施工事例」としてAI生成画像を使わないこと**\n消費者庁は、施工実績の件数が実際とかけ離れていた事案について、**優良誤認表示**として課徴金納付命令を出しています（2026年3月の事例）。実績の優良性を画像で示す場合も同じ観点で評価されうるため、**自社が施工していない物件やAI生成のイメージを施工実績として掲載することは避けてください。**\n\n**2. 景品表示法 第5条第1号（優良誤認表示）**\n商品・サービスの内容について、実際のものよりも著しく優良であると一般消費者に示す表示が禁止されています。技術力、仕上がり、工期、対応範囲を実際より優良に見せる画像はこの対象になりえます。\n\n**3. 判断は「表示全体から受ける印象」で行われます**\n消費者庁の公式な考え方は、表示上の特定の文言・図表・写真等から受ける印象ではなく、**表示内容全体から一般消費者が受ける印象・認識が基準となる**としています。小さな注記で打ち消せる前提で設計しないでください。\n\n**4. 建設業法に誇大広告の禁止規定は確認できませんでした**\n国土交通省の建設業法関連資料を確認しましたが、宅地建物取引業法第32条に相当する広告内容の規制は見当たりませんでした。**したがって建設業の広告規律の中心は景品表示法です。**\nあわせて、よくある誤解として、建設業法第40条の義務は「**店舗および建設工事の現場ごと**に公衆の見やすい場所に標識を掲げること」であり、**広告に許可番号を記載する義務ではありません。** 顧客にこの点を誤って案内しないでください。\n\n**5. 安全装備の描写について**\n安全基準を満たさない作業を描いた広告画像を不適切とする公的指針や注意喚起は、2026年10月時点で確認できませんでした。労働安全衛生法は実際の作業における事業者の義務を定めるものであり、広告表現の規制ではありません。\n**つまりこれは法的義務の問題ではありません。** それでも本パックが全プロンプトに保護具の着用を明示しているのは、発注者や元請の社内基準、そして何より**顧客の安全管理体制を疑わせる素材は営業上の損失になる**という実務上の理由からです。保護具が正しく描かれていない生成結果は、作り直すのではなく破棄してください。\n\n**出典**：消費者庁「不当な表示」および措置命令・課徴金事例／同「メニュー・料理等の食品表示に係る景品表示法上の考え方」（表示全体から受ける印象という判断基準）／国土交通省 建設業法 第40条の解説"
+}

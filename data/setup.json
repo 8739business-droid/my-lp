@@ -1,0 +1,620 @@
+{
+  "note": "レッスンごとの推奨設定と生成量。クレジットは build.js が models の単価から計算する。単価を直せば、レッスン表示・費用設計ページ・週次集計がすべて同時に更新される。",
+  "unit": {
+    "usdPerCredit": 0.05,
+    "basis": "1クレジット = $0.05（20クレジット = $1）。各モデルの単価は公式ブログに掲載された実測値から1秒あたりに換算したもの。",
+    "imageNote": "静止画は Higgsfield 以外のツールで作ってもよい。その場合 Higgsfield のクレジットは消費しない。表示している目安コストは、すべて Higgsfield 内（Soul 2.0）で作った場合の上限値。"
+  },
+  "models": {
+    "soul2": {
+      "label": "Soul 2.0",
+      "cr": 0.125,
+      "unlimited": true,
+      "src": "公式ブログ：2Kまで 0.125クレジット/枚"
+    },
+    "nb2": {
+      "label": "Nano Banana 2",
+      "cr": 2,
+      "unlimited": true,
+      "src": "公式ブログ：1K・2Kとも2クレジット、4Kは4クレジット"
+    },
+    "seedance20": {
+      "label": "Seedance 2.0",
+      "perSec": {
+        "720": 4.5,
+        "1080": 9
+      },
+      "unlimited": true,
+      "src": "公式ブログ：5秒720p=23 / 8秒720p=36 / 10秒720p=45 / 5秒1080p=45 から換算"
+    },
+    "seedance20fast": {
+      "label": "Seedance 2.0 Fast",
+      "perSec": {
+        "720": 3.5
+      },
+      "unlimited": true,
+      "src": "公式ブログ：8秒720p=28 から換算"
+    },
+    "seedance25": {
+      "label": "Seedance 2.5",
+      "perSec": {
+        "480": 3,
+        "720": 6.5,
+        "1080": 9
+      },
+      "unlimited": false,
+      "src": "公式ブログ：8秒 480p=24 / 720p=52 / 1080p=72 から換算。10秒以上では1秒あたりの単価が上がるため、8秒以下の換算値"
+    },
+    "kling30": {
+      "label": "Kling 3.0",
+      "perSec": {
+        "720": 2,
+        "1080": 2.5
+      },
+      "unlimited": true,
+      "src": "公式ブログ：5秒720p=10 / 5秒1080p=12.5 / 10秒720p=20 から換算"
+    },
+    "wan27": {
+      "label": "Wan 2.7",
+      "perSec": {
+        "720": 1.6,
+        "1080": 2.6
+      },
+      "unlimited": true,
+      "src": "公式ブログ：5秒720p=8 / 5秒1080p=13 から換算"
+    },
+    "cinema": {
+      "label": "Cinema Studio",
+      "perSec": {
+        "720": 5,
+        "1080": 10
+      },
+      "unlimited": false,
+      "src": "公式ブログ：5秒720p=25 / 10秒1080p=100 から換算"
+    }
+  },
+  "unitCosts": [
+    {
+      "item": "静止画 Soul 2.0（2Kまで）",
+      "cr": "0.125",
+      "usd": "$0.006",
+      "src": "公式ブログ（確認済み）／Unlimited対象"
+    },
+    {
+      "item": "静止画 Nano Banana 2（1K・2K）",
+      "cr": "2",
+      "usd": "$0.10",
+      "src": "公式ブログ（確認済み）／4Kは4cr・Unlimited対象外"
+    },
+    {
+      "item": "Wan 2.7　5秒 720p",
+      "cr": "8",
+      "usd": "$0.40",
+      "src": "公式ブログ（確認済み）／Unlimited対象"
+    },
+    {
+      "item": "Kling 3.0　5秒 720p",
+      "cr": "10",
+      "usd": "$0.50",
+      "src": "公式ブログ（確認済み）／Unlimited対象"
+    },
+    {
+      "item": "Kling 3.0　5秒 1080p",
+      "cr": "12.5",
+      "usd": "$0.63",
+      "src": "公式ブログ（確認済み）／1080pでも安い"
+    },
+    {
+      "item": "Seedance 2.0 Fast　8秒 720p",
+      "cr": "28",
+      "usd": "$1.40",
+      "src": "公式ブログ（確認済み）／Unlimited対象"
+    },
+    {
+      "item": "Seedance 2.0　8秒 720p",
+      "cr": "36",
+      "usd": "$1.80",
+      "src": "公式ブログ（確認済み）／Unlimited対象"
+    },
+    {
+      "item": "Seedance 2.0　5秒 1080p",
+      "cr": "45",
+      "usd": "$2.25",
+      "src": "公式ブログ（確認済み）"
+    },
+    {
+      "item": "Seedance 2.5　8秒 480p",
+      "cr": "24",
+      "usd": "$1.20",
+      "src": "公式ブログ（確認済み）／Unlimited対象外"
+    },
+    {
+      "item": "Seedance 2.5　8秒 720p",
+      "cr": "52",
+      "usd": "$2.60",
+      "src": "公式ブログ（確認済み）／Unlimited対象外"
+    },
+    {
+      "item": "Seedance 2.5　8秒 1080p",
+      "cr": "72",
+      "usd": "$3.60",
+      "src": "公式ブログ（確認済み）／Unlimited対象外"
+    },
+    {
+      "item": "Marketing Studio　8秒 720p",
+      "cr": "47.62",
+      "usd": "$2.38",
+      "src": "公式ブログ（確認済み）／Studio系はUnlimited対象外"
+    },
+    {
+      "item": "Marketing Studio　15秒 720p",
+      "cr": "89.2",
+      "usd": "$4.46",
+      "src": "公式ブログ（確認済み）／Studio系はUnlimited対象外"
+    },
+    {
+      "item": "Ads Studio 静止画広告 1点",
+      "cr": "4",
+      "usd": "$0.20",
+      "src": "公式ブログ（確認済み）"
+    },
+    {
+      "item": "Ad Multiplier（CTAのみ・720p）",
+      "cr": "最大35",
+      "usd": "約$1.75",
+      "src": "公式ブログ（確認済み）／Unlimited対象外"
+    },
+    {
+      "item": "Ad Multiplier（フック＋CTA・720p）",
+      "cr": "最大140",
+      "usd": "約$7.00",
+      "src": "公式ブログ（確認済み）"
+    },
+    {
+      "item": "Higgsfield DoP",
+      "cr": "未確認",
+      "usd": "—",
+      "src": "一次・三次情報とも単価の記載なし。生成ボタンの表示で確認すること"
+    }
+  ],
+  "weekNotes": {
+    "1": "静止画はすべて Soul 2.0。動画は Seedance 2.0 が主役で、2.5 は Day 1 の単価比較に1本だけ",
+    "2": "料理の試行は Seedance 2.0 Fast、流体と湯気は Wan 2.7。15秒広告の採用4カットだけ Seedance 2.5 に上げる",
+    "3": "都市型ホテルのb-rollはカメラ移動中心なので Kling 3.0 が最適。1080pでも5秒12.5クレジットで、Seedance 2.5 の約4分の1",
+    "4": "映像は1本だけ作り、残りは Ad Multiplier で変種化。Ad Multiplier は Unlimited 対象外なので、ここだけは必ずクレジットを使う",
+    "5": "生成はほぼなし。不整合素材の差し替えと手順書の再現確認のみ",
+    "6": "既存素材の再編集が中心。不足分を Kling 3.0 の1080pで補う"
+  },
+  "lessons": {
+    "w1d1": {
+      "tag": "単価の実測",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 動画 Seedance 2.0（基準）と Seedance 2.5（比較用に1本だけ）",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1（バッチは各々課金されるので必ず1に）",
+      "cap": "静止画4枚・動画2本",
+      "save": "Seedance 2.5 は Unlimited の対象外で、2.0 の約1.4倍かかる。今日その差を自分の画面で確認し、以後は 2.0 を既定にする。生成ボタンに消費クレジットが表示されるので、押す前に必ず読む癖をつける。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "seedance20",
+      "videos": 1,
+      "videoSeconds": 4,
+      "videoRes": "720",
+      "video2Model": "seedance25",
+      "videos2": 1,
+      "video2Seconds": 4,
+      "video2Res": "720"
+    },
+    "w1d2": {
+      "tag": "比較実験",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 動画 Seedance 2.0 に固定（モデルを変えると比較が壊れる）",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画6枚・動画6本（経路A3本・経路B3本）",
+      "save": "ここは6本必要。比較のための支出なので削らない。Seedance 2.0 は Unlimited 対象なので、ウィンドウが有効な期間にこの日を当てれば実費はゼロになる。",
+      "imageModel": "soul2",
+      "images": 6,
+      "videoModel": "seedance20",
+      "videos": 6,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w1d3": {
+      "tag": "静止画のみ",
+      "model": "手持ちのツールで可（ChatGPT / Gemini / Soul 2.0）。動画は作らない",
+      "seconds": "—",
+      "res": "2K",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画12枚",
+      "save": "Soul 2.0 は1枚0.125クレジット。12枚でも1.5クレジットで、Seedance 2.0 の4秒動画1本（18クレジット）の12分の1。プロンプト構造の学習はすべてここで回すのが正しい。",
+      "imageModel": "soul2",
+      "images": 12
+    },
+    "w1d4": {
+      "tag": "カメラ検証",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 動画 Kling 3.0（カメラ移動が安定し、単価も最安級）",
+      "seconds": "5秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画9枚・動画5本",
+      "save": "Kling 3.0 は5秒720pで10クレジット。Seedance 2.5 の同条件（約33クレジット）の3分の1で、カメラの挙動を見る目的には十分。DoP のプリセットも試す場合、DoP は単価が公開されていないので、生成ボタンの表示を必ず確認してから押すこと。",
+      "imageModel": "soul2",
+      "images": 9,
+      "videoModel": "kling30",
+      "videos": 5,
+      "videoSeconds": 5,
+      "videoRes": "720"
+    },
+    "w1d5": {
+      "tag": "Week 1 総合課題",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 動画 Seedance 2.0",
+      "seconds": "5秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画14枚・動画5本（再生成は各1回まで）",
+      "save": "5パターンは設計表を書いてから生成する。設計なしだと平均3本が無駄になり、その分がそのまま原価に乗る。",
+      "imageModel": "soul2",
+      "images": 14,
+      "videoModel": "seedance20",
+      "videos": 5,
+      "videoSeconds": 5,
+      "videoRes": "720"
+    },
+    "w2d1": {
+      "tag": "静止画のみ",
+      "model": "手持ちのツールで可（ChatGPT / Gemini / Soul 2.0）。Higgsfield で作るなら素のモデルを使う（Marketing Studio の Product Shots は12倍かかる）",
+      "seconds": "—",
+      "res": "2K",
+      "aspect": "9:16 と 1:1",
+      "outputs": "1",
+      "cap": "静止画16枚",
+      "save": "料理の構図は静止画で完全に決める。16枚試しても2クレジット。テンプレート経由ではなく素のモデルを使うことが、この週で最も効く節約。",
+      "imageModel": "soul2",
+      "images": 16
+    },
+    "w2d2": {
+      "tag": "物理表現の検証",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 流体・湯気は Wan 2.7、それ以外は Seedance 2.0",
+      "seconds": "5秒（Wan）/ 4秒（Seedance）",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画6枚・動画7本（Wan 4本・Seedance 3本）",
+      "save": "Wan 2.7 は流体と重力の表現に強く、5秒720pで8クレジットと最安。液体と湯気の検証はここに寄せる。1つの表現に3回までと決め、超えたら構図を変えて逃げる。",
+      "imageModel": "soul2",
+      "images": 6,
+      "videoModel": "wan27",
+      "videos": 4,
+      "videoSeconds": 5,
+      "videoRes": "720",
+      "video2Model": "seedance20",
+      "videos2": 3,
+      "video2Seconds": 4,
+      "video2Res": "720"
+    },
+    "w2d3": {
+      "tag": "破綻の検出",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 動画 Seedance 2.0（部分修正は Edit 系の機能）",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画4枚・動画6本",
+      "save": "同一の破綻に対する再生成は2回が上限。3回目は構図変更か編集で切る。全体の作り直しより部分編集のほうが安い。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "seedance20",
+      "videos": 6,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w2d4": {
+      "tag": "ブランド統一",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0）・参照画像つき／ 動画 Seedance 2.0",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画12枚・動画2本",
+      "save": "トーンの統一を生成で粘らない。最終的には編集のカラーグレーディングで合わせる前提にしておけば、生成回数は半分で済む。",
+      "imageModel": "soul2",
+      "images": 12,
+      "videoModel": "seedance20",
+      "videos": 2,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w2d5": {
+      "tag": "Week 2 総合課題",
+      "model": "下書き Seedance 2.0 Fast ／ 採用カットのみ Seedance 2.5",
+      "seconds": "4秒 × 4カット（目標尺より1〜2秒長く生成して編集で詰める）",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画4枚・下書き8本・本番4本",
+      "save": "15秒を Marketing Studio で1本生成すると89.2クレジット。4秒×4カットを Seedance 2.0 Fast で下書きし、採用分だけ Seedance 2.5 に上げれば、品質を上げながら撮り直しの損失を4分の1に抑えられる。なお Seedance 2.5 は Unlimited 対象外なので、この4本だけは必ずクレジットを消費する。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "seedance20fast",
+      "videos": 8,
+      "videoSeconds": 4,
+      "videoRes": "720",
+      "video2Model": "seedance25",
+      "videos2": 4,
+      "video2Seconds": 4,
+      "video2Res": "720"
+    },
+    "w3d1": {
+      "tag": "設計のみ",
+      "model": "手持ちのツールで可（ChatGPT / Gemini / Soul 2.0）。構図検討用の静止画のみ",
+      "seconds": "—",
+      "res": "2K",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画6枚（この日は動画を作らない）",
+      "save": "棚卸しと構成設計の日。ここで30秒の設計を固めないと Day 5 で作り直すことになり、6週間で最も高い失敗になる。",
+      "imageModel": "soul2",
+      "images": 6
+    },
+    "w3d2": {
+      "tag": "一貫性の仕込み",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ＋ Elements（Locations / Props）登録 ／ 動画 Seedance 2.0",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画16枚・動画2本",
+      "save": "Elements への登録自体にクレジットはかからない。ここに時間をかけるほど Day 5 の生成回数が減る。参照は8〜10枚から始め、矛盾を確認してから増やす。",
+      "imageModel": "soul2",
+      "images": 16,
+      "videoModel": "seedance20",
+      "videos": 2,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w3d3": {
+      "tag": "連続性の検証",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0） ／ 動画 Kling 3.0（始点終点フレーム指定、1回の生成で複数カットも可）",
+      "seconds": "5秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画8枚・動画6本",
+      "save": "つなぎの検証は2カット分で十分。全カットで試すのは Day 5 に回す。Kling 3.0 は1回の生成で複数カットを作れるため、つなぎの練習に向く。",
+      "imageModel": "soul2",
+      "images": 8,
+      "videoModel": "kling30",
+      "videos": 6,
+      "videoSeconds": 5,
+      "videoRes": "720"
+    },
+    "w3d4": {
+      "tag": "法令・倫理",
+      "model": "検証用に Seedance 2.0 を少量",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画4枚・動画2本",
+      "save": "この日の主成果はチェックリストと表現確認シート。生成は捏造リスクの実例を見るための最小限に留める。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "seedance20",
+      "videos": 2,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w3d5": {
+      "tag": "Week 3 総合課題",
+      "model": "下書き Kling 3.0（720p）／ 採用カット Kling 3.0（1080p）",
+      "seconds": "5秒 × 8カット前後（使用尺より1秒以上長く生成）",
+      "res": "720p → 採用分のみ1080p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画4枚・下書き12本・本番8本",
+      "save": "都市型ホテルのb-rollはカメラ移動が主で人物の細かい演技が要らないため、Kling 3.0 で十分。1080pでも5秒12.5クレジットで、Seedance 2.5 の同条件の約4分の1。まず全カットを720pで作り、構成が確定してから採用分だけ上げ直す。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "kling30",
+      "videos": 12,
+      "videoSeconds": 5,
+      "videoRes": "720",
+      "video2Model": "kling30",
+      "videos2": 8,
+      "video2Seconds": 5,
+      "video2Res": "1080"
+    },
+    "w4d1": {
+      "tag": "生成なし",
+      "model": "—（顧客KPIの分析とヒアリング設計）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "この日は1クレジットも使わない。どの動画を作るかを決める日で、ここを飛ばすと作る必要のない動画を作ることになる。"
+    },
+    "w4d2": {
+      "tag": "フック検証",
+      "model": "静止画 手持ちのツールで可（ChatGPT / Gemini / Soul 2.0）（冒頭フレーム）／ 動画 Seedance 2.0 Fast",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画12枚・動画6本（1案あたり3回まで）",
+      "save": "冒頭だけを4秒で作って比べる。15秒の完成形で比較すると1案あたり5〜6倍かかり、同じ判断にその費用を払うことになる。",
+      "imageModel": "soul2",
+      "images": 12,
+      "videoModel": "seedance20fast",
+      "videos": 6,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w4d3": {
+      "tag": "Ad Multiplier",
+      "model": "元動画 Kling 3.0（1080p）／ 変種は Ad Multiplier（CTAのみ差し替え）",
+      "seconds": "5秒",
+      "res": "1080p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "動画2本 ＋ 変種2回",
+      "save": "3本を一から作ると映像変数が揃わず、テストとして成立しない。1本作って変種を2つ出せば、映像を完全に固定したまま訴求だけ比較できる。ただし Ad Multiplier は Ads Studio の機能で Unlimited の対象外なので、ここは必ずクレジットを消費する。フックまで変えると1回140クレジットに跳ねるため、まずCTAのみ（最大35クレジット）で試す。",
+      "imageModel": "soul2",
+      "images": 2,
+      "videoModel": "kling30",
+      "videos": 2,
+      "videoSeconds": 5,
+      "videoRes": "1080",
+      "extraCredits": 70
+    },
+    "w4d4": {
+      "tag": "生成なし",
+      "model": "—（計測設計。UTM・CV定義・導線の実機確認）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "計測設計に費用はかからない。これを作らないまま配信すると、使ったクレジットのすべてが判断材料にならなくなる。"
+    },
+    "w4d5": {
+      "tag": "Week 4 総合課題",
+      "model": "動画 Kling 3.0（1080p）＋ Ad Multiplier",
+      "seconds": "5秒 × 必要カット",
+      "res": "1080p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "動画6本 ＋ 変種1回",
+      "save": "3本の映像は完全に同一。変えるのはフック文言・ナレーション・画面内テキストだけなので、映像の生成は1本分で済む。",
+      "videoModel": "kling30",
+      "videos": 6,
+      "videoSeconds": 5,
+      "videoRes": "1080",
+      "extraCredits": 35
+    },
+    "w5d1": {
+      "tag": "整理が主",
+      "model": "動画 Seedance 2.0（不整合素材の差し替えのみ）",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "既存素材に合わせる",
+      "outputs": "1",
+      "cap": "静止画4枚・動画2本",
+      "save": "新規生成は不整合の修正と Elements 登録用の基準カットのみ。着手前に本日の上限クレジットを台帳に書く。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "seedance20",
+      "videos": 2,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w5d2": {
+      "tag": "編集のみ",
+      "model": "—（CapCut 等の編集ソフト。字幕・音・書き出し）",
+      "seconds": "—",
+      "res": "9:16 / 16:9 / 1:1 の3比率で書き出し",
+      "aspect": "3比率",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "編集工程にクレジットはかからない。生成で直そうとしていた問題の多くは、編集で切る・重ねるほうが速く安い。"
+    },
+    "w5d3": {
+      "tag": "生成なし",
+      "model": "—（品質チェックリストと納品仕様の作成）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "出荷判定の仕組みを作る日。チェックリストがないと、納品後に見つかった破綻を無償で作り直すことになり、それが最大の原価になる。"
+    },
+    "w5d4": {
+      "tag": "生成なし",
+      "model": "—（原価と時間の計算表）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "Week 1 から記録してきた台帳をここで集計する。MCP・CLI・Canvas・Supercomputer に加え、Marketing Studio などの Studio 系も Unlimited の対象外で常に課金される。自動化の試算にこれを必ず織り込む。"
+    },
+    "w5d5": {
+      "tag": "仕組み化",
+      "model": "動画 Seedance 2.0（手順書の再現確認用に少量）",
+      "seconds": "4秒",
+      "res": "720p",
+      "aspect": "9:16",
+      "outputs": "1",
+      "cap": "静止画4枚・動画2本",
+      "save": "手順書どおりに作って同じ結果が出るかを確かめる分だけ生成する。再現できなければ、外注しても同じ品質は出ない。",
+      "imageModel": "soul2",
+      "images": 4,
+      "videoModel": "seedance20",
+      "videos": 2,
+      "videoSeconds": 4,
+      "videoRes": "720"
+    },
+    "w6d1": {
+      "tag": "既存素材の再編集",
+      "model": "不足カットのみ Kling 3.0（1080p）／ 既存カットの再編集が中心",
+      "seconds": "5秒",
+      "res": "1080p",
+      "aspect": "9:16 と 16:9",
+      "outputs": "1",
+      "cap": "静止画8枚・動画8本（新規生成は必要カットの半分以下）",
+      "save": "Week 2〜4 で作った素材を使い回す。ポートフォリオ3本を一から作ると費用が倍になるうえ、過去の工程を見直す機会も失う。",
+      "imageModel": "soul2",
+      "images": 8,
+      "videoModel": "kling30",
+      "videos": 8,
+      "videoSeconds": 5,
+      "videoRes": "1080"
+    },
+    "w6d2": {
+      "tag": "生成なし",
+      "model": "—（商品設計と価格）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "Week 5 の原価表と Day 1 の実測値だけで計算する。推定値を混ぜた価格表は、受注後に必ず赤字になる。"
+    },
+    "w6d3": {
+      "tag": "生成なし",
+      "model": "—（ヒアリングシートと提案書）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "無料サンプルで作るものの範囲を先に決める。無制限に作ると、受注前に原価だけが積み上がる。"
+    },
+    "w6d4": {
+      "tag": "生成なし",
+      "model": "—（契約範囲と継続設計）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "修正回数の定義が曖昧なままだと、1件の修正対応で粗利が消える。ここは文章だけで利益率が変わる工程。"
+    },
+    "w6d5": {
+      "tag": "生成なし",
+      "model": "—（収益シミュレーションと90日計画）",
+      "seconds": "—",
+      "res": "—",
+      "aspect": "—",
+      "outputs": "—",
+      "cap": "生成なし",
+      "save": "ツールの月額とクレジット実費を固定費として計算に入れる。受注がゼロの月にも発生する費用であることを忘れない。"
+    }
+  }
+}

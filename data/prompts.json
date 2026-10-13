@@ -1,0 +1,611 @@
+{
+  "note": "すべてのプロンプトは本環境で生成検証を行っていないため『未検証』です。実際に使用して結果を確認し、自分の環境での採用率と併せて記録してください。モデルや機能の仕様は変更されるため、使用モデルの欄は執筆時点（2026-10-11）の想定です。",
+  "slots": [
+    "被写体",
+    "動作",
+    "環境",
+    "カメラ",
+    "光",
+    "質感",
+    "スタイル"
+  ],
+  "categories": [
+    {
+      "id": "food",
+      "label": "料理広告",
+      "desc": "飲食店の料理カット。シズル感と食欲喚起が目的。"
+    },
+    {
+      "id": "hotel",
+      "label": "宿泊施設広告",
+      "desc": "客室・外観・体験。滞在のイメージと信用の獲得が目的。"
+    },
+    {
+      "id": "product",
+      "label": "商品広告",
+      "desc": "物販・土産物・ドリンク等のパッケージ商品。"
+    },
+    {
+      "id": "cinematic",
+      "label": "シネマティック映像",
+      "desc": "ブランドの世界観を示す映像的なカット。"
+    },
+    {
+      "id": "camera",
+      "label": "カメラワーク",
+      "desc": "カメラスロットの差し替え部品。他のプロンプトに組み込んで使う。"
+    },
+    {
+      "id": "light",
+      "label": "ライティング",
+      "desc": "光スロットの差し替え部品。印象を最も大きく動かす。"
+    },
+    {
+      "id": "hook",
+      "label": "広告のフック",
+      "desc": "冒頭1〜3秒で視線を止めるための開始カット。"
+    },
+    {
+      "id": "brand",
+      "label": "ブランドの世界観",
+      "desc": "複数カットのトーンを揃えるための共通指定。"
+    },
+    {
+      "id": "reference",
+      "label": "参照画像を使った生成",
+      "desc": "一貫性を保つための参照つきワークフロー。"
+    }
+  ],
+  "prompts": [
+    {
+      "id": "p-food-01",
+      "category": "food",
+      "title": "半逆光のラーメン（湯気を主役にする）",
+      "purpose": "湯気と汁の照りで食欲を喚起する、飲食店広告の基本カット。",
+      "input": "料理の静止画（または料理名）。器と背景の色を先に決めておく。",
+      "model": "静止画：Soul 2.0 等 / 動画化：image-to-video（Seedance 2.5 など）",
+      "text": "A bowl of miso ramen with chashu, menma and a halved soft-boiled egg, steam rising slowly from the surface, on a dark walnut counter with a softly blurred warm interior behind, medium close-up at a 45-degree angle, 50mm equivalent, shallow depth of field, backlight from behind and slightly above with strong rim light on the steam and a weak soft fill from the front left, glossy broth surface with specular highlights and a matte ceramic bowl, photorealistic with a muted warm grade and slight film grain",
+      "effect": "湯気が背後からの光を透過して白く浮き上がり、スープ表面に反射が生まれる。暗い背景で輪郭が分離し、料理が立体的に見える。",
+      "caution": "手前が暗く潰れやすいので、フィル光を弱く入れる指定を外さないこと。湯気は動画化したときに不自然に増殖することがあるため、動画側では『subtle』を付けて量を抑える。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。何も参照せず文章だけで作る。料理名・器・背景の色を自分の店のものに置き換える",
+        "output": "9:16 の静止画1枚。構図・光の方向・器の質感がここで確定する",
+        "next": "気に入った1枚を「最も安定するカメラ移動（微速プッシュイン）」に渡して動かす"
+      }
+    },
+    {
+      "id": "p-food-02",
+      "category": "food",
+      "title": "層を見せる（バーガー・パフェ・ケーキ）",
+      "purpose": "積層構造のある料理で、断面と素材の重なりを伝える。",
+      "input": "層のある料理。器は低く、背景は無地に近いもの。",
+      "model": "静止画生成 → image-to-video",
+      "text": "A tall cheeseburger with visible layers of brioche bun, melted cheese, seared patty and fresh lettuce, on a slate plate against a clean dark background, eye-level shot at the height of the burger, 85mm equivalent, shallow depth of field, soft side light from the right with a subtle rim light on the left edge, glossy melted cheese and a matte toasted bun with visible texture, photorealistic food photography, neutral warm grade",
+      "effect": "カメラを被写体と同じ高さに置くことで層が重ならずに見える。側光で各層の境界に影が出て、素材の区別がつく。",
+      "caution": "俯瞰で撮ると層が完全に潰れる。アングル指定の『eye-level at the height of the subject』を外さないこと。溶けたチーズの伸びは動画で破綻しやすいため、静止画で表現して動きは最小限にする。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。層のある料理名と器を置き換える。参照画像は使わない",
+        "output": "層の境界が見える静止画1枚。カメラ高さと側光がここで決まる",
+        "next": "動画化するなら動きは最小限に。溶けるチーズの伸びは破綻しやすいので静止画で見せ切る"
+      }
+    },
+    {
+      "id": "p-food-03",
+      "category": "food",
+      "title": "液体を注ぐ（スローモーション）",
+      "purpose": "注ぐ・かける・垂らすという動作で、瞬間的な注目を作る。",
+      "input": "液体を伴う料理・飲料の静止画。",
+      "model": "動画：流体表現に強いモデル（Wan 2.6 など）を優先して試す",
+      "text": "Dark soy-based broth being poured in a thin continuous stream into a ceramic bowl, slow motion, the stream stays unbroken and the surface ripples outward in concentric rings, 85mm equivalent, shallow depth of field, backlight catching the falling liquid, no splashing beyond the bowl, photorealistic",
+      "effect": "注ぐ動作は視線を強く引きつけ、冒頭フックとして機能しやすい。逆光で液体の流れが光る。",
+      "caution": "液体は現在の生成モデルが最も苦手とする表現のひとつ。流れが途中で消える、逆流する、量が増えるといった破綻が頻発する。採用率が低い前提で生成回数を見込むこと。『unbroken』『no splashing beyond the bowl』のような制約を明示すると歩留まりが上がることがある。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "すでに作ってある料理の静止画1枚。新しく画像は作らない。流体に強い Wan 2.7 を選ぶ",
+        "output": "5秒前後の動画1本。注ぐ動作が主役になる",
+        "next": "冒頭フックとして15秒広告の1カット目に使う。破綻率が高いので3回で見切る"
+      }
+    },
+    {
+      "id": "p-food-04",
+      "category": "food",
+      "title": "俯瞰のテーブル全景（品数と価値を伝える）",
+      "purpose": "コース全体や品数の多さを一度に伝える。宴会プラン・朝食ビュッフェの訴求に使う。",
+      "input": "複数の皿の構成を先に決める（主菜1・副菜3・汁物1など）。",
+      "model": "静止画生成 → image-to-video（微速のプルアウト）",
+      "text": "A full table setting seen from directly above, one main dish surrounded by small side plates, a bowl of soup and a rice bowl, arranged on a dark wooden table with linen napkins, top-down flat lay, 35mm equivalent, deep focus so every plate is sharp, soft diffused overhead daylight with gentle shadows, varied textures of ceramic, lacquer and linen, photorealistic, restrained natural color grade",
+      "effect": "品数と彩りが一目で伝わる。深い被写界深度で全皿が判別できる。",
+      "caution": "俯瞰は立体感と湯気が出ないため、単体では食欲喚起が弱い。寄りのカットと組み合わせて使う。実際に提供していない品数・内容を並べると景品表示法上の問題になりうるので、提供内容と一致させること。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "単発",
+        "input": "新規。皿の構成（主菜1・副菜3・汁物1など）を先に決めてから書く",
+        "output": "真俯瞰の静止画1枚。品数と彩りが一目で伝わる",
+        "next": "単体では食欲喚起が弱い。寄りのカットと組み合わせて編集で使う"
+      }
+    },
+    {
+      "id": "p-hotel-01",
+      "category": "hotel",
+      "title": "ビル反射光の客室（東京・高層階の昼）",
+      "purpose": "都市型ホテルの客室を、現実の光条件に忠実に、かつ最も魅力的に見せる。",
+      "input": "客室の参照画像（実在施設の場合は必須）。",
+      "model": "静止画生成（参照画像つき） → image-to-video",
+      "text": "A corner guest room on a high floor with a low bed, white linen bedding and a wide picture window, a sheer curtain drifting slightly, a dense city skyline of mid-rise buildings visible through the window, minimal wooden interior, wide shot at eye level, 24mm equivalent, deep focus, soft daylight entering only through the window as indirect bounce off the glass facade of the building opposite, cool 6000K ambient with no harsh shadows and one warm 2700K table lamp in the corner, matte plaster walls, raw oak floor, soft linen weave, photorealistic architectural photography with restrained contrast",
+      "effect": "向かいのビルのガラス面が反射板として働く実際の光条件を再現する。高層階の抜けた光と、室内灯の暖色の対比で画面に奥行きが出る。",
+      "caution": "客室は深い被写界深度（deep focus）が必須。背景をぼかすと部屋の広さという最重要情報が失われる。低層階や隣棟が近い部屋では、窓からの採光がこれほど入らない。実在施設の場合、窓からの眺望・階数・家具・設備が実物と異なると優良誤認のリスクがあるため、必ず施設側に確認する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "実在施設なら客室の参照画像を必ず添付する。架空の施設でも、部屋のレイアウトがわかる1枚を渡したほうが安定する",
+        "output": "9:16 の静止画1枚。部屋の広さ・窓の位置・窓外の街並み・光の性質がここで確定する",
+        "next": "この画像を Kling 3.0 の image-to-video に渡し、カーテンの揺れ程度の微細な動きだけを足す"
+      }
+    },
+    {
+      "id": "p-hotel-02",
+      "category": "hotel",
+      "title": "夜の色温度コントラスト",
+      "purpose": "夜の宿を、カタログ的でない映像にする。",
+      "input": "客室またはラウンジの参照画像。",
+      "model": "静止画生成 → image-to-video（ごく微速のプッシュイン）",
+      "text": "A hotel lounge interior lit only by warm 2700K practical lamps and a single table candle, deep blue 8000K twilight visible through large windows with city lights and the lit windows of surrounding buildings outside, strong color temperature contrast between the warm interior and the cold blue exterior, no overhead ceiling light, soft shadows, wide shot at eye level, 28mm equivalent, deep focus, leather and wool textures, photorealistic, cinematic but restrained grade",
+      "effect": "天井照明を明示的に排除することで、宿泊施設の映像にありがちな平板さを避ける。外の街明かりとブルーアワーの青、室内の暖色という色温度差が画の主題になる。",
+      "caution": "暖色が強すぎると料理や寝具の色が転ぶ。生成後のカラーグレーディングで補正する前提で撮る。実在しない夜景や設備を出すのは明確な虚偽表示になるため、窓外の眺望も設備も実在するものだけを指定する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "ラウンジまたは客室の参照画像1枚。実在しない眺望や設備を足さないこと",
+        "output": "夜の室内の静止画1枚。内外の色温度差が画の主題になる",
+        "next": "動画化してごく微速のプッシュインを足す。暖色が強すぎる場合は編集のグレーディングで戻す"
+      }
+    },
+    {
+      "id": "p-hotel-03",
+      "category": "hotel",
+      "title": "大浴場の湯気（都市型ホテルの浴場）",
+      "purpose": "大浴場やサウナという訴求資産を、湯気と光の対比で見せる。",
+      "input": "浴場の参照画像。人物を入れる場合は肖像権の同意が必要。",
+      "model": "静止画生成 → image-to-video",
+      "text": "An indoor hotel bath with a dark stone tub, dense steam rising and drifting slowly to the right, a high horizontal window along the upper wall letting in soft daylight from a narrow gap between buildings, medium wide shot slightly above water level, 35mm equivalent, moderate depth of field, flat soft light with the steam catching a faint backlight from the window, wet dark stone, tiled floor and a still water surface with subtle reflections, photorealistic, cool neutral grade with a slight blue cast",
+      "effect": "湯気と、濡れた黒い石・タイルの明度差が画面を作る。動画化すると湯気の流れが主な動きになり、カメラをほぼ固定しても間が持つ。",
+      "caution": "湯気は動画化で最も増殖しやすい要素。『drifting slowly』など速度と方向を限定する。人物を含める場合、実在の宿泊客に見える描写は避け、AI生成であることの扱いを含めて施設と事前に合意する。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "浴場の参照画像1枚。人物を入れる場合は本人の同意が前提",
+        "output": "湯気と濡れた石のコントラストが出た静止画1枚",
+        "next": "動画化する。湯気の流れが主な動きになるため、カメラはほぼ固定でも間が持つ"
+      }
+    },
+    {
+      "id": "p-hotel-04",
+      "category": "hotel",
+      "title": "外観のエスタブリッシングショット",
+      "purpose": "冒頭で立地と施設の性格を一瞬で伝える。",
+      "input": "外観の参照画像。周辺環境（路地・商店街・大通り・駅からの経路）の情報。",
+      "model": "静止画生成 → image-to-video（微速のプッシュインまたは上昇）",
+      "text": "The facade of a small urban hotel at dusk, a warm-lit entrance set back from a narrow side street, tiled and concrete exterior walls, neighbouring buildings pressing in on both sides with deep blue twilight in the strip of sky above, wide establishing shot from slightly below eye level, 24mm equivalent, deep focus, ambient blue hour light outside with warm 2700K interior spill from the entrance and ground floor windows, damp asphalt reflecting the entrance light, photorealistic, cinematic wide, muted cool grade",
+      "effect": "青い外光と暖色の室内光という、宿の外観で最も信頼されやすい時間帯（ブルーアワー）の条件。路地の入口とエントランスの灯りで、見つけにくい立地を「隠れ家」として反転させられる。",
+      "caution": "ドローン風の大きな移動は背景が崩れやすい。微速のプッシュインに留めるのが安全。実在施設の外観を扱う場合、建物の形状や隣接する建物が実物と異なると誤認につながるため、参照画像を使い、生成結果を施設側に確認してもらう。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "外観の参照画像1枚と、周辺環境（路地・商店街・大通り・駅からの経路）の情報。建物の形は実物と変えない",
+        "output": "ブルーアワーの外観カット1枚。30秒PR動画の冒頭に置く",
+        "next": "微速のプッシュインで動画化する。ドローン風の大きな移動は背景が崩れるので避ける"
+      }
+    },
+    {
+      "id": "p-product-01",
+      "category": "product",
+      "title": "スタジオ商品カット（土産物・加工食品）",
+      "purpose": "ECサイト・OTAのプラン画像・チラシに使える清潔な商品カット。",
+      "input": "商品の実写画像（パッケージの文字は生成させず合成する前提）。",
+      "model": "Marketing Studio の Product Shots（Studio）に相当する機能",
+      "text": "A single packaged food product standing upright at the center of a seamless light gray backdrop, product-only composition with generous margin on all sides, straight-on eye-level shot, 85mm equivalent, moderate depth of field with the full product in focus, soft large diffused key light from the upper left and a white bounce from the right, subtle gradient shadow beneath the product, matte paper packaging with a slight sheen on the sealed edge, clean commercial product photography, neutral white balance",
+      "effect": "背景が無地で余白があるため、後からテキスト・価格・ロゴを載せやすい。各媒体の入稿サイズへのトリミングにも耐える。",
+      "caution": "パッケージの文字は高確率で崩れる。ロゴ・商品名は生成させず、編集工程で実物のデータを合成する。静止画の生成は動画に比べ大幅に安いので、ここで納得いくまで詰めること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "商品の実写画像1枚を参照として渡す。パッケージの文字は生成させない前提",
+        "output": "無地背景・余白つきの商品カット1枚。後からテキストを載せられる状態",
+        "next": "ロゴと商品名は編集工程で実物のデータを合成する。動かすなら「回り込み」へ"
+      }
+    },
+    {
+      "id": "p-product-02",
+      "category": "product",
+      "title": "ライフスタイルカット（使用シーン）",
+      "purpose": "商品単体ではなく、使われている文脈で価値を伝える。",
+      "input": "商品画像と、使用シーンの設定（場所・時間・誰が）。",
+      "model": "Marketing Studio の Product Shots（Lifestyle）に相当する機能",
+      "text": "A glass bottle of local craft beer placed on a weathered wooden counter by a window on a rooftop terrace, condensation beading on the glass, a blurred skyline of mid-rise buildings in the background, medium close-up at a slight low angle, 85mm equivalent, shallow depth of field, late afternoon warm backlight from the low west sun rimming the bottle with a soft fill from the front, cold wet glass and rough timber grain, photorealistic lifestyle product photography, warm golden grade",
+      "effect": "背景のボケで商品が主役として分離しつつ、場所の情報が残る。西日の逆光とビルのシルエットで、東京の夕方という文脈を帯びた商品カットになる。",
+      "caution": "背景に実在の建物やランドマークを想起させる要素を入れる場合、実際の景観と大きく異なると誤認につながる。酒類の広告は媒体ごとの規定（年齢表示等）があるため、配信面の規定を事前に確認すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "単発",
+        "input": "商品の実写画像1枚と、使用シーンの設定（場所・時間・誰が）",
+        "output": "背景のボケで商品が分離したライフスタイルカット1枚",
+        "next": "ここで完結。広告の中盤カットとして編集に渡す"
+      }
+    },
+    {
+      "id": "p-product-03",
+      "category": "product",
+      "title": "回り込み（オービット）の商品カット",
+      "purpose": "商品の立体形状を短時間で伝える。",
+      "input": "背景が単純な商品静止画。",
+      "model": "image-to-video。カメラ移動プリセットがある場合はそちらを優先。",
+      "text": "Slow orbit around the product, 30 degrees of rotation only, the product stays centered in frame, background remains simple and consistent throughout, constant speed, no cuts",
+      "effect": "短い回転でも立体感が伝わる。角度を制限することで破綻率を下げる。",
+      "caution": "背景が複雑な構図では、回り込みの途中で背景が別物に変わる。背景が無地のスタジオカットでのみ使う。回転角を明示しないと一周しようとして破綻することがある。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "工程1で作った背景が単純な商品静止画1枚。新しく画像は作らない",
+        "output": "5秒前後の回り込み動画1本。立体形状が伝わる",
+        "next": "ここで完結。背景が複雑な素材には使わない"
+      }
+    },
+    {
+      "id": "p-cinematic-01",
+      "category": "cinematic",
+      "title": "早朝の商店街（ブランドの世界観カット）",
+      "purpose": "商品でも施設でもなく、土地の魅力そのものを示すカット。冒頭または締めに使う。",
+      "input": "なし（完全生成）。実在の特定の商店街や駅として提示しないこと。",
+      "model": "静止画生成 → image-to-video",
+      "text": "A quiet shopping street at first light before the shutters open, long shadows from the buildings stretching across the wet asphalt, no people and no cars, wide shot from a low angle looking down the street, 35mm equivalent, deep focus, cold directional sunrise light raking in from the right along the street with the damp road surface reflecting the sky, worn asphalt, tiled shopfronts and dark utility pole silhouettes, photorealistic, cool blue grade with a warm highlight on the upper facades",
+      "effect": "人も車も入れないことで静寂が出る。否定語ではなく『quiet』『before the shutters open』『first light』という肯定的な情景描写で無人の状態を指定している。濡れた路面の反射が、東京の朝の固有の光になる。",
+      "caution": "特定の商店街や駅の名前を出して提示すると、実際の景観と異なる場合に誤認を招く。イメージ映像であることを明示するか、実在施設の映像と混在させない。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。参照画像なし。特定の商店街名・駅名は入れない",
+        "output": "無人の早朝の街の静止画1枚。イメージカットとして使う",
+        "next": "微速のプッシュインまたはティルトで動画化し、冒頭か締めに置く"
+      }
+    },
+    {
+      "id": "p-cinematic-02",
+      "category": "cinematic",
+      "title": "手元の所作（人の気配を入れる）",
+      "purpose": "顔を映さずに人の存在を感じさせる。肖像権の問題を避けつつ温度を出す。",
+      "input": "なし。手だけのカットにする。",
+      "model": "静止画生成 → image-to-video",
+      "text": "A pair of hands pouring hot tea from an iron kettle into a small ceramic cup, only the hands and forearms are visible, no face in frame, on a dark wooden table, close-up at a slight high angle, 50mm equivalent, shallow depth of field, warm low-key side light from the left with the steam catching the light, rough iron surface and smooth glazed ceramic, photorealistic, warm muted grade",
+      "effect": "顔を入れないため肖像の問題が生じにくく、同時に人の気配と所作の温度が出る。宿・飲食どちらでも使える汎用カット。",
+      "caution": "手と指は現在の生成モデルが最も破綻しやすい部位。指の本数、関節の向き、持ち方の物理的整合を必ず確認する。破綻した場合は構図を寄せて指を画角から外すか、手の動きを止めた構図にする。",
+      "status": "未検証",
+      "flow": {
+        "code": "T2I",
+        "step": "工程1 / 2",
+        "input": "新規。顔を画角に入れない構図で、手元だけを指定する",
+        "output": "手元の所作の静止画1枚。人の気配は出るが肖像の問題が生じにくい",
+        "next": "動画化する。指の本数と関節の向きを必ず確認し、破綻したら構図を寄せて指を画角から外す"
+      }
+    },
+    {
+      "id": "p-camera-01",
+      "category": "camera",
+      "title": "最も安定するカメラ移動（微速プッシュイン）",
+      "purpose": "破綻率を最小にしながら動きを付ける。迷ったらこれを使う。",
+      "input": "任意の静止画。",
+      "model": "image-to-video 全般",
+      "text": "Slow dolly in toward the subject, subtle and continuous, constant speed, no cuts, no camera shake",
+      "effect": "ほとんどの被写体で安定する。『constant speed』『no cuts』を入れることで、途中でのカット挿入や急加速を抑える。",
+      "caution": "寄りの構図に対して大きなプッシュインをかけると被写体が破綻する。ショットサイズが寄るほど移動量を小さくする。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "単発",
+        "input": "すでにある静止画1枚。どの画にも使える。画像は新しく作らない",
+        "output": "指定した静止画が微速で寄っていく動画1本",
+        "next": "ここで完結。迷ったらこれを使う。寄りの構図ほど移動量を小さくする"
+      }
+    },
+    {
+      "id": "p-camera-02",
+      "category": "camera",
+      "title": "ショットサイズ4段階（差し替え部品）",
+      "purpose": "同一被写体で情報量の異なるカットを作り分ける。",
+      "input": "7スロットプロンプトのカメラスロットに挿入する。",
+      "model": "静止画生成",
+      "text": "WS: wide establishing shot, eye level, 24mm equivalent, deep focus | MS: medium shot, 45-degree angle, 50mm equivalent, moderate depth of field | CU: close-up, 45-degree angle, 85mm equivalent, shallow depth of field | ECU: extreme close-up on surface texture, 100mm equivalent macro look, very shallow depth of field",
+      "effect": "引きで状況を説明し、寄りで欲求を喚起する。この4段階を揃えておくと編集で構成を組み替えられる。",
+      "caution": "4段階すべてを毎回作る必要はない。15秒広告なら3カット、30秒なら6〜8カットが目安。カット数を先に決めてから生成すること。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "7スロットプロンプトのカメラスロットに、この4行のどれかを差し込む",
+        "output": "それ自体は何も生成しない。差し込んだ先の静止画プロンプトの画角が変わる",
+        "next": "他の6スロットを固定したまま、ここだけを入れ替えて比較生成する"
+      }
+    },
+    {
+      "id": "p-camera-03",
+      "category": "camera",
+      "title": "ティルトアップ（高さ・層を見せる）",
+      "purpose": "建物の高さ、料理の層、積み上がったものを下から上へ辿る。",
+      "input": "縦方向に情報のある静止画。",
+      "model": "image-to-video",
+      "text": "Slow tilt up from the base of the subject to the top, constant speed, the camera stays in place and only rotates upward, no cuts",
+      "effect": "縦型9:16と相性がよい。縦の画角を使い切れる。",
+      "caution": "カメラが移動せず回転のみであることを明示しないと、上方向に移動（ブーム）してしまい、被写体が画面外に出る。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "単発",
+        "input": "縦方向に情報のある静止画1枚（建物、層のある料理、積み上げたもの）",
+        "output": "下から上へ辿る動画1本。縦型9:16と相性がよい",
+        "next": "ここで完結。カメラが移動せず回転のみであることを明示しないと被写体が画面外に出る"
+      }
+    },
+    {
+      "id": "p-light-01",
+      "category": "light",
+      "title": "食品の基本光（半逆光＋弱いフィル）",
+      "purpose": "「もっと美味しそうに」という要望に対する最短の操作。",
+      "input": "光スロットに挿入する。",
+      "model": "静止画生成",
+      "text": "Backlight from behind and slightly above the subject, strong rim light on the rising steam, warm 3000K key, soft fill from the front left at low intensity, specular highlights on the liquid surface, dark background for separation",
+      "effect": "湯気が透過光で白く浮き、液体表面に反射が出る。シズル感の物理的な正体はこの透過光と反射。",
+      "caution": "フィル光を強くしすぎると立体感が失われて順光に近づく。『low intensity』を保つこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "静止画プロンプトの光スロットに差し込む。他のスロットは変えない",
+        "output": "それ自体は何も生成しない。差し込んだ先の画の光が変わる",
+        "next": "「もっと美味しそうに」という要望に対する最短の操作。食品カットの既定値にする"
+      }
+    },
+    {
+      "id": "p-light-02",
+      "category": "light",
+      "title": "窓光のみ（宿泊施設の基本光）",
+      "purpose": "客室を「現実の部屋」として信用させる。",
+      "input": "光スロットに挿入する。",
+      "model": "静止画生成",
+      "text": "Soft daylight entering only through the window as the single light source, no overhead ceiling light, gentle falloff toward the far side of the room, one warm 2700K practical lamp for contrast, soft shadows",
+      "effect": "天井照明を排除することで、不動産広告的な平板さを避けられる。窓光は部屋の方向感を作る。東京では、この窓光の正体は直射ではなく向かいのビルのガラス面や壁からの反射光であることが多い。",
+      "caution": "窓から遠い側が暗くなりすぎる場合は、反対側に弱いバウンスを指定する。ただし光源を2つ以上足すと窓光の方向感が消える。隣棟が近い低層階や北向きの部屋では光量が足りないため、その場合は曇天の拡散光として指定したほうが実物に近い。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "宿泊施設の静止画プロンプトの光スロットに差し込む",
+        "output": "それ自体は何も生成しない。室内が現実の部屋として信用される光になる",
+        "next": "客室カットの既定値にする。天井照明を排除する記述を外さないこと"
+      }
+    },
+    {
+      "id": "p-light-03",
+      "category": "light",
+      "title": "高級感を出す（ローキー）",
+      "purpose": "「高級感を」という抽象的な要望を物理条件に翻訳する。",
+      "input": "光スロットに挿入する。",
+      "model": "静止画生成",
+      "text": "Low key lighting, a single hard key light from a steep angle, deep shadows occupying most of the frame, dark background, controlled specular highlights on polished surfaces only, no fill light",
+      "effect": "暗部の面積とコントラストが高級感の正体。ハイライトを限定することで素材の質が強調される。",
+      "caution": "飲食店の訴求では、暗くしすぎると料理の内容が判別できなくなる。価格帯の高い店でのみ有効で、ファミリー層向けの訴求では逆効果になる。ターゲットと合わせて選ぶこと。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "静止画プロンプトの光スロットに差し込む",
+        "output": "それ自体は何も生成しない。暗部の面積が増え、高級感が出る",
+        "next": "価格帯の高い店でのみ有効。ファミリー層向けの訴求では逆効果になる"
+      }
+    },
+    {
+      "id": "p-hook-01",
+      "category": "hook",
+      "title": "動きで止める（注ぐ・切る・湯気）",
+      "purpose": "冒頭0.5秒以内に動きを置いてスクロールを止める。",
+      "input": "動作のある料理カット。",
+      "model": "image-to-video",
+      "text": "The action is already in progress at the first frame, hot broth being poured into the bowl, slow motion, the motion fills the center of the frame, no establishing pause before the action starts",
+      "effect": "1フレーム目から動きが始まっているため、静止画と誤認されず視線が止まりやすい。",
+      "caution": "動画生成では冒頭に静止した数フレームが入ることがある。編集で頭を切り落として、動きの最中から始まるようにする。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "単発",
+        "input": "動作の途中を描いた静止画1枚。静止した状態の画ではなく、すでに動きが始まっている画を選ぶ",
+        "output": "1フレーム目から動きが始まっている4〜5秒の動画1本",
+        "next": "編集で頭の静止部分を切り落としてから広告の冒頭に置く"
+      }
+    },
+    {
+      "id": "p-hook-02",
+      "category": "hook",
+      "title": "意外性で止める（スケール・対比）",
+      "purpose": "見慣れない画で0.5〜1秒の注意を得る。",
+      "input": "対比のある構図。",
+      "model": "静止画生成 → image-to-video",
+      "text": "An extreme close-up of raindrops running down a dark glass pane filling the entire frame, then the camera pulls back rapidly to reveal the lit street outside the window behind it, single continuous shot, no cuts",
+      "effect": "極端な寄りから引きへの変化は、情報の更新が速く、離脱しにくい。",
+      "caution": "1カット内での急激なスケール変化は破綻率が高い。安定しない場合は2カットに分けて編集でつなぐほうが確実。採用率が低い前提で回数を見込む。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "単発",
+        "input": "極端な寄りの静止画1枚。ここから引いていく",
+        "output": "寄りから引きへ変化する動画1本。破綻率は高い",
+        "next": "安定しない場合は2カットに分け、編集でつなぐほうが確実で安い"
+      }
+    },
+    {
+      "id": "p-hook-03",
+      "category": "hook",
+      "title": "音なし視聴前提のフック",
+      "purpose": "SNSの既定である音声オフ状態で成立させる。",
+      "input": "冒頭カットと、画面に載せる短いテキスト。",
+      "model": "静止画生成 → image-to-video ＋ 編集でテキスト合成",
+      "text": "Composition leaves the upper third of the vertical frame empty for a text overlay, the subject occupies the lower two thirds, the empty area has a simple dark uniform background so white text remains readable, vertical 9:16",
+      "effect": "テキストの居場所を構図段階で確保しておくと、編集でテキストが被写体に被らない。",
+      "caution": "テキストは生成させず編集で載せる。生成に文字を含めると崩れる。セーフエリア（上下の UI に隠れる領域）を考慮して、画面端ぎりぎりに配置しない。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "静止画プロンプトの構図に関する記述として差し込む。これ単体では生成しない",
+        "output": "それ自体は何も生成しない。テキストを載せる余白が構図に確保される",
+        "next": "テキストは生成させず、編集工程で載せる。セーフエリアを考慮して配置する"
+      }
+    },
+    {
+      "id": "p-brand-01",
+      "category": "brand",
+      "title": "ブランド共通のスタイル指定（全カットに付与）",
+      "purpose": "複数カットのトーンを揃え、同じブランドの映像に見せる。",
+      "input": "ブランドガイドで決めた色・コントラスト・質感の方向性。",
+      "model": "全生成のスタイルスロットに共通で挿入",
+      "text": "Photorealistic, muted natural color grade with slightly lifted shadows, low saturation in the midtones, warm highlights and cool shadows, soft contrast, fine film grain, consistent across all shots",
+      "effect": "個々のカットが別の日に撮られたように見えるのを防ぐ。スタイルスロットを共通化するのが最も簡単な統一手段。",
+      "caution": "モデルやバージョンを変えるとスタイル指定が同じでもトーンがずれる。1案件内ではモデルを固定すること。最終的な統一は編集工程のカラーグレーディングで行う前提にしておく。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "1案件のすべての静止画プロンプトのスタイルスロットに、同じ文言で差し込む",
+        "output": "それ自体は何も生成しない。カット間のトーンが揃う",
+        "next": "1案件内ではモデルを固定する。最終的な統一は編集のカラーグレーディングで担保する"
+      }
+    },
+    {
+      "id": "p-brand-02",
+      "category": "brand",
+      "title": "禁止事項を含むブランド指定",
+      "purpose": "ブランドとして避けたい表現を制作時点で排除する。",
+      "input": "顧客と合意した禁止事項。",
+      "model": "全生成に共通で挿入",
+      "text": "Natural and restrained, no oversaturated colors, no lens flare, no heavy vignette, no artificial-looking gloss, no stock-photo styling, muted palette limited to warm wood tones, off-white and deep charcoal",
+      "effect": "色の範囲を明示的に限定すると、ブランドらしさが安定する。",
+      "caution": "否定指定は効き方にばらつきがあるため、肯定形の指定（限定した色名を挙げる）と併用する。最終的には生成後のグレーディングで担保する。",
+      "status": "未検証",
+      "flow": {
+        "code": "SLOT",
+        "step": "部品",
+        "input": "顧客と合意した禁止事項を反映させ、全生成に共通で差し込む",
+        "output": "それ自体は何も生成しない。避けたい表現が出にくくなる",
+        "next": "否定指定は効き方にばらつきがあるため、肯定形の色指定と併用する"
+      }
+    },
+    {
+      "id": "p-ref-01",
+      "category": "reference",
+      "title": "参照画像で場所を固定する",
+      "purpose": "同じ客室・同じ店内が、カットごとに別の場所に見えるのを防ぐ。",
+      "input": "対象となる場所の参照画像（複数角度あると精度が上がる）。Elements に Location として登録しておく。",
+      "model": "参照画像を受け付ける生成機能（スタイル参照 / キャラクター参照 等の参照タグ）",
+      "text": "Use the attached reference as the location. Keep the same room layout, the same window position, the same furniture and the same wall and floor materials. Change only the camera angle to a medium shot from the opposite corner. Lighting conditions stay identical to the reference.",
+      "effect": "変える要素を1つ（カメラ角度）に限定し、それ以外は参照を維持すると明示することで、場所の同一性が保たれやすい。",
+      "caution": "「同じにして」とだけ書くと何を同じにするのか伝わらない。維持する要素を具体的に列挙する。それでも完全な一致は保証されないため、重要な設備（浴室、眺望）は参照を変えて複数回生成し、最も近いものを選ぶ。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2I",
+        "step": "工程1 / 2",
+        "input": "対象となる場所の参照画像1枚以上（複数角度あると精度が上がる）。Elements に Location として登録しておく",
+        "output": "同じ場所を別角度から見た静止画1枚。レイアウトと素材が維持される",
+        "next": "この画像を image-to-video に渡して動かす。重要な設備は複数回生成して最も近いものを選ぶ"
+      }
+    },
+    {
+      "id": "p-ref-02",
+      "category": "reference",
+      "title": "カット間をつなぐ（終点フレーム→始点フレーム）",
+      "purpose": "「前のカットの続き」を作る。専用のワンクリック機能は存在しないため、参照で代替する。",
+      "input": "クリップAの最終フレームと、クリップBの先頭フレームの2枚。",
+      "model": "始点・終点フレーム指定に対応するモデル（Seedance、Veo 3.1、Wan 2.6 など）",
+      "text": "Generate the transition between the two attached frames. The first image is the starting frame and the second image is the ending frame. Motion is continuous and physically plausible, constant speed, no cuts, no additional objects appearing.",
+      "effect": "2つのカットの間を補間することで、連続した1つの動きとしてつながる。",
+      "caution": "2枚のフレームの差が大きすぎると補間が破綻する。カメラ位置・光・被写体の配置が近い2枚を選ぶこと。Cinema Studio 4.0 の Forward/Backward Extend で動画を前後に延長する方法もある。",
+      "status": "未検証",
+      "flow": {
+        "code": "I2V",
+        "step": "工程2 / 2",
+        "input": "2枚のフレーム。クリップAの最終フレームと、クリップBの先頭フレーム。新しく画像は作らない",
+        "output": "2枚の間を補間した動画1本。2つのカットが1つの動きとしてつながる",
+        "next": "編集でクリップAとBの間に挿入する。2枚の差が大きすぎると破綻するので、近い2枚を選ぶ"
+      }
+    },
+    {
+      "id": "p-ref-03",
+      "category": "reference",
+      "title": "既存の広告から変種を作る",
+      "purpose": "映像の構造を固定したまま、訴求メッセージだけを変えた比較検証用の広告を作る。",
+      "input": "採用済みの動画広告1本（4〜30秒）と、差し替える要素の画像。",
+      "model": "Ad Multiplier に相当する機能",
+      "text": "Keep the motion, framing, cut timing and total duration of the reference video exactly as they are. Replace only the on-screen hook text and the closing call to action. The visual content of each shot stays unchanged.",
+      "effect": "映像変数を完全に固定したまま、メッセージ変数だけを変えられる。広告テストとして正しい比較が成立する。",
+      "caution": "差し替える要素を欲張ると、何が効いたか分からなくなる。1回の検証で変える変数は1つに限定する。フック＋CTAの変更とCTAのみの変更ではクレジット消費が大きく異なるため、検証設計の段階でコストを見積もること。",
+      "status": "未検証",
+      "flow": {
+        "code": "V2V",
+        "step": "単発",
+        "input": "すでに採用済みの動画広告1本（4〜30秒）と、差し替える要素の画像。新しく映像は作らない",
+        "output": "映像の構造を保ったまま、文言だけが変わった動画1本",
+        "next": "配信してA/Bテストにかける。1回の検証で変える変数は1つに限定する"
+      }
+    }
+  ],
+  "flowLegend": [
+    {
+      "code": "T2I",
+      "label": "テキスト → 画像",
+      "desc": "何も参照せず、文章から新しく静止画を作る"
+    },
+    {
+      "code": "I2I",
+      "label": "画像 → 画像",
+      "desc": "既存の画像を参照として渡し、新しい静止画を作る"
+    },
+    {
+      "code": "I2V",
+      "label": "画像 → 動画",
+      "desc": "すでにある静止画を動かして動画にする。画像は新しく作らない"
+    },
+    {
+      "code": "T2V",
+      "label": "テキスト → 動画",
+      "desc": "画像を経由せず、文章から直接動画を作る"
+    },
+    {
+      "code": "V2V",
+      "label": "動画 → 動画",
+      "desc": "既存の動画を入力にして、変種や部分修正を作る"
+    },
+    {
+      "code": "SLOT",
+      "label": "プロンプト部品",
+      "desc": "単体では使わない。他のプロンプトの該当スロットに差し込む"
+    },
+    {
+      "code": "DOC",
+      "label": "文書テンプレート",
+      "desc": "生成AIに投げるものではなく、自分で埋める書類や表"
+    }
+  ]
+}

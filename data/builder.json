@@ -1,0 +1,154 @@
+{
+  "note": "プロンプトビルダーの選択肢。value が英語の断片、label が日本語、hint が選ぶ基準。7スロット構造（被写体→動作→環境→カメラ→光→質感→スタイル）の順に連結される。",
+  "presets": [
+    { "id": "food", "label": "飲食・料理", "set": { "shot": "close-up", "angle": "45-degree angle", "lens": "85mm equivalent", "dof": "shallow depth of field", "lightDir": "backlight from behind and slightly above the subject, with a weak soft fill from the front left", "lightQ": "soft diffused light", "kelvin": "warm 3000K", "texture": "glossy surface with specular highlights", "style": "photorealistic", "grade": "muted warm color grade", "aspect": "vertical 9:16", "move": "slow dolly in", "amount": "subtle and minimal", "motion": "steam rising slowly" } },
+    { "id": "hotel", "label": "宿泊・客室", "set": { "shot": "wide establishing shot", "angle": "eye level", "lens": "24mm equivalent", "dof": "deep focus", "lightDir": "window light as the only source, no overhead ceiling light", "lightQ": "soft diffused light", "kelvin": "daylight 5500K", "texture": "matte plaster and raw timber surfaces", "style": "photorealistic architectural photography", "grade": "restrained contrast, neutral grade", "aspect": "vertical 9:16", "move": "slow dolly in", "amount": "subtle and minimal", "motion": "sheer curtain drifting slightly" } },
+    { "id": "product", "label": "商品・物販", "set": { "shot": "medium close-up", "angle": "eye level", "lens": "85mm equivalent", "dof": "moderate depth of field", "lightDir": "side light from the left with a white bounce from the right", "lightQ": "soft diffused light", "kelvin": "neutral 4500K", "texture": "matte packaging with a slight sheen on the sealed edge", "style": "clean commercial product photography", "grade": "neutral natural grade", "aspect": "square 1:1", "move": "slow orbit around the subject, 30 degrees of rotation only", "amount": "subtle and minimal", "motion": "no subject motion" } },
+    { "id": "realestate", "label": "不動産・室内", "set": { "shot": "wide establishing shot", "angle": "eye level", "lens": "24mm equivalent", "dof": "deep focus", "lightDir": "window light as the only source, no overhead ceiling light", "lightQ": "soft diffused light", "kelvin": "daylight 5500K", "texture": "matte wall surfaces and wood flooring", "style": "photorealistic architectural photography", "grade": "neutral natural grade", "aspect": "horizontal 16:9", "move": "slow truck left", "amount": "subtle and minimal", "motion": "no subject motion" } },
+    { "id": "recruit", "label": "採用・職場", "set": { "shot": "medium shot", "angle": "eye level", "lens": "50mm equivalent", "dof": "moderate depth of field", "lightDir": "window light as the only source, no overhead ceiling light", "lightQ": "soft diffused light", "kelvin": "neutral 4500K", "texture": "natural fabric and matte desk surfaces", "style": "documentary photography", "grade": "neutral natural grade", "aspect": "vertical 9:16", "move": "static shot, camera does not move", "amount": "subtle and minimal", "motion": "hands performing the action" } },
+    { "id": "construction", "label": "建設・現場", "set": { "shot": "medium wide shot", "angle": "slightly below eye level", "lens": "24mm equivalent", "dof": "deep focus", "lightDir": "side light from the left", "lightQ": "overcast flat light", "kelvin": "daylight 5500K", "texture": "rough concrete, steel and timber surfaces", "style": "documentary photography", "grade": "restrained contrast, neutral grade", "aspect": "horizontal 16:9", "move": "slow tilt up", "amount": "subtle and minimal", "motion": "no subject motion" } }
+  ],
+  "groups": {
+    "shot": { "label": "ショットサイズ", "slot": "カメラ", "hint": "引きで状況を説明し、寄りで欲求を喚起する", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "wide establishing shot", "l": "ワイド（全景）", "h": "どこの話かを一瞬で伝える。外観・現場・客室全体" },
+      { "v": "medium wide shot", "l": "ミディアムワイド", "h": "状況と被写体のバランス" },
+      { "v": "medium shot", "l": "ミディアム", "h": "被写体の全体像。皿全体、人物の上半身" },
+      { "v": "medium close-up", "l": "ミディアムクローズアップ", "h": "情報量と親密さの中間" },
+      { "v": "close-up", "l": "クローズアップ（寄り）", "h": "感情と欲求を喚起する。料理の寄り、手元" },
+      { "v": "extreme close-up on surface texture", "l": "エクストリームクローズアップ", "h": "質感そのもの。情報は少ないが強度が高い" }
+    ]},
+    "angle": { "label": "アングル", "slot": "カメラ", "hint": "被写体との力関係が決まる", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "eye level", "l": "アイレベル", "h": "中立。信頼感、ドキュメンタリー的" },
+      { "v": "slight high angle", "l": "やや俯瞰", "h": "状況を把握しやすい" },
+      { "v": "top-down flat lay", "l": "真俯瞰（フラットレイ）", "h": "品数と彩りが一目で伝わる。立体感と湯気は出ない" },
+      { "v": "45-degree angle", "l": "斜め45度", "h": "料理の定番。食卓で見る視点に近い" },
+      { "v": "slightly below eye level", "l": "やや見上げる", "h": "建物や重機を大きく見せる" },
+      { "v": "low angle", "l": "ローアングル", "h": "威厳。外観、ボトル、グラス" }
+    ]},
+    "lens": { "label": "焦点距離（レンズ）", "slot": "カメラ", "hint": "画角と圧縮効果。業態で初期値が逆になる", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "16mm equivalent ultra wide", "l": "超広角 16mm", "h": "歪みが強い。料理には使わない" },
+      { "v": "24mm equivalent", "l": "広角 24mm", "h": "空間を広く見せる。客室、店内、現場" },
+      { "v": "35mm equivalent", "l": "準広角 35mm", "h": "汎用。状況込みの描写" },
+      { "v": "50mm equivalent", "l": "標準 50mm", "h": "人の見た目に近い。料理の斜めカット" },
+      { "v": "85mm equivalent", "l": "望遠 85mm", "h": "背景が圧縮されボケる。料理の寄り、商品" },
+      { "v": "100mm equivalent macro look", "l": "マクロ 100mm", "h": "質感を切り取る" }
+    ]},
+    "dof": { "label": "被写界深度", "slot": "カメラ", "hint": "料理は浅く、室内は深く。業態で初期設定が逆", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "deep focus", "l": "深い（奥までピント）", "h": "部屋の広さ、現場の全体像。宿泊・不動産・建設の既定" },
+      { "v": "moderate depth of field", "l": "中間", "h": "商品全体にピントを残しつつ背景を整理" },
+      { "v": "shallow depth of field", "l": "浅い（背景ボケ）", "h": "料理と商品の既定。背景を消して主役を立てる" },
+      { "v": "very shallow depth of field", "l": "極めて浅い", "h": "質感のみを見せる寄り" }
+    ]},
+    "lightDir": { "label": "光の方向", "slot": "光", "hint": "最も印象を動かす変数。顧客の修正要望の多くはここで解決する", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "soft front light", "l": "順光", "h": "陰影が消え平板になる。情報は伝わるが魅力は出にくい" },
+      { "v": "side light from the left", "l": "サイド（左から）", "h": "陰影が出て立体感が生まれる。商品の基本" },
+      { "v": "side light from the right", "l": "サイド（右から）", "h": "同上。被写体の向きで左右を選ぶ" },
+      { "v": "backlight from behind and slightly above the subject, with a weak soft fill from the front left", "l": "半逆光＋弱いフィル", "h": "食品の基本。湯気が透過し、液面に反射が出る。シズル感の正体" },
+      { "v": "top light from directly above", "l": "トップ（真上）", "h": "俯瞰と相性がよいが手前が暗くなる" },
+      { "v": "window light as the only source, no overhead ceiling light", "l": "窓光のみ（天井照明なし）", "h": "室内が現実の部屋として信用される。宿泊・不動産の既定" },
+      { "v": "low key with a single hard key light from a steep angle and no fill", "l": "ローキー（高級感）", "h": "暗部の面積とコントラストが高級感の正体。料理は内容が見えなくなるので注意" }
+    ]},
+    "lightQ": { "label": "光の質", "slot": "光", "hint": "影の縁の鋭さで決まる", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "soft diffused light", "l": "柔らかい", "h": "上品、落ち着き、曇天、朝夕の室内" },
+      { "v": "hard directional light", "l": "硬い", "h": "影がくっきり。シャープ、力強い、夏、昼" },
+      { "v": "overcast flat light", "l": "曇天の拡散光", "h": "東京の曇天。ビルに囲まれた路地や北向きの室内の既定" }
+    ]},
+    "kelvin": { "label": "色温度", "slot": "光", "hint": "暖色か寒色か。雰囲気の指定はここで物理化する", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "warm 2700K", "l": "電球色 2700K", "h": "くつろぎ、夜、居酒屋、客室" },
+      { "v": "warm 3000K", "l": "暖色 3000K", "h": "食品の既定" },
+      { "v": "neutral 4500K", "l": "中間 4500K", "h": "自然、清潔、職場" },
+      { "v": "daylight 5500K", "l": "昼光 5500K", "h": "屋外、現場、クリアな室内" },
+      { "v": "cool 6000K", "l": "寒色 6000K", "h": "ビルのガラス面からの反射光。高層階の抜けた室内" },
+      { "v": "deep blue 8000K twilight", "l": "青い残照 8000K", "h": "夜の外。室内の暖色と対比させる" }
+    ]},
+    "texture": { "label": "質感", "slot": "質感", "hint": "表面の性質。自由入力もできる", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "glossy surface with specular highlights", "l": "照り・反射がある" },
+      { "v": "matte surface with visible grain", "l": "マットで目が見える" },
+      { "v": "visible condensation and moisture", "l": "結露・水滴" },
+      { "v": "rough timber grain", "l": "粗い木目" },
+      { "v": "soft linen weave", "l": "リネンの織り" },
+      { "v": "wet dark stone", "l": "濡れた黒い石" },
+      { "v": "wet asphalt with reflected light", "l": "濡れたアスファルト" },
+      { "v": "glazed tile wall surfaces", "l": "タイルの壁" },
+      { "v": "brushed stainless steel", "l": "ステンレス" },
+      { "v": "an aged wooden counter worn smooth", "l": "使い込まれた木のカウンター" },
+      { "v": "rough concrete, steel and timber surfaces", "l": "コンクリート・鉄・木" }
+    ]},
+    "style": { "label": "スタイル", "slot": "スタイル", "hint": "全体の映像的な方向性", "options": [
+      { "v": "photorealistic", "l": "写実的" },
+      { "v": "photorealistic architectural photography", "l": "建築写真" },
+      { "v": "clean commercial product photography", "l": "商品写真" },
+      { "v": "photorealistic lifestyle photography", "l": "ライフスタイル写真" },
+      { "v": "documentary photography", "l": "ドキュメンタリー" },
+      { "v": "cinematic film still", "l": "映画のワンシーン" }
+    ]},
+    "grade": { "label": "カラーグレード", "slot": "スタイル", "hint": "1案件内では全カットで同じものを使う", "options": [
+      { "v": "", "l": "指定しない" },
+      { "v": "muted warm color grade", "l": "落ち着いた暖色" },
+      { "v": "neutral natural grade", "l": "ニュートラル" },
+      { "v": "cool blue grade", "l": "寒色寄り" },
+      { "v": "restrained contrast, neutral grade", "l": "抑えたコントラスト" },
+      { "v": "high contrast with deep shadows", "l": "高コントラスト・深い影" }
+    ]},
+    "aspect": { "label": "アスペクト比", "slot": "カメラ", "hint": "最初に決める。後から変えると構図が壊れる", "options": [
+      { "v": "vertical 9:16", "l": "縦 9:16", "h": "リール、TikTok、ショート。主軸にすることが多い" },
+      { "v": "portrait 4:5", "l": "縦 4:5", "h": "Instagramフィード" },
+      { "v": "square 1:1", "l": "正方形 1:1", "h": "一覧性重視" },
+      { "v": "horizontal 16:9", "l": "横 16:9", "h": "サイトのヒーロー、YouTube、施設内モニター" }
+    ]},
+    "move": { "label": "カメラの動き", "slot": "動画", "hint": "1カットにつき1種類だけ。複数指定すると高確率で破綻する", "options": [
+      { "v": "static shot, camera does not move", "l": "固定（動かさない）", "h": "被写体の動きだけを見せる。最も安定" },
+      { "v": "slow dolly in", "l": "プッシュイン（寄る）", "h": "最も失敗が少なく、広告で最も使われる" },
+      { "v": "slow dolly out", "l": "プルアウト（引く）", "h": "状況を明かす。締めに使う" },
+      { "v": "slow truck left", "l": "トラック左（横移動）", "h": "空間の広がりを見せる。室内に向く" },
+      { "v": "slow truck right", "l": "トラック右（横移動）" },
+      { "v": "slow pan left", "l": "パン左（その場で振る）", "h": "カメラは移動せず回転のみ" },
+      { "v": "slow pan right", "l": "パン右（その場で振る）" },
+      { "v": "slow tilt up, the camera stays in place and only rotates upward", "l": "ティルトアップ", "h": "高さ、層を下から上へ辿る。縦型と相性がよい" },
+      { "v": "slow tilt down, the camera stays in place and only rotates downward", "l": "ティルトダウン" },
+      { "v": "slow orbit around the subject, 30 degrees of rotation only, subject stays centered", "l": "オービット（回り込み）", "h": "商品の立体形状。背景が単純なときだけ使う" },
+      { "v": "slow crane up, rising while pulling back", "l": "クレーンアップ", "h": "上昇しながら引く。締めのカット" }
+    ]},
+    "amount": { "label": "移動量", "slot": "動画", "hint": "寄りの構図ほど小さくする", "options": [
+      { "v": "subtle and minimal", "l": "ごく控えめ", "h": "最も安定する。既定値にする" },
+      { "v": "moderate", "l": "中程度" },
+      { "v": "pronounced", "l": "大きめ", "h": "破綻率が上がる。背景が単純なときだけ" }
+    ]},
+    "motion": { "label": "被写体の動き", "slot": "動画", "hint": "1カットにつき1つだけ。自由入力もできる", "options": [
+      { "v": "no subject motion", "l": "動かさない" },
+      { "v": "steam rising slowly", "l": "湯気がゆっくり立つ" },
+      { "v": "liquid being poured in a thin continuous stream, the stream stays unbroken", "l": "液体が細く途切れず注がれる", "h": "破綻率が高い。Wan 2.7 を使う" },
+      { "v": "the surface rippling faintly", "l": "表面がかすかに波立つ" },
+      { "v": "sheer curtain drifting slightly", "l": "カーテンがわずかに揺れる" },
+      { "v": "rain running down the glass", "l": "雨がガラスを伝う" },
+      { "v": "a noren curtain swaying in the doorway", "l": "暖簾が揺れる" },
+      { "v": "hands performing the action, no face in frame", "l": "手元の所作（顔は映さない）", "h": "肖像の問題を避けつつ人の気配が出る" },
+      { "v": "fabric moving in a light breeze", "l": "布が風で揺れる" },
+      { "v": "a person walking slowly through the frame", "l": "人がゆっくり横切る" }
+    ]}
+  },
+  "toggles": {
+    "still": [
+      { "id": "notext", "v": "no text, no logo, no signage", "l": "文字とロゴを出さない", "h": "看板・値札・パッケージの文字は高確率で崩れる。実物は編集で合成する", "on": true },
+      { "id": "nopeople", "v": "no people in frame", "l": "人物を入れない", "h": "肖像の問題を避ける。ただし否定指定は効きが不安定なので、無人の情景として描写するほうが確実", "on": false },
+      { "id": "margin", "v": "generous margin around the subject for later text overlay", "l": "テキスト用の余白を残す", "h": "編集で字幕やロゴを載せる位置を構図段階で確保する", "on": false },
+      { "id": "grain", "v": "slight film grain", "l": "わずかなフィルムグレイン", "h": "デジタル特有の硬さを和らげる", "on": false }
+    ],
+    "video": [
+      { "id": "nocuts", "v": "no cuts", "l": "カットを入れない", "h": "1カットとして生成させる。途中でカットが挿入される事故を防ぐ", "on": true },
+      { "id": "constant", "v": "constant speed", "l": "等速", "h": "不自然な加減速を抑える", "on": true },
+      { "id": "noshake", "v": "no camera shake", "l": "手ブレなし", "h": "広告用途では既定にする", "on": true },
+      { "id": "slowmo", "v": "slow motion", "l": "スローモーション", "h": "注ぐ・落ちる・弾ける動作を強調する", "on": false },
+      { "id": "inprogress", "v": "the action is already in progress at the first frame", "l": "1フレーム目から動きが始まっている", "h": "冒頭フック用。静止画と誤認されず視線が止まる", "on": false },
+      { "id": "notext2", "v": "no text, no logo", "l": "文字とロゴを出さない", "h": "動画でも文字は崩れる。編集で載せる", "on": true }
+    ]
+  }
+}
