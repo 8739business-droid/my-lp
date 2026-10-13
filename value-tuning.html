@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VALUE TUNING ― 価格競争から抜けるための、世界観設計プログラム</title>
+<meta name="description" content="顧客の本当の欲求に、事業の価値を合わせ直す。値段ではなく共感で選ばれる店になるための、価値調律プログラム。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://loremflickr.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@400;500;600;700;900&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<!--
+  画像について: テーマ指定で実写を読み込む loremflickr を使用しています。
+  本番では各 background-image / <img src> を、お客様の実写URLに差し替えてください。
+  例: background-image: url("photos/hero.jpg");
+-->
+<style>
+  :root{
+    --paper:#f4f1ea;
+    --paper-deep:#ece7db;
+    --ink:#1c1a17;
+    --ink-soft:#43403a;
+    --ink-mute:#7b756a;
+    --brass:#9a7b4f;
+    --brass-deep:#84653b;
+    --line:#d8d1c1;
+    --mincho:"Zen Old Mincho", serif;
+    --gothic:"Zen Kaku Gothic New", sans-serif;
+    --serif:"Cormorant Garamond", serif;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+
+  body{
+    font-family:var(--gothic);
+    font-weight:300;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.95;
+    letter-spacing:0.04em;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* grain overlay */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:0.05;mix-blend-mode:multiply;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  ::selection{background:var(--brass);color:var(--paper);}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+  section{position:relative;}
+
+  /* ---------- duotone photo treatment ---------- */
+  .photo{position:relative;overflow:hidden;background:#2a2620;}
+  .photo img{width:100%;height:100%;object-fit:cover;display:block;filter:grayscale(.55) contrast(1.04) brightness(.92);}
+  .photo::after{content:"";position:absolute;inset:0;mix-blend-mode:multiply;
+    background:linear-gradient(150deg, rgba(28,26,23,.55), rgba(132,101,59,.32) 55%, rgba(28,26,23,.5));}
+  .photo::before{content:"";position:absolute;inset:0;z-index:1;
+    background:radial-gradient(120% 90% at 70% 15%, rgba(154,123,79,.18), transparent 55%);}
+
+  /* ---------- typography helpers ---------- */
+  .kicker{font-family:var(--serif);font-style:italic;font-size:1.05rem;letter-spacing:.12em;color:var(--brass-deep);}
+  .eyebrow{font-family:var(--serif);font-style:italic;letter-spacing:.14em;color:var(--brass-deep);font-size:1.1rem;display:block;margin-bottom:.7em;}
+  .eyebrow.light{color:var(--brass);}
+  .sec-num{font-family:var(--serif);font-size:.95rem;letter-spacing:.25em;color:var(--brass);display:block;margin-bottom:1.3em;}
+  h1,h2,h3{font-family:var(--mincho);font-weight:500;letter-spacing:.04em;line-height:1.5;}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(32px);transition:opacity 1.1s cubic-bezier(.22,.61,.36,1), transform 1.1s cubic-bezier(.22,.61,.36,1);}
+  .reveal.in{opacity:1;transform:none;}
+  .d1{transition-delay:.1s;}.d2{transition-delay:.2s;}.d3{transition-delay:.3s;}.d4{transition-delay:.4s;}.d5{transition-delay:.5s;}
+
+  /* CTA buttons */
+  .cta-btn{display:inline-flex;align-items:center;justify-content:center;gap:.7em;font-family:var(--gothic);font-weight:500;letter-spacing:.06em;
+    background:var(--ink);color:var(--paper);padding:1.15em 2.2em;border-radius:2px;text-decoration:none;font-size:1.02rem;
+    position:relative;overflow:hidden;transition:.5s cubic-bezier(.22,.61,.36,1);box-shadow:0 18px 40px -22px rgba(28,26,23,.7);}
+  .cta-btn .arr{transition:transform .5s cubic-bezier(.22,.61,.36,1);position:relative;z-index:1;}
+  .cta-btn span{position:relative;z-index:1;}
+  .cta-btn::before{content:"";position:absolute;inset:0;background:var(--brass);transform:translateX(-101%);transition:transform .5s cubic-bezier(.22,.61,.36,1);}
+  .cta-btn:hover::before{transform:translateX(0);}
+  .cta-btn:hover .arr{transform:translateX(6px);}
+  .cta-btn.line{background:#06C755;box-shadow:0 18px 40px -20px rgba(6,199,85,.6);}
+  .cta-btn.line::before{background:#05a948;}
+  .cta-btn.big{font-size:1.16rem;padding:1.35em 2.6em;width:auto;}
+  .cta-note{margin-top:1.2em;font-size:.86rem;color:var(--ink-mute);line-height:1.85;max-width:32em;}
+
+  /* section base */
+  .blk{padding:clamp(78px,10vh,132px) 0;}
+  .blk h2{font-size:clamp(1.85rem,4.4vw,2.9rem);font-weight:600;line-height:1.55;}
+  .blk h2 em{font-style:normal;color:var(--brass-deep);}
+  .lead{font-size:1.05rem;color:var(--ink-soft);line-height:2.05;}
+
+  /* ============ ① HERO ============ */
+  .hero{padding:clamp(80px,10vh,130px) 0 clamp(70px,9vh,110px);position:relative;}
+  .hero::after{content:"";position:absolute;right:-12%;top:6%;width:46vw;height:46vw;max-width:600px;max-height:600px;
+    background:radial-gradient(circle at 35% 35%, rgba(154,123,79,.13), transparent 62%);border-radius:50%;z-index:0;pointer-events:none;}
+  .hero .wrap{position:relative;z-index:1;}
+  .hero-grid{display:grid;grid-template-columns:0.82fr 1.18fr;gap:clamp(36px,5vw,76px);align-items:center;}
+
+  .film{aspect-ratio:4/5;border-radius:3px;box-shadow:0 40px 80px -30px rgba(28,26,23,.55);}
+  .film .film-cap{position:absolute;left:24px;right:24px;bottom:24px;z-index:2;}
+  .film .film-cap p{font-family:var(--mincho);color:#f4f1ea;font-size:1.12rem;line-height:1.7;}
+  .film .film-cap p span{display:block;font-family:var(--gothic);font-weight:300;font-size:.78rem;color:rgba(244,241,234,.7);letter-spacing:.16em;margin-top:.5em;}
+  .film .film-meta{position:absolute;top:20px;left:22px;z-index:2;font-family:var(--serif);letter-spacing:.26em;font-size:.76rem;color:rgba(244,241,234,.75);}
+  .play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;width:78px;height:78px;border-radius:50%;
+    border:1px solid rgba(244,241,234,.5);background:rgba(244,241,234,.08);backdrop-filter:blur(2px);display:grid;place-items:center;cursor:pointer;transition:.5s cubic-bezier(.22,.61,.36,1);}
+  .play::after{content:"";margin-left:5px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #f4f1ea;}
+  .play:hover{background:rgba(154,123,79,.9);border-color:transparent;transform:translate(-50%,-50%) scale(1.06);}
+  .play .ring{position:absolute;inset:-1px;border-radius:50%;border:1px solid rgba(244,241,234,.3);animation:pulse 3s ease-out infinite;}
+  @keyframes pulse{0%{transform:scale(1);opacity:.6;}100%{transform:scale(1.7);opacity:0;}}
+
+  .hero h1{font-size:clamp(2.3rem,6vw,4rem);font-weight:600;line-height:1.42;letter-spacing:.02em;}
+  .mark{position:relative;white-space:nowrap;}
+  .mark::after{content:"";position:absolute;left:-.06em;right:-.06em;bottom:.12em;height:.42em;z-index:-1;background:linear-gradient(transparent 0 55%, rgba(154,123,79,.34) 55% 100%);transform:skewX(-3deg);}
+  .hero h1 .sub{display:block;font-size:clamp(1.1rem,2.4vw,1.55rem);font-weight:400;color:var(--ink-soft);margin-top:.8em;}
+  .hero-lead{margin-top:2.2em;max-width:34em;color:var(--ink-soft);font-size:1rem;}
+  .hero-aside{margin-top:2.2em;padding-top:1.6em;border-top:1px solid var(--line);max-width:34em;}
+  .hero-aside p{font-family:var(--mincho);font-size:1.05rem;line-height:1.95;}
+  .hero-cta{margin-top:2.6em;}
+
+  /* ============ atmosphere full-bleed photo break ============ */
+  .scene{position:relative;height:clamp(280px,46vh,460px);display:grid;place-items:center;text-align:center;}
+  .scene .photo{position:absolute;inset:0;}
+  .scene .scene-copy{position:relative;z-index:2;padding:0 24px;max-width:30em;}
+  .scene .scene-copy p{font-family:var(--mincho);color:var(--paper);font-size:clamp(1.4rem,3.4vw,2.2rem);line-height:1.8;text-shadow:0 2px 30px rgba(0,0,0,.4);}
+  .scene .scene-copy .en{font-family:var(--serif);font-style:italic;color:var(--brass);letter-spacing:.16em;font-size:1.05rem;display:block;margin-bottom:1em;}
+
+  /* ============ ② PAIN ============ */
+  .pain{background:var(--paper-deep);}
+  .pain .head{max-width:24em;margin:0 auto;text-align:center;}
+  .check-list{max-width:720px;margin:3.2em auto 0;}
+  .check-item{display:flex;gap:1.2em;align-items:baseline;padding:1.4em .4em;border-top:1px solid var(--line);}
+  .check-item:last-child{border-bottom:1px solid var(--line);}
+  .check-item .ck{flex:0 0 auto;width:23px;height:23px;border:1px solid var(--brass);border-radius:2px;position:relative;top:.3em;}
+  .check-item .ck::after{content:"";position:absolute;left:7px;top:2px;width:6px;height:11px;border:solid var(--brass);border-width:0 1.5px 1.5px 0;transform:rotate(40deg);opacity:0;transition:opacity .6s ease;}
+  .check-item.in .ck::after{opacity:1;}
+  .check-item p{font-family:var(--mincho);font-size:1.12rem;line-height:1.7;}
+  .pain-close{text-align:center;margin-top:3em;font-family:var(--mincho);font-size:clamp(1.15rem,2.8vw,1.55rem);line-height:1.85;}
+  .pain-close em{font-style:normal;color:var(--brass-deep);}
+
+  /* ============ ③ REFRAME ============ */
+  .reframe{background:var(--ink);color:var(--paper);overflow:hidden;}
+  .reframe::after{content:"";position:absolute;left:-10%;bottom:-20%;width:48vw;height:48vw;max-width:620px;max-height:620px;background:radial-gradient(circle,rgba(154,123,79,.16),transparent 60%);border-radius:50%;pointer-events:none;}
+  .reframe .wrap{position:relative;z-index:1;}
+  .reframe .sec-num{color:var(--brass);}
+  .reframe h2{color:var(--paper);font-size:clamp(1.9rem,5vw,3.2rem);font-weight:600;max-width:16em;}
+  .reframe .body{color:rgba(244,241,234,.82);font-size:1.04rem;line-height:2.1;max-width:33em;margin-top:2em;}
+  .reframe .body strong{color:var(--paper);font-weight:500;border-bottom:1px solid var(--brass);}
+  .reframe-turn{margin-top:2.8em;padding-top:2.4em;border-top:1px solid rgba(244,241,234,.16);}
+  .reframe-turn p{font-family:var(--mincho);font-size:clamp(1.3rem,3.4vw,1.95rem);line-height:1.75;color:var(--paper);max-width:18em;}
+  .reframe-turn p span{color:var(--brass);}
+
+  /* ============ ④ SOLUTION ============ */
+  .solution .head{max-width:26em;}
+  .solution .body{font-size:1.04rem;color:var(--ink-soft);line-height:2.05;max-width:34em;margin-top:1.6em;}
+  .steps{margin-top:clamp(44px,6vw,80px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(18px,2.4vw,34px);}
+  .step{position:relative;padding:2.4em 1.8em;background:var(--paper);border:1px solid var(--line);border-radius:3px;transition:transform .7s cubic-bezier(.22,.61,.36,1),box-shadow .7s;}
+  .step:hover{transform:translateY(-6px);box-shadow:0 30px 60px -34px rgba(28,26,23,.4);}
+  .step .no{font-family:var(--serif);font-size:2.3rem;color:var(--brass);line-height:1;}
+  .step h3{font-size:1.6rem;font-weight:600;margin:.45em 0 .5em;}
+  .step .en{font-family:var(--serif);font-style:italic;font-size:1rem;color:var(--ink-mute);letter-spacing:.08em;margin-bottom:.9em;display:block;}
+  .step p{font-size:.95rem;color:var(--ink-soft);line-height:1.95;}
+  .step-arrow{position:absolute;right:-18px;top:50%;transform:translateY(-50%);z-index:2;color:var(--brass);font-family:var(--serif);font-size:1.6rem;}
+
+  /* ============ ⑤ PROOF ============ */
+  .proof{background:var(--paper-deep);}
+  .proof .head{max-width:24em;margin:0 auto;text-align:center;}
+  .cases{margin-top:clamp(44px,5vw,72px);display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.6vw,38px);}
+  .case{background:var(--paper);border:1px solid var(--line);border-radius:3px;overflow:hidden;display:flex;flex-direction:column;}
+  .case .ph{aspect-ratio:3/2;}
+  .case .case-body{padding:1.8em 1.6em 2em;}
+  .case .label{font-family:var(--serif);font-style:italic;font-size:1.5rem;color:var(--brass-deep);}
+  .case .label .ja{font-family:var(--gothic);font-style:normal;font-weight:400;font-size:.74rem;letter-spacing:.16em;color:var(--ink-mute);display:block;margin-top:.3em;}
+  .case p{font-size:.98rem;line-height:1.95;color:var(--ink-soft);margin-top:1em;}
+  .case p b{font-family:var(--mincho);font-weight:500;color:var(--ink);}
+  .proof-close{text-align:center;margin-top:3.2em;font-family:var(--mincho);font-size:clamp(1.15rem,2.8vw,1.6rem);line-height:1.85;max-width:24em;margin-left:auto;margin-right:auto;}
+  .proof-close em{font-style:normal;color:var(--brass-deep);}
+
+  /* ============ ⑥ FOR WHOM ============ */
+  .whom .head{max-width:24em;}
+  .whom-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(36px,5vw,72px);align-items:center;margin-top:clamp(36px,4vw,56px);}
+  .whom-list li{list-style:none;display:flex;gap:1em;align-items:baseline;padding:1.3em 0;border-bottom:1px solid var(--line);font-family:var(--mincho);font-size:1.1rem;line-height:1.7;}
+  .whom-list li:first-child{border-top:1px solid var(--line);}
+  .whom-list li::before{content:"—";color:var(--brass);font-family:var(--serif);}
+  .whom .ph{aspect-ratio:4/5;border-radius:3px;box-shadow:0 30px 60px -34px rgba(28,26,23,.45);}
+  .whom-close{margin-top:2.6em;font-family:var(--mincho);font-size:clamp(1.15rem,2.8vw,1.55rem);line-height:1.85;max-width:26em;}
+  .whom-close em{font-style:normal;color:var(--brass-deep);}
+
+  /* ============ ⑦ OFFER ============ */
+  .offer{color:var(--paper);text-align:center;position:relative;overflow:hidden;padding:clamp(92px,12vh,160px) 0;}
+  .offer .photo{position:absolute;inset:0;}
+  .offer .photo img{filter:grayscale(.7) brightness(.5);}
+  .offer .photo::after{background:linear-gradient(160deg, rgba(20,18,15,.86), rgba(28,26,23,.8));}
+  .offer .wrap{position:relative;z-index:2;max-width:720px;}
+  .offer h2{color:var(--paper);font-size:clamp(2rem,5vw,3.1rem);font-weight:600;line-height:1.55;margin:.4em 0 0;}
+  .offer .body{color:rgba(244,241,234,.84);font-size:1.04rem;line-height:2.1;margin:1.8em auto 0;max-width:30em;}
+  .gift{margin:2.4em auto 0;max-width:30em;padding:1.8em;border:1px solid rgba(154,123,79,.45);border-radius:3px;background:rgba(154,123,79,.1);backdrop-filter:blur(3px);}
+  .gift .tag{font-family:var(--serif);font-style:italic;letter-spacing:.1em;color:var(--brass);font-size:.95rem;}
+  .gift .ttl{font-family:var(--mincho);font-size:1.28rem;color:var(--paper);margin-top:.35em;line-height:1.6;}
+  .gift .meta{font-size:.84rem;color:rgba(244,241,234,.65);margin-top:.6em;letter-spacing:.08em;}
+  .offer .cta-btn{margin-top:2.6em;}
+  .offer .fine{margin-top:1.5em;font-size:.86rem;color:rgba(244,241,234,.6);letter-spacing:.06em;}
+
+  /* ============ FAQ ============ */
+  .faq .head{max-width:24em;margin:0 auto;text-align:center;}
+  .faq-list{max-width:760px;margin:3em auto 0;}
+  .faq-item{border-top:1px solid var(--line);}
+  .faq-item:last-child{border-bottom:1px solid var(--line);}
+  .faq-q{width:100%;background:none;border:0;text-align:left;cursor:pointer;font-family:var(--mincho);font-size:1.1rem;color:var(--ink);
+    padding:1.5em 2.4em 1.5em .2em;position:relative;line-height:1.6;letter-spacing:.03em;}
+  .faq-q::after{content:"";position:absolute;right:6px;top:1.85em;width:13px;height:13px;border-right:1.5px solid var(--brass);border-bottom:1.5px solid var(--brass);transform:rotate(45deg);transition:transform .4s;}
+  .faq-item.open .faq-q::after{transform:rotate(-135deg);}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .5s cubic-bezier(.22,.61,.36,1);}
+  .faq-a-inner{padding:0 .2em 1.6em;color:var(--ink-soft);font-size:.98rem;line-height:2;}
+
+  /* footer */
+  footer{background:var(--ink);color:rgba(244,241,234,.5);text-align:center;padding:3em 0 3.2em;border-top:1px solid rgba(244,241,234,.1);}
+  footer .brand{font-family:var(--serif);font-size:1.5rem;letter-spacing:.3em;color:rgba(244,241,234,.85);}
+  footer .brand .ja{display:block;font-family:var(--mincho);font-size:.76rem;letter-spacing:.4em;margin-top:.55em;color:rgba(244,241,234,.45);}
+  footer small{display:block;margin-top:1.7em;font-size:.72rem;letter-spacing:.08em;}
+
+  /* sticky cta bar */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:500;transform:translateY(120%);transition:transform .6s cubic-bezier(.22,.61,.36,1);
+    background:rgba(28,26,23,.95);backdrop-filter:blur(8px);border-top:1px solid rgba(154,123,79,.4);}
+  .bar.show{transform:translateY(0);}
+  .bar .in{max-width:1180px;margin:0 auto;padding:.8em 24px;display:flex;align-items:center;justify-content:space-between;gap:1.2em;}
+  .bar p{color:var(--paper);font-family:var(--mincho);font-size:.96rem;}
+  .bar p span{display:block;font-family:var(--gothic);font-weight:300;font-size:.72rem;color:rgba(244,241,234,.6);letter-spacing:.08em;margin-top:.15em;}
+  .bar a{flex:0 0 auto;}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;gap:40px;}
+    .film{max-width:340px;margin:0 auto;width:100%;}
+    .steps{grid-template-columns:1fr;gap:16px;}
+    .step-arrow{right:50%;top:auto;bottom:-16px;transform:translateX(50%) rotate(90deg);}
+    .cases{grid-template-columns:1fr;max-width:440px;margin-left:auto;margin-right:auto;}
+    .whom-grid{grid-template-columns:1fr;gap:36px;}
+    .whom .ph{max-width:360px;margin:0 auto;width:100%;order:-1;}
+    .bar p span{display:none;}
+  }
+  @media(max-width:560px){
+    .wrap{padding:0 20px;}
+    .blk{padding:64px 0;}
+    .hero h1{font-size:2.1rem;}
+    .check-item p,.faq-q{font-size:1.02rem;}
+    .cta-btn{width:100%;padding:1.2em 1.4em;font-size:1rem;}
+    .cta-btn.big{font-size:1.05rem;}
+    .bar .in{padding:.7em 16px;}
+    .bar p{font-size:.8rem;}
+    .bar a{padding:.8em 1.1em;font-size:.82rem;}
+    .gift{padding:1.4em;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .reveal{transition:none;opacity:1;transform:none;}
+    .play .ring{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ① HERO ============ -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-grid">
+      <!-- 動画プレースホルダー（実写・縦4:5）／本番は動画埋め込みに差し替え -->
+      <div class="film photo reveal" role="img" aria-label="価値調律の世界観を伝える映像（準備中）">
+        <img src="https://loremflickr.com/900/1100/onsen,japan,snow,steam?lock=12" alt="" loading="eager">
+        <span class="film-meta">FILM ・ 02:14</span>
+        <button class="play" aria-label="動画を再生"><span class="ring"></span></button>
+        <div class="film-cap"><p>なぜ、高くても選ばれる店があるのか。<span>2分で分かる、価値調律の話</span></p></div>
+      </div>
+
+      <div class="hero-copy">
+        <span class="kicker reveal d1" style="display:block;margin-bottom:1.6em;">価格競争から抜けるための、世界観設計プログラム</span>
+        <h1 class="reveal d2">あなたの店は、<span class="mark">部屋</span>を<br>売っていない。<span class="sub">そう気づいた時から、価格競争は終わる。</span></h1>
+        <p class="hero-lead reveal d3">機能を磨いても、値段は上げられない。お客様が本当に求めているのは、その店でしか戻れない『自分』です。VALUE TUNINGは、顧客の本当の欲求に、事業の価値を合わせ直すプログラムです。</p>
+        <div class="hero-aside reveal d4"><p>温泉でも、料理でも、技術でもない。人が本当にお金を払うのは、『ここでなら、本来の自分に戻れる』という、たった一つの感覚に対してです。</p></div>
+        <div class="hero-cta reveal d5">
+          <a href="#offer" class="cta-btn line"><span>LINEで無料特典を受け取る</span><span class="arr">→</span></a>
+          <p class="cta-note">LINE登録で『あなたの店は本当は何を売っているのか』7つの問いを今すぐお渡しします。所要15分。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ② PAIN ============ -->
+<section class="blk pain">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">For You</span>
+      <h2>こんなこと、ありませんか。</h2>
+    </div>
+    <div class="check-list">
+      <div class="check-item reveal"><span class="ck"></span><p>値下げしないと、お客様が来ない気がする</p></div>
+      <div class="check-item reveal"><span class="ck"></span><p>集客はしているのに、利益がほとんど残らない</p></div>
+      <div class="check-item reveal"><span class="ck"></span><p>近くの店と、結局“値段”で比べられてしまう</p></div>
+      <div class="check-item reveal"><span class="ck"></span><p>良いものを提供している自信はあるのに、伝わらない</p></div>
+      <div class="check-item reveal"><span class="ck"></span><p>安売りするたびに、自分の店の価値が削られていく気がする</p></div>
+    </div>
+    <p class="pain-close reveal">もし一つでも当てはまるなら——<br>問題は、<em>あなたの努力不足ではありません。</em></p>
+  </div>
+</section>
+
+<!-- ============ atmosphere break ============ -->
+<section class="scene">
+  <div class="photo"><img src="https://loremflickr.com/1600/900/snow,mountain,niseko,fog?lock=23" alt="" loading="lazy"></div>
+  <div class="scene-copy reveal">
+    <span class="en">A quiet question</span>
+    <p>その値段は、<br>あなたの価値ですか。</p>
+  </div>
+</section>
+
+<!-- ============ ③ REFRAME ============ -->
+<section class="blk reframe">
+  <div class="wrap">
+    <span class="eyebrow light reveal">Rule Change</span>
+    <h2 class="reveal d1">本当の原因は、<br>『集客』ではありません。</h2>
+    <p class="body reveal d2">多くの店主が、売上が伸びない原因を『集客が足りない』と考えます。だから広告を打ち、SNSを頑張り、値段を下げる。でも、いくら人を集めても、“何を売っている店なのか”が定まっていなければ、お客様は『安いかどうか』でしか選べません。価格競争とは、集客の問題ではなく、<strong>『価値が定義されていない』という問題</strong>なのです。</p>
+    <div class="reframe-turn reveal d3"><p>あなたの店は、本当はもっと深いものを売っている。<span>それに気づいていないだけです。</span></p></div>
+  </div>
+</section>
+
+<!-- ============ ④ SOLUTION ============ -->
+<section class="blk solution">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">The Method</span>
+      <h2>値下げの、まったく<em>逆</em>をいく。</h2>
+    </div>
+    <p class="body reveal d1">VALUE TUNING（価値調律）は、お客様の“本当の欲求”を聴き取り、あなたの店の価値を定義し直し、それを空間・言葉・価格に翻訳していく技術です。機能を競うのをやめ、『この店でしか味わえない感覚』で選ばれる状態をつくる。すると、価格は“比べるもの”ではなくなります。</p>
+    <div class="steps">
+      <div class="step reveal d1"><span class="no">01</span><h3>聴く</h3><span class="en">Listen</span><p>お客様が言葉にしていない、本当の欲求を聴き取る。</p><span class="step-arrow" aria-hidden="true">→</span></div>
+      <div class="step reveal d2"><span class="no">02</span><h3>調律する</h3><span class="en">Tune</span><p>自店が“本当に”売っている価値を定義し直す。</p><span class="step-arrow" aria-hidden="true">→</span></div>
+      <div class="step reveal d3"><span class="no">03</span><h3>響かせる</h3><span class="en">Resonate</span><p>その価値を、言葉と空間に翻訳して伝える。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑤ PROOF ============ -->
+<section class="blk proof">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">Why It Works</span>
+      <h2>『世界観』は、本当に価格を変えるのか。</h2>
+    </div>
+    <div class="cases">
+      <div class="case reveal d1">
+        <div class="ph photo"><img src="https://loremflickr.com/600/400/apple,desk,minimal,creative?lock=31" alt="" loading="lazy"></div>
+        <div class="case-body"><span class="label">Apple<span class="ja">テクノロジー</span></span><p>性能ではなく<b>「創造的な自分でいられる感覚」</b>を売り、同スペックの製品より高く支持される。</p></div>
+      </div>
+      <div class="case reveal d2">
+        <div class="ph photo"><img src="https://loremflickr.com/600/400/niseko,hotel,snow,luxury?lock=32" alt="" loading="lazy"></div>
+        <div class="case-body"><span class="label">Niseko<span class="ja">ホテル</span></span><p>「部屋」ではなく<b>「本来の自分に戻る時間」</b>を売り、世界中から人が集まる。</p></div>
+      </div>
+      <div class="case reveal d3">
+        <div class="ph photo"><img src="https://loremflickr.com/600/400/salon,hair,interior?lock=33" alt="" loading="lazy"></div>
+        <div class="case-body"><span class="label">Salon<span class="ja">美容室</span></span><p>「髪質改善」は単なるカットではなく<b>「ケアし続ける自分」</b>という“次に通う理由”を売っている。</p></div>
+      </div>
+    </div>
+    <p class="proof-close reveal">どれも、機能で勝ったのではない。<br><em>“どんな自分になれるか”</em>を定義したから、選ばれている。</p>
+  </div>
+</section>
+
+<!-- ============ ⑥ FOR WHOM ============ -->
+<section class="blk whom">
+  <div class="wrap">
+    <div class="whom-grid">
+      <div>
+        <div class="head reveal">
+          <span class="eyebrow">For Whom</span>
+          <h2>このプログラムは、<br>こんな方のためにあります。</h2>
+        </div>
+        <ul class="whom-list">
+          <li class="reveal d1">安売りせず、“選ばれる店”に変わりたい</li>
+          <li class="reveal d2">自分の店が本当は何を売っているのか、言葉にしたい</li>
+          <li class="reveal d3">価格でなく、共感や世界観でお客様と繋がりたい</li>
+          <li class="reveal d4">規模の拡大ではなく、価値の深さで勝負したい</li>
+        </ul>
+        <p class="whom-close reveal">——もしそう感じるなら、あなたはもう、<em>最初の一歩を踏み出しています。</em></p>
+      </div>
+      <div class="ph photo reveal d2"><img src="https://loremflickr.com/700/875/cafe,interior,warm,japan?lock=41" alt="" loading="lazy"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ⑦ OFFER ============ -->
+<section class="offer" id="offer">
+  <div class="photo"><img src="https://loremflickr.com/1600/1000/onsen,snow,night,lantern?lock=51" alt="" loading="lazy"></div>
+  <div class="wrap">
+    <span class="eyebrow light reveal">Free Gift</span>
+    <h2 class="reveal d1">まずは、あなたの店の<br>“本音”を見つけてください。</h2>
+    <p class="body reveal d2">LINE登録された方に、無料の特典ワーク『あなたの店は本当は何を売っているのか ― 7つの問い』をお渡しします。問いに答えていくだけで、あなたの店が“本当に”売っているものが見えてきます。</p>
+    <div class="gift reveal d3">
+      <span class="tag">Free Workbook</span>
+      <p class="ttl">あなたの店は本当は何を売っているのか<br>― 7つの問い</p>
+      <p class="meta">所要 15分 ／ LINE登録ですぐにお渡し</p>
+    </div>
+    <a href="#" class="cta-btn line big reveal d4"><span>LINEで無料特典を受け取る</span><span class="arr">→</span></a>
+    <p class="fine reveal d4">登録は無料。いつでも解除できます。</p>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section class="blk faq">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2>よくあるご質問</h2>
+    </div>
+    <div class="faq-list reveal d1">
+      <div class="faq-item">
+        <button class="faq-q">特典を受け取るのに、お金はかかりますか？</button>
+        <div class="faq-a"><div class="faq-a-inner">いいえ、LINE登録も特典ワーク『7つの問い』も完全に無料です。登録後はいつでも解除いただけます。</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">うちのような小さな店でも意味がありますか？</button>
+        <div class="faq-a"><div class="faq-a-inner">むしろ小規模な店ほど効果があります。VALUE TUNINGは規模ではなく“価値の深さ”で選ばれる状態をつくる考え方なので、個人店・小規模店との相性が良いものです。</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">飲食・美容・宿泊以外の業種でも使えますか？</button>
+        <div class="faq-a"><div class="faq-a-inner">はい。お客様が“感覚”や“体験”にお金を払う事業であれば、業種を問わず応用できます。まずは無料の7つの問いで、ご自身の事業に当てはめてみてください。</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">特典ワークにはどれくらい時間がかかりますか？</button>
+        <div class="faq-a"><div class="faq-a-inner">所要およそ15分です。7つの問いに順番に答えていくだけで、あなたの店が“本当に”売っているものが見えてきます。</div></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">登録するとしつこく営業されませんか？</button>
+        <div class="faq-a"><div class="faq-a-inner">売り込みを目的とした連絡はいたしません。世界観や価値づくりに役立つ情報をお届けしますが、不要であればいつでもブロック・解除いただけます。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span class="brand">VALUE TUNING<span class="ja">価 値 調 律</span></span>
+    <small>© 2026 VALUE TUNING. 価格競争から抜けるための、世界観設計プログラム.</small>
+  </div>
+</footer>
+
+<!-- sticky cta bar -->
+<div class="bar" id="bar">
+  <div class="in">
+    <p>あなたの店は、本当は何を売っているのか。<span>無料特典『7つの問い』を今すぐ受け取る ― 所要15分</span></p>
+    <a href="#offer" class="cta-btn line"><span>無料で受け取る</span><span class="arr">→</span></a>
+  </div>
+</div>
+
+<script>
+  // staggered reveal
+  const io = new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.16,rootMargin:'0px 0px -7% 0px'});
+  document.querySelectorAll('.reveal, .check-item').forEach(el=>io.observe(el));
+  window.addEventListener('load',()=>document.querySelectorAll('.hero .reveal').forEach(el=>el.classList.add('in')));
+
+  // faq accordion
+  document.querySelectorAll('.faq-q').forEach(q=>{
+    q.addEventListener('click',()=>{
+      const item=q.parentElement, a=item.querySelector('.faq-a'), open=item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(o=>{o.classList.remove('open');o.querySelector('.faq-a').style.maxHeight=null;});
+      if(!open){item.classList.add('open');a.style.maxHeight=a.scrollHeight+'px';}
+    });
+  });
+
+  // sticky cta bar
+  const bar=document.getElementById('bar'), offer=document.getElementById('offer');
+  window.addEventListener('scroll',()=>{
+    const past=window.scrollY>window.innerHeight*0.9;
+    const r=offer.getBoundingClientRect();
+    const offerVisible=r.top<window.innerHeight*0.85;
+    bar.classList.toggle('show', past && !offerVisible);
+  },{passive:true});
+</script>
+
+</body>
+</html>
