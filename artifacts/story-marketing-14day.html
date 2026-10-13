@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>物語マーケティング14日</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Layout: a training log — week bands, then day rows with a mono numeral rail and four fixed slots each. */
+  :root {
+    --paper:       #ECEEF1;
+    --raised:      #F8F9FB;
+    --sunken:      #E1E5EA;
+    --ink:         #11161D;
+    --ink-soft:    #58616F;
+    --rule:        #D2D7DE;
+    --accent:      #27456E;
+    --accent-soft: #DEE6F0;
+    --signal:      #91560F;
+    --font-display: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --font-body:    "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:       #10141A;
+      --raised:      #171D25;
+      --sunken:      #0B0E13;
+      --ink:         #E5E8ED;
+      --ink-soft:    #8D97A6;
+      --rule:        #262E39;
+      --accent:      #86ADE0;
+      --accent-soft: #19222F;
+      --signal:      #D9A054;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:       #10141A;
+    --raised:      #171D25;
+    --sunken:      #0B0E13;
+    --ink:         #E5E8ED;
+    --ink-soft:    #8D97A6;
+    --rule:        #262E39;
+    --accent:      #86ADE0;
+    --accent-soft: #19222F;
+    --signal:      #D9A054;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 50rem; margin: 0 auto; padding-inline: 20px; padding-block: 0 80px; }
+
+  /* ---------- masthead ---------- */
+  .mast { padding-block: 52px 36px; border-bottom: 2px solid var(--ink); }
+  .kicker {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--accent); margin: 0 0 16px;
+  }
+  h1 {
+    font-family: var(--font-display); font-weight: 800;
+    font-size: clamp(2rem, 7vw, 3rem); line-height: 1.3; letter-spacing: .02em;
+    margin: 0 0 16px; text-wrap: balance;
+  }
+  .lede { font-size: 1.0625rem; color: var(--ink-soft); margin: 0 0 24px; max-width: 34em; }
+  .meta {
+    display: flex; flex-wrap: wrap; gap: 8px 26px;
+    font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft);
+  }
+  .meta b { color: var(--ink); font-weight: 500; }
+
+  /* ---------- sections ---------- */
+  section { padding-block: 44px 0; }
+  h2 {
+    font-family: var(--font-display); font-weight: 700; font-size: 1.4375rem;
+    line-height: 1.5; letter-spacing: .02em; margin: 0 0 16px; text-wrap: balance;
+  }
+  h3 { font-size: 1rem; font-weight: 700; margin: 26px 0 8px; letter-spacing: .01em; }
+  p { margin: 0 0 15px; max-width: 40em; }
+  p:last-child { margin-bottom: 0; }
+
+  .label {
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+  }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--rule); min-width: 0; }
+  .label em { font-style: normal; color: var(--accent); }
+
+  /* ---------- daily rhythm ---------- */
+  .rhythm { display: grid; grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr)); gap: 1px; background: var(--rule); border: 1px solid var(--rule); margin-top: 20px; }
+  .slot { background: var(--raised); padding: 16px 16px 18px; }
+  .slot-t { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; color: var(--accent); margin-bottom: 6px; }
+  .slot-n { font-weight: 700; font-size: .9375rem; margin-bottom: 4px; }
+  .slot-d { font-size: .8125rem; color: var(--ink-soft); line-height: 1.7; }
+
+  .callout {
+    margin-top: 24px; background: var(--accent-soft);
+    border-left: 3px solid var(--accent); padding: 16px 20px; font-size: .9375rem;
+  }
+  .callout b { font-weight: 700; }
+
+  /* ---------- week band ---------- */
+  .band {
+    margin-top: 48px; padding: 18px 20px;
+    background: var(--ink); color: var(--paper);
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px;
+  }
+  .band-id { font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; opacity: .7; }
+  .band-t { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; letter-spacing: .03em; }
+  .band-d { font-size: .875rem; opacity: .78; flex: 1 1 16rem; min-width: 0; line-height: 1.7; }
+
+  /* ---------- day ---------- */
+  .day { border-bottom: 1px solid var(--rule); padding-block: 34px; }
+  .day:last-of-type { border-bottom: 0; }
+  .day-head { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0 20px; align-items: start; }
+  .day-num {
+    font-family: var(--font-mono); font-weight: 600; font-size: 2.25rem; line-height: .95;
+    color: var(--accent); font-variant-numeric: tabular-nums; letter-spacing: -.03em;
+  }
+  .day-num span { display: block; font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .18em; color: var(--ink-soft); font-weight: 400; margin-top: 7px; }
+  .day-t {
+    font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.25rem, 4.2vw, 1.5rem); line-height: 1.5; letter-spacing: .02em;
+    margin: 0 0 8px; text-wrap: balance;
+  }
+  .day-sub { font-size: .875rem; color: var(--ink-soft); margin: 0; }
+  .day-body { margin-top: 20px; padding-left: 0; }
+  @media (min-width: 620px) { .day-body { padding-left: 5.5rem; } }
+  @media (max-width: 480px) {
+    .day-head { grid-template-columns: 1fr; gap: 10px; }
+    .day-num { font-size: 1.875rem; }
+    .day-num span { display: inline; margin-left: 10px; }
+  }
+
+  .sl { margin-top: 20px; }
+  .sl-h {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .14em;
+    text-transform: uppercase; color: var(--ink-soft); margin-bottom: 7px;
+  }
+  .sl-h b { color: var(--accent); font-weight: 600; }
+  .sl p { font-size: .9375rem; }
+
+  ol.steps { margin: 0; padding-left: 1.4em; max-width: 40em; font-size: .9375rem; }
+  ol.steps li { margin-bottom: 7px; padding-left: .25em; }
+  ol.steps li::marker { font-family: var(--font-mono); font-size: .85em; color: var(--accent); }
+
+  .drill {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px;
+    background: var(--sunken); border: 1px solid var(--rule); padding: 12px 16px; font-size: .9375rem;
+  }
+  .drill .dn { font-weight: 700; }
+  .drill .dm { font-family: var(--font-mono); font-size: 12px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .drill .dm b { color: var(--accent); font-weight: 600; }
+
+  .deliver { font-size: .9375rem; border-left: 2px solid var(--accent); padding-left: 14px; }
+  .pit { font-size: .9375rem; border-left: 2px solid var(--signal); padding-left: 14px; color: var(--ink-soft); }
+  .pit b { color: var(--ink); font-weight: 500; }
+
+  .ex { font-size: .9375rem; background: var(--raised); border: 1px solid var(--rule); padding: 13px 16px; margin-top: 12px; }
+  .ex span { display: block; }
+  .ex .bad { color: var(--ink-soft); }
+  .ex .bad::before { content: "✕ "; color: var(--signal); font-family: var(--font-mono); }
+  .ex .good::before { content: "○ "; color: var(--accent); font-family: var(--font-mono); }
+
+  /* ---------- score ladder ---------- */
+  table { width: 100%; border-collapse: collapse; font-size: .9375rem; margin-top: 18px; }
+  caption { text-align: left; font-size: .875rem; color: var(--ink-soft); margin-bottom: 10px; }
+  th, td { text-align: left; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); font-weight: 500; }
+  td.n { font-family: var(--font-mono); font-weight: 600; color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tscroll { overflow-x: auto; }
+
+  footer { margin-top: 52px; padding-top: 26px; border-top: 1px solid var(--rule); font-size: .875rem; color: var(--ink-soft); }
+  footer p { max-width: 40em; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Story Marketing / 14-Day Intensive</p>
+    <h1>物語マーケティング14日</h1>
+    <p class="lede">読んで終わらせないための2週間。毎日ひとつ概念を入れ、その日のうちに声に出して話し、採点を受けて翌日に持ち越します。入力と出力を同じ日に閉じるのが、この設計の全部です。</p>
+    <div class="meta">
+      <span>1日 <b>60〜90分</b></span>
+      <span>実技 <b>毎日1〜3本</b></span>
+      <span>合格基準 <b>Day 14 平均70点</b></span>
+      <span>更新 <b>2026.10.13</b></span>
+    </div>
+  </header>
+
+  <section>
+    <h2>1日の型</h2>
+    <p>毎日この4つを通します。順番を入れ替えないでください。先に話してから読むと、既に口から出た言葉を正当化する方向に理解が歪みます。</p>
+    <div class="rhythm">
+      <div class="slot">
+        <div class="slot-t">20 MIN</div>
+        <div class="slot-n">読む</div>
+        <div class="slot-d">その日の概念を読む。暗記はしない。使えるかどうかだけ考える。</div>
+      </div>
+      <div class="slot">
+        <div class="slot-t">15 MIN</div>
+        <div class="slot-n">設計する</div>
+        <div class="slot-d">自分の商材に当てはめて紙に書く。話す原稿は作らない。骨だけ。</div>
+      </div>
+      <div class="slot">
+        <div class="slot-t">1-3 本</div>
+        <div class="slot-n">話す</div>
+        <div class="slot-d">採点道場のお題を制限時間で。原稿を読み上げてはいけない。</div>
+      </div>
+      <div class="slot">
+        <div class="slot-t">10 MIN</div>
+        <div class="slot-n">読み返す</div>
+        <div class="slot-d">講評の「致命的な欠陥」と「宿題」だけ書き写す。点数は見るだけ。</div>
+      </div>
+    </div>
+    <div class="callout">
+      <b>原稿を書かない理由。</b>書いた文章を読み上げる練習は、話す力を鍛えません。骨組みだけ決めて、肉付けは毎回その場でやる。同じお題を3回話すと3回違う言葉になりますが、骨が同じなら合格です。むしろ毎回同じ言葉で話せてしまうなら、それは暗唱であって物語ではありません。
+    </div>
+  </section>
+
+  <section>
+    <h2>点数の読み方</h2>
+    <p>採点道場は5軸×20点の100点満点です。初回に50点前後が出ますが、それが正常値です。各日の目標点は、その日の概念を使えば届くはずのラインに置いてあります。</p>
+    <div class="tscroll">
+      <table>
+        <caption>到達ラインの目安。前日より下がった日は、前日の概念が定着していないという情報です。</caption>
+        <thead>
+          <tr><th>点数</th><th>状態</th><th>やること</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="n">39以下</td><td>構造が存在しない</td><td>その日の概念をもう一度読み、同じお題をもう1本</td></tr>
+          <tr><td class="n">40–59</td><td>意味は通るが抽象的</td><td>講評の「削るべき表現」を潰して再挑戦</td></tr>
+          <tr><td class="n">60–74</td><td>人前で話せる最低ライン</td><td>翌日へ進む</td></tr>
+          <tr><td class="n">75–89</td><td>商談でそのまま使える</td><td>翌日へ進み、この原稿を保存する</td></tr>
+          <tr><td class="n">90以上</td><td>一語も削れない</td><td>14日間で1回出れば十分</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:18px" class="pit"><b>1日に同じお題を4本以上話さないこと。</b>同じお題を繰り返すほど点は上がりますが、それは物語が良くなったのではなく、その1本に最適化されただけです。上限は3本。</p>
+  </section>
+
+  <!-- ============ WEEK 1 ============ -->
+  <div class="band">
+    <span class="band-id">WEEK 1 / DAY 1–7</span>
+    <span class="band-t">両岸を立てる</span>
+    <span class="band-d">橋を架ける前に、どこから どこへ渡すのかを確定させる週。ここが曖昧なまま第2週に入ると、架ける長さが決まりません。</span>
+  </div>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">01<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">物語と説明の境界</h3>
+        <p class="day-sub">概念：ABT（And / But / Therefore）</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>物語の最小単位は三語です。<strong>And（状況）／But（対立）／Therefore（だから）</strong>。三つ揃えば物語になり、一つ欠ければ説明に落ちます。</p>
+        <p>世の中の商品説明の大半は「And, and, and」でできています。機能があり、実績があり、サポートもある。情報として正しいのに誰も最後まで読まない。対立のない文章は、人間の注意を保持できないからです。逆に言えば、But を一つ入れるだけで同じ情報が読まれるようになります。</p>
+        <div class="ex">
+          <span class="bad">当社は制作会社であり、実績は300社を超え、ワンストップで対応します。</span>
+          <span class="good">良いものを作るほど評判は上がる。しかし作る時間がそのぶん削られていく。だから私たちは、制作以外の全てを引き取る会社を作った。</span>
+        </div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>自社サイトのトップコピーを手で書き写す。コピペではなく手で。</li>
+          <li>ABT の一文に畳む。120字以内。</li>
+          <li>畳めなければ、欠けているのはどれか書き出す。たいていは But。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">ABT 一文</span><span class="dm">60秒 × 2本　目標 <b>50</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">ABT 一文（120字以内）と、1本目・2本目の点差。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>But に自社の困りごとを書く。</b>「しかし我々は知名度がなかった」は顧客にとって何の対立でもない。But は顧客の世界で起きている矛盾でなければ機能しません。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">02<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">主人公の席を渡す</h3>
+        <p class="day-sub">概念：役割配分と、ガイドの二資格</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>StoryBrand の中心原則は役割配分です。<strong>顧客が主人公、ブランドはガイド</strong>。ルークが顧客で、自社はヨーダ。この一点を守るだけで、自社語りの事故はほぼ防げます。</p>
+        <p>そしてガイドには二つの資格が要ります。<strong>共感</strong>（あなたの苦しさを知っている）と<strong>権威</strong>（私はそれを越えた）。共感だけなら、ただの親切な人。権威だけなら、ただの偉そうな人。両方そろって初めて、主人公は後についてきます。</p>
+        <p>神話の構造でも、師は必ず<em>かつて同じ試練を越えた者</em>です。この含意は Day 9 の「来歴」で回収します。今日は役割を入れ替えるところまで。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>自社LPから連続2000字を取り出す。</li>
+          <li>一人称（弊社・当社・サービス名）と二人称（あなた・御社）の出現数を数え、比率を記録する。</li>
+          <li>冒頭5文だけ二人称に書き換える。全文やらない。5文で体感がつかめる。</li>
+          <li>ガイド宣言を2文で書く。1文目が共感、2文目が権威。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">ガイド宣言</span><span class="dm">45秒 × 2本　目標 <b>55</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">主語比率の実数、書き換えた冒頭5文、ガイド宣言2文。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>謙虚にしようとして権威まで消す。</b>顧客を主役にすることは、自社を無力にすることではありません。実績のないガイドに、主人公は命を預けません。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">03<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">痛みの三層を掘り分ける</h3>
+        <p class="day-sub">概念：不便 / 損失 / 自己像、そして越えてはいけない線</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>痛みには三つの層があります。<strong>表層の不便</strong>（手間がかかる）、<strong>機能層の損失</strong>（売上が立たない、人が辞める）、<strong>深層の自己像</strong>（自分は経営者として無能ではないか）。</p>
+        <p>記憶に残るのは深層に触れた文章だけです。ただし触れ方を誤ると、それはただの侮辱になります。判定基準はひとつ。<strong>その文章を、本人の目の前で声に出して読めるか。</strong>読めないなら越境しています。</p>
+        <p>そして Before が抽象的だと、読者はそれを自分の話だと認識しません。「業務が非効率で時間が足りない」で振り向く人はいない。誰にでも当てはまる記述は、誰のものでもないからです。</p>
+        <div class="ex">
+          <span class="bad">月曜の朝、彼は焦っていた。やることが多すぎて大変だった。</span>
+          <span class="good">月曜 9時10分。受信箱を開く前にコーヒーを淹れ直す。3回目の見積もりを開いて、何も直さずに閉じる。</span>
+        </div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>実在の顧客を1人決める。ペルソナではなく、実際に話したことのある人。</li>
+          <li>一週間のうち問題が最も表面化する一瞬を特定する。曜日と時刻まで。</li>
+          <li>その一瞬を300字で描写する。形容詞より動詞。感情語を使わず行動で示す。</li>
+          <li>最後に1文だけ深層の痛みを書き添える。2文以上書いたら削る。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">Before 描写</span><span class="dm">90秒 × 2本　目標 <b>60</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">Before シーン 300字 ＋ 深層の痛み 1文。可能なら本人に読ませ、反応を記録する。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>「忙しい」「大変」「課題」を使う。</b>この三語が出たら、それは描写ではなく要約です。場面に戻してください。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">04<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">到達点を自己像で描く</h3>
+        <p class="day-sub">概念：After は機能の裏返しではない</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>After を「Before の反対」で書くと、必ず抽象語になります。非効率の反対は効率化。これは機能の言い換えにすぎず、誰も欲しがりません。</p>
+        <p>顧客が本当に買っているのは<strong>こうありたい自分</strong>です。だから After は、Day 3 で掘った三層のうち<em>深層の自己像</em>の側から書く。「見積もり作業が3分で終わる」は機能層。「月曜の朝、受信箱を開くのが怖くなくなる」が自己像です。</p>
+        <p>もうひとつ。After に自社のKPIを書かないこと。「導入企業の生産性が20%向上」は自社の成果です。顧客の一日として書けないなら、まだ After になっていません。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>Day 3 と同じ人物、同じ曜日・時刻を使う。別の場面にしない。</li>
+          <li>その一瞬が問題解決後にどう変わるかを300字で描写する。</li>
+          <li>最後に1文、その人の自己像がどう変わったかを書く。</li>
+          <li>Before と並べて読み、同じ人物の話に見えるか確認する。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">After 描写</span><span class="dm">60秒 × 2本　目標 <b>60</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">After シーン 300字 ＋ 自己像の変化 1文。Before / After の対置稿。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>After が夢物語になる。</b>到達点が遠すぎると、橋が長すぎて誰も渡りません。顧客が「3か月後にはあり得る」と思える距離に置いてください。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">05<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">型を痛みの自覚度で選ぶ</h3>
+        <p class="day-sub">概念：PAS / BAB / 4P の読み分け</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>短いコピーの型は三つ覚えれば足ります。<strong>PAS</strong>（問題→増幅→解決）は最も強力で最も下品になりやすい。<strong>BAB</strong>（Before→After→Bridge）は上品でB2Bと相性がいい。<strong>4P</strong>（情景→約束→証拠→後押し）は証拠パートが構造に組み込まれているのが利点です。</p>
+        <p>選び方の基準は、<strong>顧客が痛みを自覚しているかどうか</strong>。自覚済みなら BAB か 4P が効きます。自覚がない領域（新カテゴリー、予防型の商材）に BAB をぶつけると、Before の段階で「自分の話ではない」と判断されて終わります。その場合は PAS で問題を認識させる工程を前に挟むか、そもそも教育コンテンツが先に必要です。</p>
+        <p>今日はもうひとつ重要な作業があります。<strong>30秒ピッチの初回計測</strong>です。Day 7 と Day 14 で同じお題を話すので、この点数が基準値になります。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>自社の顧客が痛みを自覚しているかを判定する。問い合わせ時に顧客が自分の言葉で問題を語れるなら自覚あり。</li>
+          <li>判定に基づいて型を一つ選び、理由を1文で書く。</li>
+          <li>Day 3・4 の素材をその型に流し込み、400字にまとめる。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">30秒ピッチ</span><span class="dm">30秒 × 2本　目標 <b>60</b>（基準値として記録）</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">選んだ型と理由、400字の原稿、30秒ピッチの基準点。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>強いから PAS を選ぶ。</b>煽りの匙加減を誤ると、一回の成約と引き換えに信頼を失います。迷ったら BAB。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">06<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">落差を数値で測る</h3>
+        <p class="day-sub">概念：説得力 = 落差 × 信憑性</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>物語の推進力は、Before と After の<strong>落差</strong>から生まれます。落差が小さければ渡る動機が立たず、大きすぎれば嘘に聞こえる。だから落差は、必ず<strong>信憑性</strong>と掛け算で考えます。</p>
+        <p>そして落差は、そのまま<strong>橋の長さ</strong>です。ここを数値で確定させないまま第2週に入ると、架ける橋の規模が決まりません。「月40時間が8時間になる」なら橋は短く、「赤字から黒字へ」なら橋は長い。長い橋には、それだけの機序と証拠が要求されます。</p>
+        <p>数値がない商材でも必ず測れます。頻度（週3回→週0回）、所要時間、関わる人数、意思決定にかかる日数。どれか一つで構いません。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>Before と After の差を、数値で3つ書き出す。推測で構わないが、推測だと明記する。</li>
+          <li>そのうち最も検証可能な1つを選ぶ。最も大きい数字ではなく、最も証明できる数字。</li>
+          <li>その数字をどう証明するか1文で書く。証明できないなら使わない。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">フリー</span><span class="dm">120秒 × 1本　目標 <b>62</b>　— Before から After までを落差を軸に語る</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">落差の数値3つ、採用する1つ、その証明方法。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>一番大きい数字を選ぶ。</b>証明できない数字は、落差を広げるのではなく信憑性をゼロにします。掛け算なので、片方がゼロなら結果もゼロです。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">07<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">第1週の統合と再計測</h3>
+        <p class="day-sub">概念：両岸が立ったかの検証</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>今日は新しい概念を入れません。6日間の素材を1枚に統合し、他人に渡して検証します。</p>
+        <p>検証の方法はひとつです。<strong>第三者に読ませて、Before の人物が誰か説明させる</strong>。説明が自分の意図とずれたら、Before が抽象的すぎます。After について「で、どうやって?」と聞かれたら正常です。それが第2週で架ける橋の位置です。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>ABT 一文、ガイド宣言、Before、After、落差の数値を A4 一枚に収める。</li>
+          <li>第三者1人に読ませ、顧客像を説明させる。ずれた箇所を記録する。</li>
+          <li>ずれた箇所だけ直す。全体を書き直さない。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">30秒ピッチ</span><span class="dm">30秒 × 2本　目標 <b>65</b>（Day 5 から +5）</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">A4 一枚の統合稿、第三者のずれ記録、Day 5 との点差。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>点数が上がらないまま第2週に進む。</b>Day 5 から変化がないなら、素材ではなく話す順序の問題です。結論を先に置く形に組み替えてから進んでください。</p>
+      </div>
+    </div>
+  </article>
+
+  <!-- ============ WEEK 2 ============ -->
+  <div class="band">
+    <span class="band-id">WEEK 2 / DAY 8–14</span>
+    <span class="band-t">橋を架ける</span>
+    <span class="band-d">物語で最も難しく、最も手を抜かれている場所。機序・来歴・証拠・単純化の4要素を1日ずつ潰し、最後に反論処理と推敲を乗せます。</span>
+  </div>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">08<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">橋の正体と、機序を書く</h3>
+        <p class="day-sub">概念：ブリッジは目的地ではなく手段</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>ブリッジは物語上、<strong>師が主人公に道具を授ける場面</strong>です。オビ=ワンがライトセーバーを渡す瞬間。StoryBrand でいえば「計画」。</p>
+        <p>ここで決定的なのは、<strong>橋は渡られるためにあり、眺められるためにあるのではない</strong>ということ。商品を物語のゴールに置いた瞬間、顧客は主人公の席を降ろされます。「Bridge：弊社のマーケティング支援サービス」——これは橋ではなく看板です。</p>
+        <p>橋として信じてもらうには4要素が要ります。<strong>機序</strong>（なぜ渡れるのか）、<strong>来歴</strong>（なぜこの橋が存在するのか）、<strong>証拠</strong>（先に渡った人がいる）、<strong>単純化</strong>（橋が短く見えること）。今日は機序だけをやります。</p>
+        <p>機序とは「効きます」ではなく「こういう仕組みだから効く」。因果が一本通っていると、人は検証せずに納得します。逆にここが空白だと、どれだけ実績を並べても「でもうちは違うから」で弾かれます。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>Before が解消される因果を、矢印でつないで紙に書く。「◯◯をする → だから◯◯が起きる → だから◯◯が消える」。</li>
+          <li>矢印が飛んでいる箇所を探す。たいてい1か所、説明を省略している。</li>
+          <li>その断絶を埋める。埋められないなら、それは機序ではなく願望です。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">橋 ― 機序</span><span class="dm">90秒 × 2本　目標 <b>62</b>（Day 11 で再挑戦するため記録）</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">因果の矢印図、埋めた断絶の箇所、Day 11 との比較用の点数。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>機能説明に逃げる。</b>機能を並べるほど、橋は渡るものから鑑賞するものに変わります。機能は何個あるかではなく、因果が一本通っているかが問われています。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">09<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">来歴を発掘する</h3>
+        <p class="day-sub">概念：師は、かつて同じ試練を越えた者</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>橋の4要素のうち、物語の密度を最も稼げるのがここです。</p>
+        <p><strong>創業者自身がかつて Before の側にいて、渡れずに苦しみ、自分のために架けた橋だった</strong>。この構造が強いのは、ガイドが元・主人公であることの証明になるからです。Day 2 で保留した含意がここで回収されます。神話において師は必ず、かつて同じ試練を越えた者です。</p>
+        <p>来歴を書くときはピクサーのストーリー・スパインが機能します。「むかし◯◯でした / 毎日◯◯でした / ある日◯◯が起きました / そのせいで… / そのせいで… / ついに◯◯となりました」。創業譚や社史に当てると、驚くほど型にはまります。</p>
+        <p>そして来歴は必ず<strong>顧客の利益に接続して終える</strong>こと。美談で終わると、主人公の席が自社に戻ります。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>ストーリー・スパインの6行を埋める。各行一文、誇張しない。</li>
+          <li>「ある日」に当たる転機を特定する。転機がないなら、まだ来歴になっていない。</li>
+          <li>最後の1文を、顧客が受け取る利益に接続して書き直す。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">橋 ― 来歴</span><span class="dm">120秒 × 2本　目標 <b>65</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">ストーリー・スパイン6行、転機の特定、顧客利益への接続文。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>創業者が当事者でない場合に話を作る。</b>来歴は捏造すると後で必ず崩れます。当事者経験がないなら、代わりに「なぜこの問題を選んだか」を正直に語ってください。無理に主人公の過去を作るより強い。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">10<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">先に渡った人を見せる</h3>
+        <p class="day-sub">概念：証拠と CAR（Challenge / Action / Result）</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>橋は、誰かが渡っているところを見ると急に安全に見えます。だから事例はスペックより効きます。</p>
+        <p>事例の型は実質 <strong>CAR</strong> 一択です。Challenge（課題）→ Action（やったこと）→ Result（結果）。要点は<strong>Challenge を数字と固有名詞で書くこと</strong>。ここが抽象的だと、Result の数字も信じてもらえません。多くの導入事例は逆をやっています。Challenge が3行で曖昧、Result が派手。これでは信憑性が立ちません。</p>
+        <p>もうひとつ。Action を自社の手柄話にしないこと。主役は顧客です。自社は「何を渡したか」だけを述べる。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>実在の顧客1社で CAR を書く。Challenge に数字を2つ以上入れる。</li>
+          <li>Action から自社を主語にした文を削る。顧客が何をしたかに書き換える。</li>
+          <li>Result が検証可能か自問する。できないなら、その数字を外す。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">導入事例 (CAR)</span><span class="dm">90秒 × 2本　目標 <b>65</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">CAR 一式、Challenge に入れた数字、外した数字とその理由。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>最も成功した事例を選ぶ。</b>極端な成功例は「うちでは無理」を生みます。選ぶべきは、聞き手と状況が最も近い事例です。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">11<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">橋を短く見せる</h3>
+        <p class="day-sub">概念：難易度の体感は、距離より手順の数で決まる</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>人は橋の長さではなく<strong>手順の数</strong>で難易度を感じます。だから3ステップに圧縮されているだけで渡れそうに見える。ステップを7個書いた瞬間、橋は吊り橋になります。</p>
+        <p>圧縮は手順を減らすことではありません。<strong>顧客が意識する必要のない手順を、こちら側に引き取ること</strong>です。実際の工程が12あっても、顧客が意思決定する地点が3つなら3ステップです。</p>
+        <p>今日は Day 8 の機序を、この観点で組み直して再挑戦します。<strong>同じお題で点が上がるかどうかが、第2週の進捗そのもの</strong>です。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>導入から成果までの全工程を書き出す。数は気にしない。</li>
+          <li>顧客が判断・作業する地点に印を付ける。それ以外は自社が引き取る。</li>
+          <li>印の付いた地点を3つに統合する。4つ以上なら、まだ引き取れる余地がある。</li>
+          <li>Day 8 の機序原稿に、この3ステップを組み込む。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">橋 ― 機序（再挑戦）</span><span class="dm">90秒 × 2本　目標 <b>70</b>（Day 8 から +8）</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">全工程リスト、3ステップへの統合、Day 8 との点差。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>手順を隠して、後から増える。</b>見せ方の圧縮と、実態の省略は別です。契約後に工程が増えると、橋の途中で裏切られたことになります。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">12<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">反論を先回りして畳む</h3>
+        <p class="day-sub">概念：土俵を移す / 論破しない</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>反論は、橋の手前で足を止めている状態です。処理の原則は三つ。</p>
+        <p>ひとつ、<strong>先に言う</strong>。相手に言わせてから反論すると、防御の構図になります。「高いと思われるはずです」と自分から置くと、同じ内容が共同の検討材料に変わります。</p>
+        <p>ふたつ、<strong>土俵を移す</strong>。「高い」への回答は値引きや正当化ではなく、比較の軸を変えることです。何と比べて高いのかを特定し、その比較自体が適切かを一緒に検討する。</p>
+        <p>みっつ、<strong>論破しない</strong>。勝った瞬間に相手は主人公の席を降ります。最後は必ず相手に判断を返す形で終えてください。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>実際に言われた反論を3つ書き出す。想像ではなく実例。</li>
+          <li>それぞれについて、相手が何と比較しているかを特定する。</li>
+          <li>比較の軸を移す一文を書く。値引きと正当化は禁止。</li>
+          <li>各回答を、相手に判断を返す一文で終える。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">反論処理</span><span class="dm">60秒 × 3本　目標 <b>68</b></span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">反論3つ、各々の比較対象、土俵を移す一文、判断を返す一文。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>反論を全部潰そうとする。</b>全ての懸念に答えると、かえって不安が多い商材に見えます。潰すのは購買を止めている1つだけ。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">13<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">型を隠す</h3>
+        <p class="day-sub">概念：説得知識と、削る技術</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>人は「これは広告だ」と認識した瞬間、心の中で反論を始めます。<strong>説得知識の活性化</strong>と呼ばれる現象です。PAS を露骨にやると、読者は売られていると気づいて防御に入る。<strong>型は骨格であって、表面に出てはいけません。</strong></p>
+        <p>隠す方法は装飾ではなく、ほぼ<strong>削ること</strong>です。12日間で積み上げた要素を全部入れると、確実に型が透けます。今日やるのは引き算だけ。</p>
+        <p>もうひとつ。ここまで扱った型はすべて欧米の物語観が前提です。日本語の文脈では<strong>起承転結</strong>や<strong>序破急</strong>のほうが馴染む場面があり、特に「転」で意外性をつくる型は短尺動画と相性がいい。海外フレームワークを直輸入して妙に大仰になっている日本企業のコピーは、ここを飛ばしています。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Design</b> 設計する</div>
+        <ol class="steps">
+          <li>統合稿から、型の名残が見える表現を探して消す。「3つのステップで」「まず問題は」などの案内文。</li>
+          <li>全体の2割を削る。情報ではなく語数を削る。</li>
+          <li>同じ内容を起承転結で組み直したものを1本作り、どちらが自然か読み比べる。</li>
+        </ol>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場</div>
+        <div class="drill"><span class="dn">フリー</span><span class="dm">120秒 × 2本　目標 <b>70</b>　— 型の名前を一度も口に出さずに話す</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 提出物</div>
+        <p class="deliver">削除前後の文字数、削った表現リスト、起承転結版との比較メモ。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Pitfall</b></div>
+        <p class="pit"><b>削って骨まで抜く。</b>隠すことと、無くすことは違います。削った後に ABT が成立しているか必ず確認してください。</p>
+      </div>
+    </div>
+  </article>
+
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">14<span>DAY</span></div>
+      <div>
+        <h3 class="day-t">最終試験</h3>
+        <p class="day-sub">3本連続・原稿なし・平均70点で合格</p>
+      </div>
+    </div>
+    <div class="day-body">
+      <div class="sl">
+        <div class="sl-h"><b>Input</b> 読む</div>
+        <p>今日は読みません。3本を連続で話します。間に設計を挟まないこと。実際の商談では、考える時間は与えられません。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Speak</b> 道場 — 3本連続</div>
+        <div class="drill"><span class="dn">① 30秒ピッチ</span><span class="dm">30秒　Day 5・7 との比較</span></div>
+        <div class="drill" style="margin-top:8px"><span class="dn">② 橋 ― 来歴</span><span class="dm">120秒　Day 9 との比較</span></div>
+        <div class="drill" style="margin-top:8px"><span class="dn">③ 反論処理</span><span class="dm">60秒　Day 12 との比較</span></div>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Record</b> 判定</div>
+        <p class="deliver"><strong>3本の平均が70点以上で合格。</strong>届かなかった場合、最も低い軸（構造・具体・主語・橋・話術）を特定し、その軸が中心だった日に戻ります。14日を繰り返す必要はありません。1日だけやり直す。</p>
+      </div>
+      <div class="sl">
+        <div class="sl-h"><b>Next</b> 15日目以降</div>
+        <p>合格後は、<strong>週2回・各1本</strong>に落として維持します。毎日やる必要はありません。お題は「フリー」を中心に、直近の商談で実際に話した内容を入れてください。架空のピッチより、実際に使った言葉を採点させるほうが精度が上がります。</p>
+        <p style="margin-top:12px">そして月に1回、Day 5 の30秒ピッチを同条件で計測する。これが腕が落ちていないかの唯一の指標です。</p>
+      </div>
+    </div>
+  </article>
+
+  <section>
+    <h2>このカリキュラムが効かない場合</h2>
+    <p>売り込まずに書いておきます。</p>
+    <p>Byron Sharp をはじめとするエビデンス重視の立場からは、ブランドの成長を決めるのは精緻な物語ではなく「想起されやすさ」と「買いやすさ」であり、低関与の日用品カテゴリーでは一貫した識別記号を反復するほうが効く、という有力な反論があります。この14日間が効くのは、<strong>高関与・高価格・価値観が購買に絡む商材</strong>です。洗剤や飲料のような商材では、物語の精度より到達と一貫性の問題になります。</p>
+    <p>そして、商品が約束を裏切る場合、物語は嘘を速く遠くまで運ぶ装置にしかなりません。<strong>物語は増幅器であって、発電機ではない。</strong>中身がゼロなら、何倍してもゼロです。</p>
+  </section>
+
+  <footer>
+    <p>実技は採点道場（別ページ）のお題名と対応しています。お題名・制限時間はそのまま一致するので、該当のお題を選んで制限時間で話してください。</p>
+    <p>所要時間は目安です。提出物さえ残れば、1日の総時間が短くても構いません。読んだ量ではなく、話した量と削った量だけが実力になります。</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

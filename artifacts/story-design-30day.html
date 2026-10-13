@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>物語設計30日</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Old+Mincho:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: one reading column with a left rail of day numerals; rail folds above the text at phone width. */
+  :root {
+    --paper:        #EDEEEA;
+    --raised:       #F7F8F5;
+    --ink:          #14181A;
+    --ink-soft:     #566059;
+    --rule:         #D2D5CD;
+    --accent:       #1F5E55;
+    --accent-soft:  #DDE7E2;
+    --signal:       #9C4225;
+
+    --font-display: "Zen Old Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --font-body:    "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    --font-mono:    "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:       #14181A;
+      --raised:      #1D2325;
+      --ink:         #E7E9E5;
+      --ink-soft:    #99A39D;
+      --rule:        #2F3739;
+      --accent:      #74B7A8;
+      --accent-soft: #1E2E2B;
+      --signal:      #DB8B6C;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:       #14181A;
+    --raised:      #1D2325;
+    --ink:         #E7E9E5;
+    --ink-soft:    #99A39D;
+    --rule:        #2F3739;
+    --accent:      #74B7A8;
+    --accent-soft: #1E2E2B;
+    --signal:      #DB8B6C;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.9;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 50rem;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 0 72px;
+  }
+
+  /* ---- masthead ---- */
+  .mast { padding-block: 56px 40px; border-bottom: 1px solid var(--rule); }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(2.1rem, 7vw, 3.1rem);
+    line-height: 1.3;
+    letter-spacing: .02em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .lede {
+    font-size: 1.0625rem;
+    color: var(--ink-soft);
+    margin: 0 0 28px;
+    max-width: 34em;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 28px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+  .meta b { color: var(--ink); font-weight: 500; }
+
+  /* ---- generic section ---- */
+  section { padding-block: 48px; border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: 0; }
+
+  h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.5rem;
+    line-height: 1.5;
+    letter-spacing: .02em;
+    margin: 0 0 20px;
+    text-wrap: balance;
+  }
+  h3 {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1rem;
+    margin: 32px 0 10px;
+    letter-spacing: .02em;
+  }
+  p { margin: 0 0 16px; max-width: 40em; }
+  p:last-child { margin-bottom: 0; }
+
+  .note { color: var(--ink-soft); font-size: .9375rem; }
+
+  /* ---- span diagram ---- */
+  figure { margin: 0 0 32px; }
+  figure svg { display: block; width: 100%; max-width: 520px; height: auto; margin-inline: auto; }
+  figcaption {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-top: 10px;
+    letter-spacing: .04em;
+  }
+
+  /* ---- week cards ---- */
+  .weeks { display: grid; gap: 14px; margin-top: 28px; }
+  .week {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 4px 20px;
+    padding: 20px 22px;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+  }
+  .week.focus { border-color: var(--accent); }
+  .week-id {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: .08em;
+    color: var(--accent);
+    padding-top: .35em;
+  }
+  .week-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.1875rem;
+    letter-spacing: .02em;
+  }
+  .week-days {
+    grid-column: 2;
+    font-size: .9375rem;
+    color: var(--ink-soft);
+    line-height: 1.95;
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+  .week-days li { padding-left: 1.1em; text-indent: -1.1em; }
+  .week-days li::before { content: "·"; color: var(--accent); padding-right: .6em; }
+  .tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    padding: 2px 8px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    margin-left: 10px;
+    vertical-align: .18em;
+  }
+  @media (max-width: 480px) {
+    .week { grid-template-columns: 1fr; gap: 2px; }
+    .week-days { grid-column: 1; }
+  }
+
+  /* ---- day ---- */
+  .day { padding-block: 56px; border-bottom: 1px solid var(--rule); }
+  .day-head {
+    display: grid;
+    grid-template-columns: 5.5rem 1fr;
+    gap: 0 20px;
+    align-items: start;
+    margin-bottom: 28px;
+  }
+  .day-num {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 2.75rem;
+    line-height: 1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.02em;
+  }
+  .day-num span { display: block; font-size: 10px; letter-spacing: .18em; color: var(--ink-soft); margin-top: 8px; }
+  .day-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(1.4rem, 4.6vw, 1.75rem);
+    line-height: 1.45;
+    letter-spacing: .02em;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  .day-q {
+    font-size: .9375rem;
+    color: var(--ink-soft);
+    border-left: 2px solid var(--accent);
+    padding-left: 14px;
+    margin: 0;
+    max-width: 36em;
+  }
+  .day-q b { color: var(--ink); font-weight: 500; }
+  @media (max-width: 560px) {
+    .day-head { grid-template-columns: 1fr; gap: 16px; }
+    .day-num { font-size: 2.25rem; }
+    .day-num span { display: inline; margin-left: 12px; }
+  }
+
+  .block { margin-top: 30px; }
+  .block-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .block-label::after { content: ""; flex: 1; height: 1px; background: var(--rule); min-width: 0; }
+  .block-label em { font-style: normal; color: var(--accent); }
+
+  ol.steps { margin: 0; padding-left: 1.4em; max-width: 40em; }
+  ol.steps li { margin-bottom: 10px; padding-left: .3em; }
+  ol.steps li::marker { font-family: var(--font-mono); font-size: .85em; color: var(--accent); }
+
+  .deliver {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 16px 20px;
+    font-size: .9375rem;
+  }
+  .deliver b { font-weight: 700; }
+
+  ul.check { list-style: none; margin: 0; padding: 0; max-width: 40em; }
+  ul.check li {
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 8px;
+    font-size: .9375rem;
+  }
+  ul.check li::before {
+    content: "";
+    position: absolute;
+    left: 0; top: .62em;
+    width: 13px; height: 13px;
+    border: 1px solid var(--accent);
+  }
+
+  .pitfall {
+    border: 1px solid var(--rule);
+    border-top: 2px solid var(--signal);
+    padding: 16px 20px;
+    font-size: .9375rem;
+  }
+  .pitfall .block-label em { color: var(--signal); }
+  .pitfall .block-label::after { display: none; }
+  .pitfall .block-label { margin-bottom: 8px; }
+
+  .bridge-next {
+    font-size: .9375rem;
+    color: var(--ink-soft);
+    font-family: var(--font-display);
+    border-top: 1px solid var(--rule);
+    margin-top: 34px;
+    padding-top: 18px;
+  }
+  .bridge-next b { color: var(--accent); font-weight: 500; }
+
+  .ex {
+    font-size: .9375rem;
+    background: var(--raised);
+    border: 1px solid var(--rule);
+    padding: 14px 18px;
+    margin-top: 14px;
+  }
+  .ex .bad, .ex .good { display: block; }
+  .ex .bad { color: var(--ink-soft); }
+  .ex .bad::before { content: "✕ "; color: var(--signal); font-family: var(--font-mono); }
+  .ex .good::before { content: "○ "; color: var(--accent); font-family: var(--font-mono); }
+
+  footer {
+    padding-block: 40px 8px;
+    font-size: .875rem;
+    color: var(--ink-soft);
+  }
+  footer p { max-width: 40em; }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="eyebrow">Marketing Storytelling / 30-Day Drill</p>
+    <h1>物語設計30日</h1>
+    <p class="lede">マーケティングの物語を、感性ではなく手順で作れるようにするための自習カリキュラム。読むだけでは身につかないので、毎日ひとつ成果物を残す設計にしてあります。</p>
+    <div class="meta">
+      <span>公開 <b>2026.10.11</b></span>
+      <span>1日あたり <b>60〜90分</b></span>
+      <span>本ページ掲載 <b>全体マップ ＋ Day 1–3</b></span>
+    </div>
+  </header>
+
+  <section>
+    <h2>30日の地図</h2>
+    <p>4週それぞれに役割があります。前半で両岸（Before と After）を立て、後半はその間に橋（Bridge）を架ける作業に充てる。<strong>第3週をいちばん厚くとってあります</strong>。橋は物語のなかで最も難しく、最も手を抜かれている場所だからです。</p>
+
+    <figure>
+      <svg viewBox="0 0 520 182" role="img" aria-label="4週間を橋の4つのスパンに見立てた図。左岸が現在地、右岸が到達点、第3スパンが架橋週として強調されている。">
+        <!-- banks -->
+        <rect x="0" y="128" width="70" height="38" fill="var(--rule)"/>
+        <rect x="450" y="128" width="70" height="38" fill="var(--rule)"/>
+        <!-- deck -->
+        <line x1="70" y1="96" x2="260" y2="96" stroke="var(--ink-soft)" stroke-width="2"/>
+        <line x1="260" y1="96" x2="355" y2="96" stroke="var(--accent)" stroke-width="5"/>
+        <line x1="355" y1="96" x2="450" y2="96" stroke="var(--ink-soft)" stroke-width="2"/>
+        <!-- piers -->
+        <line x1="70"  y1="96" x2="70"  y2="128" stroke="var(--ink-soft)" stroke-width="1.5"/>
+        <line x1="165" y1="96" x2="165" y2="128" stroke="var(--ink-soft)" stroke-width="1.5"/>
+        <line x1="260" y1="96" x2="260" y2="128" stroke="var(--accent)" stroke-width="1.5"/>
+        <line x1="355" y1="96" x2="355" y2="128" stroke="var(--accent)" stroke-width="1.5"/>
+        <line x1="450" y1="96" x2="450" y2="128" stroke="var(--ink-soft)" stroke-width="1.5"/>
+        <!-- water line -->
+        <line x1="0" y1="166" x2="520" y2="166" stroke="var(--rule)" stroke-width="1"/>
+        <!-- week ids -->
+        <g font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--ink-soft)" text-anchor="middle" letter-spacing="1">
+          <text x="117.5" y="84">W1</text>
+          <text x="212.5" y="84">W2</text>
+          <text x="307.5" y="84" fill="var(--accent)">W3</text>
+          <text x="402.5" y="84">W4</text>
+        </g>
+        <!-- week words -->
+        <g font-family="Zen Old Mincho, serif" font-size="13" fill="var(--ink)" text-anchor="middle">
+          <text x="117.5" y="117">診断</text>
+          <text x="212.5" y="117">両岸</text>
+          <text x="307.5" y="117" fill="var(--accent)" font-weight="700">架橋</text>
+          <text x="402.5" y="117">運用</text>
+        </g>
+        <!-- bank labels -->
+        <g font-family="Zen Kaku Gothic New, sans-serif" font-size="12" fill="var(--ink)" text-anchor="middle">
+          <text x="35" y="152">現在地</text>
+          <text x="485" y="152">到達点</text>
+        </g>
+        <g font-family="IBM Plex Mono, monospace" font-size="9" fill="var(--ink-soft)" text-anchor="middle" letter-spacing="1.2">
+          <text x="35" y="118">BEFORE</text>
+          <text x="485" y="118">AFTER</text>
+        </g>
+      </svg>
+      <figcaption>30日を4スパンに分割する。重量がかかるのは第3スパン。</figcaption>
+    </figure>
+
+    <div class="weeks">
+      <div class="week">
+        <div class="week-id">W1 / D1–7</div>
+        <div class="week-title">診断する<span class="tag">本ページ D1–3</span></div>
+        <ul class="week-days">
+          <li>Day 1　物語と説明を見分ける（ABT）</li>
+          <li>Day 2　主人公の席を顧客に渡す</li>
+          <li>Day 3　Before を解像度で描く</li>
+          <li>Day 4　After を同じ解像度で描く</li>
+          <li>Day 5　型の読み分け（PAS / BAB / 4P）</li>
+          <li>Day 6　名作コピーを構造に解体する</li>
+          <li>Day 7　自社の物語健康診断（週次レポート）</li>
+        </ul>
+      </div>
+
+      <div class="week">
+        <div class="week-id">W2 / D8–15</div>
+        <div class="week-title">両岸を立てる</div>
+        <ul class="week-days">
+          <li>痛みの3層（不便／損失／自己像）を掘り分ける</li>
+          <li>顧客インタビューで言葉を採集する</li>
+          <li>自分の語彙を捨て、顧客の語彙で書き直す</li>
+          <li>Before と After の落差を数値で測る</li>
+          <li>Before / After 一枚絵の完成と検証</li>
+        </ul>
+      </div>
+
+      <div class="week focus">
+        <div class="week-id">W3 / D16–23</div>
+        <div class="week-title">橋を架ける<span class="tag">重点</span></div>
+        <ul class="week-days">
+          <li>機序を書く — なぜそれで渡れるのかの因果を一本通す</li>
+          <li>来歴を発掘する — この橋が存在する理由としての創業譚</li>
+          <li>ガイドの資格を証明する（共感 × 権威）</li>
+          <li>証拠を配置する — 先に渡った人を見せる</li>
+          <li>3ステップに圧縮する — 手順の数が難易度の体感を決める</li>
+          <li>反論を先回りして畳む</li>
+          <li>失敗した橋の研究（商品名を橋だと思い込んだ例）</li>
+          <li>Bridge 完成稿と、第三者による渡河テスト</li>
+        </ul>
+      </div>
+
+      <div class="week">
+        <div class="week-id">W4 / D24–30</div>
+        <div class="week-title">運用する</div>
+        <ul class="week-days">
+          <li>媒体別に展開する（LP／メール／SNS／営業資料）</li>
+          <li>尺を変えて圧縮する（15秒・3分・30分）</li>
+          <li>型を隠す技術 — 骨格を表面に出さない</li>
+          <li>導入事例を CAR で書く</li>
+          <li>ピッチ構造（現状と理想の往復）</li>
+          <li>何を測るか決める／Day 30 発表</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== DAY 1 ===== -->
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">01<span>DAY</span></div>
+      <div>
+        <h2 class="day-title">物語と説明を見分ける</h2>
+        <p class="day-q"><b>今日の問い。</b>あなたの商品説明は物語ですか、それとも項目の列挙ですか。</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Input</em> 15分</div>
+      <p>物語の最小単位は ABT と呼ばれます。<strong>And（状況）／ But（対立）／ Therefore（だから）</strong>。科学コミュニケーションの分野から出てきた診断道具で、三語あれば物語は成立し、一語でも欠ければ成立しません。</p>
+      <p>世の中の商品説明の大半は「And, and, and」です。機能があり、実績があり、サポートもあります。情報としては正しいのに誰も最後まで読まない。対立がない文章は、人間の注意を保持できないからです。</p>
+      <div class="ex">
+        <span class="bad">当社は creative な制作会社であり、実績は300社を超え、ワンストップで対応します。</span>
+        <span class="good">良いものを作るほど評判は上がる。しかし作る時間がそのぶん削られていく。だから私たちは、制作以外の全てを引き取る会社を作った。</span>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Work</em> 45分</div>
+      <ol class="steps">
+        <li>自分の商材（なければ好きなブランド）の公式サイトのトップコピーを、手で書き写す。コピペではなく手で。</li>
+        <li>それを ABT の一文に畳む。<strong>120字以内</strong>。</li>
+        <li>畳めなかったら、どこが欠けているかを書き出す。たいていは But がない。</li>
+        <li>同じ作業を他社3社ぶん行う。合計4本。</li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <div class="deliver"><b>提出物</b>　ABT 一文 × 4本（自社1＋他社3）、および自社コピーの欠落診断メモ</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Check</em> 自己採点</div>
+      <ul class="check">
+        <li>But が「課題」ではなく「対立」になっているか。「認知度が低い」は課題にすぎない。「知ってもらうほど安く見られる」なら対立になる</li>
+        <li>Therefore が「だから買ってください」ではなく「だから私たちは◯◯を作った」になっているか</li>
+        <li>120字に収まっているか。収まらないのは、まだ何を言いたいか決まっていないため</li>
+      </ul>
+    </div>
+
+    <div class="block pitfall">
+      <div class="block-label"><em>Pitfall</em></div>
+      <p>But に自社の困りごとを書いてしまう。「しかし我々は知名度がなかった」は、顧客にとって何の対立でもありません。But は<strong>顧客の世界で起きている矛盾</strong>でなければ機能しない。</p>
+    </div>
+
+    <p class="bridge-next">今日作った ABT には、まだ<b>主語</b>がありません。明日それを決めます。</p>
+  </article>
+
+  <!-- ===== DAY 2 ===== -->
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">02<span>DAY</span></div>
+      <div>
+        <h2 class="day-title">主人公の席を顧客に渡す</h2>
+        <p class="day-q"><b>今日の問い。</b>あなたの文章の主人公は、誰ですか。</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Input</em> 15分</div>
+      <p>StoryBrand の中心原則は役割配分にあります。<strong>顧客が主人公、ブランドはガイド</strong>。ルークが顧客で、自社はヨーダです。この一点を守るだけで、自社語りに陥る事故のほとんどが防げます。</p>
+      <p>そしてガイドには二つの資格が要ります。<strong>共感</strong>（あなたの苦しさを知っている）と<strong>権威</strong>（私はそれを越えた）。共感だけなら、ただの親切な人。権威だけなら、ただの偉そうな人。両方そろって初めて、主人公は後についてきます。</p>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Work</em> 50分</div>
+      <ol class="steps">
+        <li>自社のLPか会社案内から、連続した2000字ぶんのテキストを取り出す。</li>
+        <li>一人称（弊社・私たち・当社・サービス名）と二人称（あなた・御社）の出現回数を数え、比率を記録する。</li>
+        <li>比率が自社側に傾いていたら、冒頭5文だけを二人称に書き換える。全文やる必要はない。5文で体感がつかめる。</li>
+        <li>ガイド宣言を2文で書く。1文目が共感、2文目が権威。</li>
+      </ol>
+    </div>
+
+    <div class="block">
+      <div class="deliver"><b>提出物</b>　主語比率の実数／書き換えた冒頭5文／ガイド宣言2文</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Check</em> 自己採点</div>
+      <ul class="check">
+        <li>共感の文に具体的な場面が入っているか。「お困りではありませんか」は共感ではなく定型文</li>
+        <li>権威の文に検証可能な事実があるか。年数、件数、固有名詞のいずれか</li>
+        <li>顧客が読んだときに「この人は自分の側の人間だ」と思えるか</li>
+      </ul>
+    </div>
+
+    <div class="block pitfall">
+      <div class="block-label"><em>Pitfall</em></div>
+      <p>謙虚にしようとして権威まで消してしまう。顧客を主役にするのは、自社を無力にすることではありません。<strong>実績のないガイドに、主人公は命を預けない。</strong></p>
+    </div>
+
+    <p class="bridge-next">主人公が決まりました。次は、その人が<b>いまどこに立っているか</b>を描きます。</p>
+  </article>
+
+  <!-- ===== DAY 3 ===== -->
+  <article class="day">
+    <div class="day-head">
+      <div class="day-num">03<span>DAY</span></div>
+      <div>
+        <h2 class="day-title">Before を解像度で描く</h2>
+        <p class="day-q"><b>今日の問い。</b>顧客の「いま」を、何曜日の何時何分の場面として書けますか。</p>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Input</em> 15分</div>
+      <p>Before が抽象的だと、読者はそれを自分の話だと認識しません。「業務が非効率で、時間が足りない」——この文を読んで振り向く人はいない。誰にでも当てはまる記述は、誰のものでもないからです。</p>
+      <p>痛みには三つの層があります。<strong>表層の不便</strong>（手間がかかる）、<strong>機能層の損失</strong>（売上が立たない、人が辞める）、<strong>深層の自己像</strong>（自分は経営者として無能ではないか）。記憶に残るのは深層に触れた文章だけですが、触れ方を誤ると、それはただの侮辱になります。</p>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Work</em> 55分</div>
+      <ol class="steps">
+        <li>実在の顧客を1人決める。ペルソナではなく、実際に話したことのある人。</li>
+        <li>その人の一週間のうち、問題が最も表面化する一瞬を特定する。曜日と時刻まで落とす。</li>
+        <li>その一瞬を300字で描写する。ルールは二つ。形容詞より動詞を使う。感情語を使わず行動で示す。</li>
+        <li>最後に1文だけ、深層の痛みを書き添える。1文以上書いたら削る。</li>
+      </ol>
+      <div class="ex">
+        <span class="bad">月曜の朝、彼は焦っていた。やることが多すぎて大変だった。</span>
+        <span class="good">月曜 9時10分。受信箱を開く前にコーヒーを淹れ直す。3回目の見積もりを開いて、何も直さずに閉じる。</span>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="deliver"><b>提出物</b>　Before シーン 300字 ＋ 深層の痛み 1文</div>
+    </div>
+
+    <div class="block">
+      <div class="block-label"><em>Check</em> 自己採点</div>
+      <ul class="check">
+        <li>時刻が書いてあるか</li>
+        <li>固有名詞か具体物が3つ以上出てくるか</li>
+        <li>「忙しい」「大変」「課題」を一度も使っていないか</li>
+        <li>本人に読ませたとき「見られていた」と感じるか。可能なら実際に見せる</li>
+      </ul>
+    </div>
+
+    <div class="block pitfall">
+      <div class="block-label"><em>Pitfall</em></div>
+      <p>痛みを描こうとして、煽りの側に越境する。境界線の判定基準はひとつだけです。<strong>その文章を、本人の目の前で声に出して読めるか。</strong>読めないなら書き直してください。</p>
+    </div>
+
+    <p class="bridge-next">Day 4 は After。到達点を同じ解像度で描きます。<b>Before と After の落差が、そのまま Bridge の長さになる</b>ので、ここを曖昧にすると第3週の架橋が始められません。</p>
+  </article>
+
+  <section>
+    <h2>このカリキュラムの限界</h2>
+    <p>最後に、売り込まずに書いておきます。物語の型は万能ではありません。</p>
+    <p>Byron Sharp をはじめとするエビデンス重視の立場からは、ブランドの成長を決めるのは精緻な物語ではなく「想起されやすさ」と「買いやすさ」であり、低関与の日用品カテゴリーでは一貫した識別記号を反復するほうが効く、という有力な反論があります。実務でも、感動的なブランドムービーを作って自己満足で終わる例は数えきれません。</p>
+    <p>このカリキュラムが効くのは、高関与・高価格・価値観が購買に絡む商材です。洗剤や飲料のような商材では、物語の精度より到達と一貫性の問題になります。</p>
+    <p>そしてもうひとつ。商品が約束を裏切る場合、物語は嘘を速く遠くまで運ぶ装置にしかなりません。<strong>物語は増幅器であって、発電機ではない。</strong>中身がゼロなら、何倍してもゼロです。</p>
+  </section>
+
+  <footer>
+    <p>Day 4 以降は順次公開予定。各日の所要時間は目安で、提出物さえ残れば時間は短くて構いません。読んだ量ではなく、書いた量だけが実力になります。</p>
+  </footer>
+
+</div>
+
+</body>
+</html>

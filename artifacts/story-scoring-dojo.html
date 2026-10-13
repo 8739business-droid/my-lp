@@ -1,0 +1,728 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ストーリー採点道場</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Layout: one narrow working column — drill, input, verdict, log — like a graded worksheet. */
+  :root {
+    --paper:       #F2F3F1;
+    --raised:      #FBFBF9;
+    --sunken:      #E8E9E6;
+    --ink:         #15181C;
+    --ink-soft:    #5B6069;
+    --rule:        #D6D8D3;
+    --mark:        #B5342A;
+    --mark-soft:   #F7E5E2;
+    --good:        #2D6A4F;
+    --font-ui:     "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    --font-mono:   "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:     #121417;
+      --raised:    #1A1E22;
+      --sunken:    #0D0F11;
+      --ink:       #E8E9E6;
+      --ink-soft:  #959BA3;
+      --rule:      #2B3036;
+      --mark:      #E9796A;
+      --mark-soft: #2C1C1A;
+      --good:      #6BB591;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper:     #121417;
+    --raised:    #1A1E22;
+    --sunken:    #0D0F11;
+    --ink:       #E8E9E6;
+    --ink-soft:  #959BA3;
+    --rule:      #2B3036;
+    --mark:      #E9796A;
+    --mark-soft: #2C1C1A;
+    --good:      #6BB591;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-ui);
+    font-size: 16px;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 44rem; margin: 0 auto; padding-inline: 18px; padding-block: 0 80px; }
+
+  /* masthead */
+  .mast { padding-block: 40px 26px; border-bottom: 2px solid var(--ink); }
+  .kicker {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--mark); margin: 0 0 14px;
+  }
+  h1 {
+    font-size: clamp(1.75rem, 6vw, 2.4rem); font-weight: 900; letter-spacing: .01em;
+    line-height: 1.3; margin: 0 0 12px; text-wrap: balance;
+  }
+  .mast p { margin: 0; color: var(--ink-soft); font-size: .9375rem; max-width: 36em; }
+
+  .panel { border: 1px solid var(--rule); background: var(--raised); padding: 20px; margin-top: 18px; }
+  .panel.flat { background: none; }
+
+  .label {
+    font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .16em;
+    text-transform: uppercase; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 10px; margin-bottom: 12px;
+  }
+  .label::after { content: ""; flex: 1; height: 1px; background: var(--rule); min-width: 0; }
+  .label b { color: var(--mark); font-weight: 600; }
+
+  h2 { font-size: 1.125rem; font-weight: 700; margin: 0 0 10px; letter-spacing: .01em; }
+  section { padding-top: 38px; }
+
+  /* drill picker */
+  .drills { display: flex; flex-wrap: wrap; gap: 7px; }
+  .drill-btn {
+    font-family: var(--font-ui); font-size: .8125rem; font-weight: 500;
+    padding: 7px 12px; border: 1px solid var(--rule); background: var(--raised);
+    color: var(--ink-soft); cursor: pointer; line-height: 1.4;
+  }
+  .drill-btn:hover { border-color: var(--ink-soft); color: var(--ink); }
+  .drill-btn[aria-pressed="true"] {
+    background: var(--ink); border-color: var(--ink); color: var(--paper); font-weight: 700;
+  }
+  .drill-btn:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+
+  /* drill card */
+  .brief { font-size: 1.0625rem; font-weight: 500; margin: 0 0 10px; line-height: 1.75; }
+  .brief-sub { font-size: .875rem; color: var(--ink-soft); margin: 0; }
+  .brief-sub b { color: var(--mark); font-weight: 500; }
+
+  /* timer */
+  .timer-row {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+    margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--rule);
+  }
+  .clock {
+    font-family: var(--font-mono); font-size: 2rem; font-weight: 600;
+    font-variant-numeric: tabular-nums; letter-spacing: -.01em; line-height: 1;
+    min-width: 4.6em;
+  }
+  .clock.over { color: var(--mark); }
+  .clock small { display: block; font-size: 10px; letter-spacing: .14em; color: var(--ink-soft); font-weight: 400; margin-top: 6px; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  button.act {
+    font-family: var(--font-ui); font-size: .875rem; font-weight: 700;
+    padding: 9px 18px; border: 1px solid var(--ink); background: var(--ink);
+    color: var(--paper); cursor: pointer; line-height: 1.5;
+  }
+  button.act.ghost { background: none; color: var(--ink); }
+  button.act.mark { background: var(--mark); border-color: var(--mark); color: #fff; }
+  button.act:disabled { opacity: .38; cursor: not-allowed; }
+  button.act:focus-visible { outline: 2px solid var(--mark); outline-offset: 2px; }
+
+  /* input */
+  textarea {
+    width: 100%; min-height: 220px; resize: vertical;
+    font-family: var(--font-ui); font-size: 1rem; line-height: 1.9;
+    color: var(--ink); background: var(--sunken);
+    border: 1px solid var(--rule); padding: 14px 16px;
+  }
+  textarea:focus-visible { outline: 2px solid var(--mark); outline-offset: -1px; }
+  .count {
+    display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px;
+    font-family: var(--font-mono); font-size: 11.5px; color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .count b { color: var(--ink); font-weight: 500; }
+  .dict {
+    font-size: .8125rem; color: var(--ink-soft); margin: 14px 0 0;
+    border-left: 2px solid var(--mark); padding-left: 12px; line-height: 1.75;
+  }
+  .dict kbd {
+    font-family: var(--font-mono); font-size: .9em; border: 1px solid var(--rule);
+    padding: 1px 5px; background: var(--sunken);
+  }
+
+  .submit-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 18px; }
+  .status { font-size: .8125rem; color: var(--ink-soft); }
+  .status.err { color: var(--mark); }
+
+  /* result */
+  #result[hidden] { display: none !important; }
+  .score-head {
+    display: flex; align-items: flex-end; gap: 18px; flex-wrap: wrap;
+    padding-bottom: 18px; border-bottom: 1px solid var(--rule);
+  }
+  .total {
+    font-family: var(--font-mono); font-weight: 600; font-size: 4rem; line-height: .9;
+    color: var(--mark); font-variant-numeric: tabular-nums; letter-spacing: -.03em;
+  }
+  .total span { font-size: 1.125rem; color: var(--ink-soft); letter-spacing: 0; }
+  .grade {
+    font-family: var(--font-mono); font-weight: 600; font-size: 1.5rem;
+    border: 2px solid var(--mark); color: var(--mark); width: 2.2em; height: 2.2em;
+    display: grid; place-items: center; line-height: 1;
+  }
+  .verdict { flex: 1 1 14rem; min-width: 0; font-size: .9375rem; font-weight: 500; line-height: 1.7; }
+
+  .axes { margin: 22px 0 0; display: grid; gap: 16px; }
+  .axis-top { display: flex; align-items: baseline; gap: 10px; }
+  .axis-name { font-weight: 700; font-size: .9375rem; }
+  .axis-num { font-family: var(--font-mono); font-size: .8125rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; margin-left: auto; }
+  .track { height: 5px; background: var(--sunken); margin: 7px 0 7px; border: 1px solid var(--rule); }
+  .fill { height: 100%; background: var(--mark); }
+  .fill.hi { background: var(--good); }
+  .axis-c { font-size: .875rem; color: var(--ink-soft); line-height: 1.75; margin: 0; }
+
+  .crit { margin-top: 26px; border-top: 2px solid var(--mark); background: var(--mark-soft); padding: 16px 18px; }
+  .crit p { margin: 0; font-size: .9375rem; line-height: 1.8; }
+  .cutlist { margin: 18px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+  .cutlist li { font-size: .875rem; color: var(--ink-soft); padding-left: 1.5em; text-indent: -1.5em; }
+  .cutlist li::before { content: "✕"; color: var(--mark); font-family: var(--font-mono); padding-right: .7em; }
+  .rewrite { margin-top: 18px; border-left: 2px solid var(--good); padding-left: 14px; font-size: .9375rem; line-height: 1.8; }
+  .hw { margin-top: 18px; font-size: .9375rem; background: var(--sunken); border: 1px solid var(--rule); padding: 14px 16px; }
+  .hw b { color: var(--mark); }
+
+  /* history */
+  .stats { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 18px; }
+  .stat-n { font-family: var(--font-mono); font-size: 1.75rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
+  .stat-l { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: var(--ink-soft); margin-top: 6px; }
+  .bars { display: flex; align-items: flex-end; gap: 4px; height: 64px; margin-bottom: 20px; }
+  .bars i { flex: 1; min-width: 4px; background: var(--mark); display: block; opacity: .55; }
+  .bars i.last { opacity: 1; }
+  .hrow {
+    display: grid; grid-template-columns: 3.2rem 1fr auto auto; gap: 12px; align-items: baseline;
+    padding: 11px 0; border-top: 1px solid var(--rule); font-size: .875rem;
+  }
+  .hrow .hs { font-family: var(--font-mono); font-weight: 600; color: var(--mark); font-variant-numeric: tabular-nums; }
+  .hrow .ht { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hrow .hd { font-family: var(--font-mono); font-size: 11px; color: var(--ink-soft); }
+  .hrow button {
+    background: none; border: 0; color: var(--ink-soft); cursor: pointer;
+    font-family: var(--font-mono); font-size: 11px; padding: 0 2px;
+  }
+  .hrow button:hover { color: var(--mark); }
+  .empty { color: var(--ink-soft); font-size: .875rem; margin: 0; }
+
+  footer { margin-top: 44px; padding-top: 22px; border-top: 1px solid var(--rule); font-size: .8125rem; color: var(--ink-soft); }
+  footer p { margin: 0 0 10px; max-width: 40em; }
+  footer p:last-child { margin: 0; }
+
+  @media (max-width: 420px) {
+    .total { font-size: 3.2rem; }
+    .hrow { grid-template-columns: 2.8rem 1fr auto; }
+    .hrow .hd { grid-column: 2 / -1; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="mast">
+    <p class="kicker">Story Pitch / Graded Drill</p>
+    <h1>ストーリー採点道場</h1>
+    <p>お題に対して声に出して話し、その内容を貼り付けると、100点満点で採点されます。励ましは返ってきません。減点理由だけが返ってきます。</p>
+  </header>
+
+  <section>
+    <div class="label">Step 1 <b>お題を選ぶ</b></div>
+    <div class="drills" id="drills"></div>
+
+    <div class="panel">
+      <p class="brief" id="brief"></p>
+      <p class="brief-sub" id="briefSub"></p>
+      <div class="timer-row">
+        <div class="clock" id="clock">0:60<small>REMAINING</small></div>
+        <div class="btn-row">
+          <button class="act" id="btnStart" type="button">開始</button>
+          <button class="act ghost" id="btnReset" type="button">リセット</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Step 2 <b>話して、書き起こす</b></div>
+    <textarea id="text" placeholder="ここに話した内容を入力します。キーボードの音声入力を使えば、話しながらそのまま文字になります。"></textarea>
+    <div class="count">
+      <span>文字数 <b id="cChars">0</b></span>
+      <span>話す目安 <b id="cSecs">0</b> 秒</span>
+      <span>制限 <b id="cLimit">60</b> 秒</span>
+    </div>
+    <p class="dict">
+      このページ自体はマイクを使えません（公開ページはブラウザのマイク権限を取得できない仕様です）。音声入力は端末側の機能を使ってください。
+      iPhone / Android はキーボードのマイクキー、Mac は <kbd>fn</kbd>×2、Windows は <kbd>Win</kbd>+<kbd>H</kbd>。
+      言い淀みや助詞の揺れはそのままで構いません。表記は減点されません。
+    </p>
+
+    <div class="submit-row">
+      <button class="act mark" id="btnScore" type="button" disabled>採点する</button>
+      <button class="act ghost" id="btnStop" type="button" hidden>中止</button>
+      <span class="status" id="status"></span>
+    </div>
+  </section>
+
+  <section id="result" hidden>
+    <div class="label">Step 3 <b>講評</b></div>
+    <div class="panel">
+      <div class="score-head">
+        <div class="total" id="rTotal">0<span> / 100</span></div>
+        <div class="grade" id="rGrade">—</div>
+        <div class="verdict" id="rVerdict"></div>
+      </div>
+      <div class="axes" id="rAxes"></div>
+      <div class="crit">
+        <div class="label" style="margin-bottom:8px">致命的な欠陥</div>
+        <p id="rFatal"></p>
+      </div>
+      <ul class="cutlist" id="rCut"></ul>
+      <div class="rewrite" id="rRewrite"></div>
+      <div class="hw" id="rHw"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="label">Log <b>記録</b></div>
+    <div class="panel flat" style="padding:0;border:0">
+      <div class="stats" id="stats" hidden>
+        <div><div class="stat-n" id="sCount">0</div><div class="stat-l">ATTEMPTS</div></div>
+        <div><div class="stat-n" id="sAvg">—</div><div class="stat-l">AVERAGE</div></div>
+        <div><div class="stat-n" id="sBest">—</div><div class="stat-l">BEST</div></div>
+        <div><div class="stat-n" id="sLast5">—</div><div class="stat-l">LAST 5 AVG</div></div>
+      </div>
+      <div class="bars" id="bars" hidden></div>
+      <div id="hist"><p class="empty" id="histEmpty">まだ記録がありません。1本目を採点すると、ここに点数が積み上がります。</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>採点はこのページから Claude に問い合わせて行われます。閲覧者それぞれの Claude 利用枠を消費し、最初の1回で許可を求められます。</p>
+    <p>記録は閲覧者ごとに分かれて保存され、他の人からは見えません。採点基準は固定で、60点が実務で使える最低ラインに設定してあります。</p>
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var DRILLS = [
+    { id: "abt", t: "ABT 一文", sec: 60,
+      brief: "あなたの商品・サービスを、And（状況）/ But（対立）/ Therefore（だから）の三部構成で、一息で言い切ってください。",
+      focus: "But が本物の対立になっているか。『認知度が低い』のような自社都合の課題は対立ではない。Therefore が『だから買ってください』になっていたら失格。" },
+    { id: "before", t: "Before 描写", sec: 90,
+      brief: "顧客が問題に直面している一瞬を、曜日と時刻を特定して描写してください。感情語は使わず、行動だけで示すこと。",
+      focus: "時刻・固有名詞・具体物があるか。『忙しい』『大変』『課題』を使っていないか。本人の前で読み上げられる文章か（煽りになっていないか）。" },
+    { id: "after", t: "After 描写", sec: 60,
+      brief: "その顧客が問題を越えた後の一日を、同じ解像度で描写してください。抽象的な『効率化』は禁止です。",
+      focus: "到達点が具体的な場面になっているか。Before との落差が明確か。企業側の成果ではなく顧客の生活として描けているか。" },
+    { id: "mech", t: "橋 ― 機序", sec: 90,
+      brief: "なぜあなたの商品でその問題が解決するのか、因果を一本の筋で説明してください。『効果があります』は説明ではありません。",
+      focus: "原因から結果までの連鎖が途切れていないか。機能の列挙に逃げていないか。聞き手が検証せずに納得できる筋が通っているか。" },
+    { id: "origin", t: "橋 ― 来歴", sec: 120,
+      brief: "なぜこの商品を作ったのか。あなた自身がかつて同じ問題の側にいた経験を含めて語ってください。",
+      focus: "ガイドが元・当事者であることが伝わるか。自慢話になっていないか。時系列と転機が具体的か。美談で終わらず、顧客の利益に接続しているか。" },
+    { id: "guide", t: "ガイド宣言", sec: 45,
+      brief: "二文だけ話してください。一文目で共感（相手の状況を知っていること）、二文目で権威（解決した実績）を示します。",
+      focus: "共感の文に具体的な場面があるか。権威の文に検証可能な事実（年数・件数・固有名詞）があるか。謙遜しすぎて権威が消えていないか。" },
+    { id: "pitch30", t: "30秒ピッチ", sec: 30,
+      brief: "初対面の相手に30秒で。誰の、どんな対立を、どうやって越えさせるのかを言い切ってください。",
+      focus: "30秒に収まる情報量か。結論が先にあるか。一文が長すぎないか。削れる語が残っていないか。" },
+    { id: "objection", t: "反論処理", sec: 60,
+      brief: "「高いですね」と言われました。値引きせず、価格を正当化せず、相手の判断基準そのものを変える返答をしてください。",
+      focus: "防御的になっていないか。比較の土俵を移せているか。相手を論破しようとしていないか。最後に相手に判断を返しているか。" },
+    { id: "car", t: "導入事例 (CAR)", sec: 90,
+      brief: "顧客事例を Challenge（課題）→ Action（やったこと）→ Result（結果）の順で話してください。",
+      focus: "Challenge が数字と固有名詞で具体的か。Action が自社の手柄話になっていないか。Result が検証可能か。" },
+    { id: "free", t: "フリー", sec: 120,
+      brief: "お題なし。いま話したいことを話してください。ピッチでも、説明でも、売り込みでも構いません。",
+      focus: "お題の制約がないぶん、構造の有無がそのまま出る。基準どおり機械的に採点すること。" }
+  ];
+
+  var PROMPT_HEAD =
+    "あなたは、日本のBtoB・BtoCのピッチとコピーを20年にわたり添削してきた、極めて厳格な指導者です。" +
+    "励まし、お世辞、クッション言葉、「〜ですが良い点もあります」のような緩衝表現を一切使いません。" +
+    "加点理由を探さず、減点理由を探してください。良いと評価する場合は、必ず発話から該当箇所を引用して根拠を示します。\n\n";
+
+  var RUBRIC =
+    "【採点軸】各20点、合計100点\n" +
+    "1. structure 構造 — ABT（状況／対立／だから）が成立しているか。対立が本物か、単なる課題の列挙になっていないか。\n" +
+    "2. specificity 具体 — 固有名詞・数字・時刻・物の名前があるか。「便利」「効率」「課題」「価値」のような抽象語に逃げていないか。\n" +
+    "3. hero 主語 — 顧客が主人公になっているか。途中で主役が自社・自分に戻っていないか。\n" +
+    "4. bridge 橋 — 解決の機序、その商品が存在する理由、先に渡った人の証拠、手順の少なさ。聞き手が「自分にも渡れそうだ」と思えるか。\n" +
+    "5. delivery 話術 — 結論が先にあるか。一文が長すぎないか。冗長な前置き・口癖・繰り返しがないか。制限時間に対して適量か。\n\n" +
+    "【配点の目安（厳守）】\n" +
+    "0〜39点: 構造が存在せず、聞き手の注意を保持できない。\n" +
+    "40〜59点: 言いたいことは分かるが抽象的で、記憶に残らない。初めて提出する人の大半はここに入る。\n" +
+    "60〜74点: 実務で使える最低ライン。欠陥は残るが人前で話せる。\n" +
+    "75〜89点: 強い。そのまま商談で使える。全体の1割程度しか到達しない。\n" +
+    "90〜100点: 一語も削れない状態。めったに出してはならない。\n\n" +
+    "お題が直接問うていない軸も、基準に照らして機械的に採点してください。ただしコメントは、そのお題の焦点に関わる指摘を優先します。\n\n";
+
+  var FORMAT =
+    "【出力】以下の形のJSONだけを返してください。前後に文章を付けないこと。\n" +
+    '{"total": 0から100の整数, "grade": "S|A|B|C|D", ' +
+    '"axes": [{"key":"structure","name":"構造","score":0から20の整数,"comment":"40〜90字。何がどう足りないかを具体的に。"},' +
+    '{"key":"specificity","name":"具体","score":0,"comment":""},{"key":"hero","name":"主語","score":0,"comment":""},' +
+    '{"key":"bridge","name":"橋","score":0,"comment":""},{"key":"delivery","name":"話術","score":0,"comment":""}], ' +
+    '"fatal": "最も致命的な欠陥を一つだけ。80〜150字。", ' +
+    '"cut": ["発話から削るべき表現を、原文のまま3つまで。なければ空配列。"], ' +
+    '"rewrite": "発話中で最も弱い一文を、あなたが書き直した一文。60〜130字。", ' +
+    '"homework": "次の1回で直すことを一つだけ。40〜90字。", ' +
+    '"verdict": "一行総評。慰めを含めない。25〜60字。"}\n' +
+    "gradeはtotalから機械的に決めます: 90以上=S、75〜89=A、60〜74=B、40〜59=C、39以下=D。";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var el = {
+    drills: $("drills"), brief: $("brief"), briefSub: $("briefSub"),
+    clock: $("clock"), btnStart: $("btnStart"), btnReset: $("btnReset"),
+    text: $("text"), cChars: $("cChars"), cSecs: $("cSecs"), cLimit: $("cLimit"),
+    btnScore: $("btnScore"), btnStop: $("btnStop"), status: $("status"),
+    result: $("result"), rTotal: $("rTotal"), rGrade: $("rGrade"), rVerdict: $("rVerdict"),
+    rAxes: $("rAxes"), rFatal: $("rFatal"), rCut: $("rCut"), rRewrite: $("rRewrite"), rHw: $("rHw"),
+    stats: $("stats"), sCount: $("sCount"), sAvg: $("sAvg"), sBest: $("sBest"), sLast5: $("sLast5"),
+    bars: $("bars"), hist: $("hist"), histEmpty: $("histEmpty")
+  };
+
+  var drill = DRILLS[0];
+  var tick = null, startedAt = 0, sampleFn = null, dbRef = null, uid = null;
+  var history = [], ctl = null, busy = false, pendingDelete = null;
+
+  // ---------- drills ----------
+  function renderDrills() {
+    el.drills.textContent = "";
+    DRILLS.forEach(function (d) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "drill-btn";
+      b.textContent = d.t;
+      b.setAttribute("aria-pressed", String(d.id === drill.id));
+      b.addEventListener("click", function () { drill = d; renderDrills(); renderDrill(); resetTimer(); });
+      el.drills.appendChild(b);
+    });
+  }
+  function renderDrill() {
+    el.brief.textContent = drill.brief;
+    el.briefSub.innerHTML = "";
+    var s = document.createElement("span");
+    s.textContent = "採点で特に見る点：" + drill.focus;
+    el.briefSub.appendChild(s);
+    el.cLimit.textContent = String(drill.sec);
+    resetTimer();
+  }
+
+  // ---------- timer ----------
+  function fmt(ms) {
+    var neg = ms < 0, s = Math.floor(Math.abs(ms) / 1000);
+    return (neg ? "+" : "") + Math.floor(s / 60) + ":" + ("0" + (s % 60)).slice(-2);
+  }
+  function paintClock(remain) {
+    el.clock.firstChild.nodeValue = fmt(remain);
+    el.clock.classList.toggle("over", remain < 0);
+  }
+  function resetTimer() {
+    if (tick) { clearInterval(tick); tick = null; }
+    startedAt = 0;
+    el.btnStart.textContent = "開始";
+    paintClock(drill.sec * 1000);
+  }
+  function toggleTimer() {
+    if (tick) { clearInterval(tick); tick = null; el.btnStart.textContent = "再開"; return; }
+    var base = startedAt ? startedAt : Date.now();
+    if (!startedAt) startedAt = base;
+    var anchor = Date.now(), consumed = drill.sec * 1000 - parseRemain();
+    el.btnStart.textContent = "一時停止";
+    tick = setInterval(function () {
+      paintClock(drill.sec * 1000 - consumed - (Date.now() - anchor));
+    }, 200);
+  }
+  function parseRemain() {
+    var txt = el.clock.firstChild.nodeValue, neg = txt.charAt(0) === "+";
+    var p = txt.replace("+", "").split(":"), s = (+p[0]) * 60 + (+p[1]);
+    return (neg ? -s : s) * 1000;
+  }
+
+  // ---------- counts ----------
+  function updateCounts() {
+    var n = el.text.value.replace(/\s/g, "").length;
+    el.cChars.textContent = String(n);
+    el.cSecs.textContent = String(Math.round(n / 5.5));
+    el.btnScore.disabled = busy || !sampleFn || n < 40;
+    if (!busy) {
+      if (!sampleFn) el.status.textContent = "";
+      else if (n < 40) { el.status.className = "status"; el.status.textContent = "40字以上で採点できます。"; }
+      else el.status.textContent = "";
+    }
+  }
+
+  // ---------- scoring ----------
+  function buildPrompt(text) {
+    return PROMPT_HEAD +
+      "【お題】" + drill.t + "\n" +
+      "【指示】" + drill.brief + "\n" +
+      "【制限時間】" + drill.sec + "秒\n" +
+      "【このお題の焦点】" + drill.focus + "\n\n" +
+      "【受講者の発話】音声入力の書き起こしです。言い淀み、助詞の揺れ、表記ゆれは減点対象にせず、内容と構造だけを評価してください。\n" +
+      "-----\n" + text.slice(0, 6000) + "\n-----\n\n" +
+      RUBRIC + FORMAT;
+  }
+
+  var ERR = {
+    not_granted: "Claude の利用が許可されていないため採点できません。",
+    sampling_disabled: "このアカウントでは採点機能を利用できません。",
+    not_declared: "採点機能が無効になっています。",
+    capability_disabled: "この画面では採点機能を利用できません。",
+    capability_removed: "この画面では採点機能を利用できません。",
+    rate_limited: "回数制限に達しました。しばらく時間を置いてから、もう一度お試しください。",
+    session_expired: "サインインの有効期限が切れました。再読み込みしてください。",
+    refused: "この内容は採点できませんでした。内容を変えてお試しください。",
+    empty_completion: "採点結果が返りませんでした。内容を短くしてお試しください。",
+    invalid_json: "採点結果の形式が崩れました。もう一度お試しください。",
+    prompt_too_large: "文章が長すぎます。短くしてください。",
+    upstream_error: "通信に失敗しました。もう一度お試しください。"
+  };
+
+  function setBusy(on) {
+    busy = on;
+    el.btnStop.hidden = !on;
+    updateCounts();
+    el.btnScore.disabled = on || !sampleFn || el.text.value.replace(/\s/g, "").length < 40;
+  }
+
+  function score() {
+    if (!sampleFn || busy) return;
+    var text = el.text.value.trim();
+    if (text.replace(/\s/g, "").length < 40) return;
+    setBusy(true);
+    el.status.className = "status";
+    el.status.textContent = "採点中。20〜60秒ほどかかります。";
+    ctl = new AbortController();
+
+    sampleFn.json(buildPrompt(text), { signal: ctl.signal, cache: false, modelTier: "default" })
+      .then(function (r) {
+        if (!r || typeof r !== "object") throw { code: "invalid_json", message: "shape" };
+        var rec = normalize(r, text);
+        showResult(rec);
+        el.status.textContent = "";
+        save(rec);
+      })
+      .catch(function (e) {
+        var code = (e && e.code) || "upstream_error";
+        if (code === "cancelled") { el.status.className = "status"; el.status.textContent = "中止しました。"; return; }
+        el.status.className = "status err";
+        el.status.textContent = ERR[code] || ERR.upstream_error;
+        if (code === "not_granted" || code === "sampling_disabled" || code === "not_declared") sampleFn = null;
+      })
+      .then(function () { setBusy(false); });
+  }
+
+  function clampInt(v, lo, hi) {
+    var n = Math.round(Number(v));
+    if (!isFinite(n)) n = lo;
+    return Math.max(lo, Math.min(hi, n));
+  }
+  function gradeOf(t) { return t >= 90 ? "S" : t >= 75 ? "A" : t >= 60 ? "B" : t >= 40 ? "C" : "D"; }
+
+  function normalize(r, text) {
+    var names = { structure: "構造", specificity: "具体", hero: "主語", bridge: "橋", delivery: "話術" };
+    var order = ["structure", "specificity", "hero", "bridge", "delivery"];
+    var got = {};
+    (Array.isArray(r.axes) ? r.axes : []).forEach(function (a) {
+      if (a && a.key && names[a.key]) got[a.key] = a;
+    });
+    var axes = order.map(function (k) {
+      var a = got[k] || {};
+      return { key: k, name: names[k], score: clampInt(a.score, 0, 20), comment: String(a.comment || "") };
+    });
+    var sum = axes.reduce(function (s, a) { return s + a.score; }, 0);
+    var total = clampInt(r.total, 0, 100);
+    if (Math.abs(total - sum) > 5) total = sum;
+    return {
+      ts: Date.now(), drill: drill.id, title: drill.t,
+      total: total, grade: gradeOf(total), axes: axes,
+      fatal: String(r.fatal || ""),
+      cut: (Array.isArray(r.cut) ? r.cut : []).slice(0, 3).map(String),
+      rewrite: String(r.rewrite || ""), homework: String(r.homework || ""),
+      verdict: String(r.verdict || ""), chars: text.replace(/\s/g, "").length
+    };
+  }
+
+  function showResult(rec) {
+    el.rTotal.firstChild.nodeValue = String(rec.total);
+    el.rGrade.textContent = rec.grade;
+    el.rVerdict.textContent = rec.verdict;
+    el.rAxes.textContent = "";
+    rec.axes.forEach(function (a) {
+      var wrap = document.createElement("div");
+      var top = document.createElement("div"); top.className = "axis-top";
+      var nm = document.createElement("span"); nm.className = "axis-name"; nm.textContent = a.name;
+      var nu = document.createElement("span"); nu.className = "axis-num"; nu.textContent = a.score + " / 20";
+      top.appendChild(nm); top.appendChild(nu);
+      var tr = document.createElement("div"); tr.className = "track";
+      var fl = document.createElement("div");
+      fl.className = "fill" + (a.score >= 15 ? " hi" : "");
+      fl.style.width = (a.score / 20 * 100) + "%";
+      tr.appendChild(fl);
+      var c = document.createElement("p"); c.className = "axis-c"; c.textContent = a.comment;
+      wrap.appendChild(top); wrap.appendChild(tr); wrap.appendChild(c);
+      el.rAxes.appendChild(wrap);
+    });
+    el.rFatal.textContent = rec.fatal;
+    el.rCut.textContent = "";
+    rec.cut.forEach(function (c) {
+      var li = document.createElement("li"); li.textContent = c; el.rCut.appendChild(li);
+    });
+    el.rRewrite.textContent = rec.rewrite ? "書き直し例　" + rec.rewrite : "";
+    el.rRewrite.hidden = !rec.rewrite;
+    el.rHw.textContent = "";
+    if (rec.homework) {
+      var b = document.createElement("b"); b.textContent = "次回の宿題　";
+      el.rHw.appendChild(b);
+      el.rHw.appendChild(document.createTextNode(rec.homework));
+    }
+    el.rHw.hidden = !rec.homework;
+    el.result.hidden = false;
+    el.result.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  // ---------- history ----------
+  function renderHistory() {
+    var rows = history.slice().sort(function (a, b) { return b.ts - a.ts; });
+    el.histEmpty.hidden = rows.length > 0;
+    el.stats.hidden = rows.length === 0;
+    el.bars.hidden = rows.length === 0;
+
+    var old = el.hist.querySelectorAll(".hrow");
+    for (var i = 0; i < old.length; i++) old[i].remove();
+
+    if (rows.length) {
+      var tot = rows.reduce(function (s, r) { return s + r.total; }, 0);
+      var best = rows.reduce(function (m, r) { return Math.max(m, r.total); }, 0);
+      var l5 = rows.slice(0, 5);
+      el.sCount.textContent = String(rows.length);
+      el.sAvg.textContent = String(Math.round(tot / rows.length));
+      el.sBest.textContent = String(best);
+      el.sLast5.textContent = String(Math.round(l5.reduce(function (s, r) { return s + r.total; }, 0) / l5.length));
+
+      el.bars.textContent = "";
+      rows.slice(0, 12).reverse().forEach(function (r, idx, arr) {
+        var i2 = document.createElement("i");
+        i2.style.height = Math.max(4, r.total) + "%";
+        if (idx === arr.length - 1) i2.className = "last";
+        i2.title = r.title + " " + r.total;
+        el.bars.appendChild(i2);
+      });
+    }
+
+    rows.forEach(function (r) {
+      var row = document.createElement("div"); row.className = "hrow";
+      var s = document.createElement("span"); s.className = "hs"; s.textContent = String(r.total);
+      var t = document.createElement("span"); t.className = "ht"; t.textContent = r.title;
+      var d = document.createElement("span"); d.className = "hd";
+      var dt = new Date(r.ts);
+      d.textContent = (dt.getMonth() + 1) + "/" + dt.getDate() + " " + dt.getHours() + ":" + ("0" + dt.getMinutes()).slice(-2);
+      var x = document.createElement("button"); x.type = "button";
+      x.textContent = pendingDelete === r.id ? "本当に消す" : "削除";
+      x.addEventListener("click", function () {
+        if (pendingDelete !== r.id) { pendingDelete = r.id; renderHistory(); return; }
+        pendingDelete = null;
+        remove(r);
+      });
+      row.appendChild(s); row.appendChild(t); row.appendChild(d); row.appendChild(x);
+      el.hist.appendChild(row);
+    });
+  }
+
+  function save(rec) {
+    var id = String(rec.ts) + "-" + Math.random().toString(36).slice(2, 8);
+    rec.id = id;
+    history.push(rec);
+    renderHistory();
+    if (!dbRef || !uid) return;
+    var body = {
+      ts: rec.ts, drill: rec.drill, title: rec.title, total: rec.total, grade: rec.grade,
+      chars: rec.chars, verdict: rec.verdict, fatal: rec.fatal, homework: rec.homework,
+      axes: rec.axes.map(function (a) { return { key: a.key, score: a.score }; })
+    };
+    dbRef.collection("data/users/" + uid).doc(id).set(body).catch(function () {
+      el.status.className = "status err";
+      el.status.textContent = "採点は終わりましたが、記録の保存に失敗しました。";
+    });
+  }
+
+  function remove(rec) {
+    history = history.filter(function (h) { return h.id !== rec.id; });
+    renderHistory();
+    if (dbRef && uid && rec.id) dbRef.collection("data/users/" + uid).doc(rec.id).delete().catch(function () {});
+  }
+
+  function loadHistory() {
+    if (!dbRef || !uid) return;
+    dbRef.collection("data/users/" + uid).orderBy("ts", "desc").limit(60).get()
+      .then(function (snap) {
+        var seen = {};
+        history.forEach(function (h) { seen[h.id] = true; });
+        snap.docs.forEach(function (d) {
+          if (seen[d.id]) return;
+          var v = d.data() || {};
+          history.push({
+            id: d.id, ts: Number(v.ts) || 0, drill: String(v.drill || ""),
+            title: String(v.title || "—"), total: clampInt(v.total, 0, 100),
+            grade: String(v.grade || ""), verdict: String(v.verdict || ""),
+            fatal: String(v.fatal || ""), homework: String(v.homework || ""),
+            cut: [], rewrite: "", axes: [], chars: Number(v.chars) || 0
+          });
+        });
+        renderHistory();
+      })
+      .catch(function () {});
+  }
+
+  // ---------- wiring ----------
+  renderDrills();
+  renderDrill();
+  renderHistory();
+  el.text.addEventListener("input", updateCounts);
+  el.btnStart.addEventListener("click", toggleTimer);
+  el.btnReset.addEventListener("click", resetTimer);
+  el.btnScore.addEventListener("click", score);
+  el.btnStop.addEventListener("click", function () { if (ctl) ctl.abort(); });
+  updateCounts();
+
+  // ---------- capabilities ----------
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("sample").then(function (s) {
+      sampleFn = s || null;
+      if (!sampleFn) {
+        el.status.className = "status err";
+        el.status.textContent = "この画面では採点機能を利用できません。claude.ai でこのページを開いてください。";
+      }
+      updateCounts();
+    }).catch(function () { updateCounts(); });
+
+    Promise.all([window.claude.use("db"), window.claude.use("user")])
+      .then(function (r) {
+        dbRef = r[0] || null;
+        var u = r[1] || null;
+        if (!dbRef || !u) return;
+        return u.id().then(function (v) { uid = v || null; if (uid) loadHistory(); });
+      })
+      .catch(function () {});
+  } else {
+    el.status.className = "status err";
+    el.status.textContent = "この画面では採点機能を利用できません。claude.ai でこのページを開いてください。";
+  }
+})();
+</script>
+
+</body>
+</html>
