@@ -1,21 +1,22 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  addChild,
-  addSibling,
-  createEmptyMap,
-  deleteNode,
-  resolveNodeColor,
-  updateNode,
-} from "@/lib/mindmap";
+import { useYMindMap } from "@/hooks/useYMindMap";
 import { downloadJSON, exportSvgAsPng, readJSONFile } from "@/lib/export";
+import { resolveNodeColor } from "@/lib/mindmap";
 import { THEMES, getTheme } from "@/lib/themes";
-import type { MindMapData, MindNode, NodeId, ThemeId } from "@/lib/types";
-import { STORAGE_KEY } from "@/lib/types";
+import type {
+  CollabUser,
+  MindMapData,
+  MindNode,
+  NodeId,
+  ThemeId,
+} from "@/lib/types";
 import IconPicker from "./IconPicker";
 import TemplateGallery from "./TemplateGallery";
 import PresentationMode from "./PresentationMode";
+import ShareDialog from "./ShareDialog";
+import CommentsPanel from "./CommentsPanel";
 
 type Viewport = { x: number; y: number; scale: number };
 
@@ -25,17 +26,51 @@ const IMAGE_HEIGHT = 80;
 const IMAGE_PADDING = 8;
 
 export default function MindMap() {
-  const [data, setData] = useState<MindMapData>(() => createEmptyMap());
+  const [roomId, setRoomId] = useState<string | null>(null);
+  const [viewMode, setViewMode] = useState<"edit" | "view">("edit");
+  const [urlReady, setUrlReady] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setRoomId(params.get("room"));
+    setViewMode(params.get("mode") === "view" ? "view" : "edit");
+    setUrlReady(true);
+  }, []);
+
+  if (!urlReady) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center text-gray-400">
+        読み込み中…
+      </div>
+    );
+  }
+
+  return <MindMapInner roomId={roomId} viewMode={viewMode} />;
+}
+
+function MindMapInner({
+  roomId,
+  viewMode,
+}: {
+  roomId: string | null;
+  viewMode: "edit" | "view";
+}) {
+  const { data, comments, status, canEdit, me, peers, actions } = useYMindMap({
+    roomId,
+    viewMode,
+  });
+
   const [selectedId, setSelectedId] = useState<NodeId | null>(null);
   const [editingId, setEditingId] = useState<NodeId | null>(null);
   const [viewport, setViewport] = useState<Viewport>({ x: 0, y: 0, scale: 1 });
   const [isPanning, setIsPanning] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
   const [iconPickerPos, setIconPickerPos] = useState<
     { x: number; y: number } | null
   >(null);
   const [templateOpen, setTemplateOpen] = useState(false);
   const [presenting, setPresenting] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [commentsOpen, setCommentsOpen] = useState(false);
 
   const svgRef = useRef<SVGSVGElement>(null);
   const panStart = useRef<{ x: number; y: number; vx: number; vy: number } | null>(
@@ -52,46 +87,22 @@ export default function MindMap() {
   const jsonInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
 
-  const theme = getTheme(data.themeId);
+  const theme = useMemo(() => getTheme(data?.themeId), [data?.themeId]);
 
-  // Load from localStorage once on mount.
+  // Center viewport on root once data arrives.
   useEffect(() => {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        const parsed = JSON.parse(raw) as MindMapData;
-        if (parsed && parsed.nodes && parsed.rootId) {
-          setData(migrate(parsed));
-          setSelectedId(parsed.rootId);
-        }
-      } else {
-        setSelectedId((prev) => prev ?? Object.keys(data.nodes)[0]);
-      }
-    } catch (e) {
-      console.warn("Failed to load mindmap", e);
-    }
-    setHydrated(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Auto-save on data change (after hydration).
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    } catch (e) {
-      console.warn("Save failed", e);
-    }
-  }, [data, hydrated]);
-
-  // Center viewport on root once.
-  useEffect(() => {
-    if (!hydrated || !svgRef.current) return;
+    if (status !== "ready" || !svgRef.current || !data) return;
     const rect = svgRef.current.getBoundingClientRect();
     setViewport((v) => ({ ...v, x: rect.width / 2, y: rect.height / 2 }));
-  }, [hydrated]);
+    setSelectedId((prev) => prev ?? data.rootId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
-  const nodes = useMemo(() => Object.values(data.nodes), [data]);
+  // Sync local selection to awareness.
+  useEffect(() => {
+    actions.setSelectedForAwareness(selectedId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedId]);
 
   const nodeHeight = useCallback(
     (n: MindNode) => (n.imageUrl ? NODE_HEIGHT_BASE + IMAGE_HEIGHT + IMAGE_PADDING : NODE_HEIGHT_BASE),
@@ -105,25 +116,27 @@ export default function MindMap() {
       if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA")) {
         return;
       }
-      if (presenting) return;
+      if (presenting || !canEdit || !data) return;
       if (!selectedId) return;
       if (e.key === "Tab") {
         e.preventDefault();
-        const { data: next, newId } = addChild(data, selectedId);
-        setData(next);
-        setSelectedId(newId);
-        setEditingId(newId);
+        const newId = actions.createChild(selectedId);
+        if (newId) {
+          setSelectedId(newId);
+          setEditingId(newId);
+        }
       } else if (e.key === "Enter") {
         e.preventDefault();
-        const { data: next, newId } = addSibling(data, selectedId);
-        setData(next);
-        setSelectedId(newId);
-        setEditingId(newId);
+        const newId = actions.createSibling(selectedId);
+        if (newId) {
+          setSelectedId(newId);
+          setEditingId(newId);
+        }
       } else if (e.key === "Delete" || e.key === "Backspace") {
         if (selectedId === data.rootId) return;
         e.preventDefault();
         const parent = data.nodes[selectedId]?.parentId ?? data.rootId;
-        setData(deleteNode(data, selectedId));
+        actions.removeNode(selectedId);
         setSelectedId(parent);
       } else if (e.key === "F2") {
         e.preventDefault();
@@ -132,7 +145,17 @@ export default function MindMap() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [data, selectedId, presenting]);
+  }, [data, selectedId, presenting, canEdit, actions]);
+
+  if (status === "loading" || !data) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center text-gray-400">
+        同期中…
+      </div>
+    );
+  }
+
+  const nodes = Object.values(data.nodes);
 
   const onBgMouseDown = (e: React.MouseEvent) => {
     if (e.target !== svgRef.current && (e.target as Element).tagName !== "rect") {
@@ -157,7 +180,7 @@ export default function MindMap() {
         x: panStart.current!.vx + (e.clientX - panStart.current!.x),
         y: panStart.current!.vy + (e.clientY - panStart.current!.y),
       }));
-    } else if (dragStart.current) {
+    } else if (dragStart.current && canEdit) {
       const d = dragStart.current;
       const dx = (e.clientX - d.startX) / viewport.scale;
       const dy = (e.clientY - d.startY) / viewport.scale;
@@ -165,9 +188,7 @@ export default function MindMap() {
         d.moved = true;
       }
       if (d.moved) {
-        setData((prev) =>
-          updateNode(prev, d.id, { x: d.nodeX + dx, y: d.nodeY + dy }),
-        );
+        actions.updateNode(d.id, { x: d.nodeX + dx, y: d.nodeY + dy });
       }
     }
   };
@@ -194,6 +215,7 @@ export default function MindMap() {
     e.stopPropagation();
     setSelectedId(node.id);
     setIconPickerPos(null);
+    if (!canEdit) return;
     dragStart.current = {
       id: node.id,
       startX: e.clientX,
@@ -206,28 +228,28 @@ export default function MindMap() {
 
   const onNodeDoubleClick = (node: MindNode) => {
     setSelectedId(node.id);
-    setEditingId(node.id);
+    if (canEdit) setEditingId(node.id);
   };
 
-  const onTextChange = (id: NodeId, text: string) => {
-    setData((prev) => updateNode(prev, id, { text }));
-  };
+  const onTextChange = (id: NodeId, text: string) =>
+    actions.updateNode(id, { text });
 
   const commitEdit = () => setEditingId(null);
 
-  const newMap = (fromTemplate = false) => {
+  const newMap = async (fromTemplate: boolean) => {
     if (fromTemplate) {
       setTemplateOpen(true);
       return;
     }
     if (!confirm("現在のマップを破棄して新規作成しますか?")) return;
+    const { createEmptyMap } = await import("@/lib/mindmap");
     const empty = createEmptyMap();
-    setData(empty);
+    actions.replaceMap(empty);
     setSelectedId(empty.rootId);
   };
 
   const useTemplateData = (next: MindMapData) => {
-    setData(next);
+    actions.replaceMap(next);
     setSelectedId(next.rootId);
     setTemplateOpen(false);
   };
@@ -237,7 +259,7 @@ export default function MindMap() {
   const importJson = async (file: File) => {
     try {
       const next = await readJSONFile(file);
-      setData(migrate(next));
+      actions.replaceMap(next);
       setSelectedId(next.rootId);
     } catch (err) {
       alert("読み込みに失敗しました: " + (err as Error).message);
@@ -268,9 +290,6 @@ export default function MindMap() {
     setViewport({ x: rect.width / 2, y: rect.height / 2, scale: 1 });
   };
 
-  const changeTheme = (themeId: ThemeId) =>
-    setData((prev) => ({ ...prev, themeId }));
-
   const openIconPicker = () => {
     if (!selectedId || !svgRef.current) return;
     const node = data.nodes[selectedId];
@@ -282,7 +301,7 @@ export default function MindMap() {
 
   const setIcon = (icon: string | undefined) => {
     if (!selectedId) return;
-    setData((prev) => updateNode(prev, selectedId, { icon }));
+    actions.updateNode(selectedId, { icon });
     setIconPickerPos(null);
   };
 
@@ -296,16 +315,35 @@ export default function MindMap() {
     }
     const reader = new FileReader();
     reader.onload = () => {
-      const dataUrl = reader.result as string;
-      setData((prev) => updateNode(prev, selectedId, { imageUrl: dataUrl }));
+      actions.updateNode(selectedId, { imageUrl: reader.result as string });
     };
     reader.readAsDataURL(file);
   };
 
   const removeImage = () => {
     if (!selectedId) return;
-    setData((prev) => updateNode(prev, selectedId, { imageUrl: undefined }));
+    actions.updateNode(selectedId, { imageUrl: undefined });
   };
+
+  const jumpToNode = (id: NodeId) => {
+    if (!svgRef.current) return;
+    const node = data.nodes[id];
+    if (!node) return;
+    setSelectedId(id);
+    const rect = svgRef.current.getBoundingClientRect();
+    setViewport({
+      x: rect.width / 2 - node.x * viewport.scale,
+      y: rect.height / 2 - node.y * viewport.scale,
+      scale: viewport.scale,
+    });
+  };
+
+  // Count comments per node for the badge.
+  const commentCountByNode = new Map<NodeId, number>();
+  comments.forEach((c) => {
+    if (c.resolved) return;
+    commentCountByNode.set(c.nodeId, (commentCountByNode.get(c.nodeId) ?? 0) + 1);
+  });
 
   const selectedNode = selectedId ? data.nodes[selectedId] : null;
 
@@ -317,27 +355,38 @@ export default function MindMap() {
       <Toolbar
         title={data.title}
         theme={theme.id}
-        onThemeChange={changeTheme}
-        onTitleChange={(t) => setData({ ...data, title: t })}
+        peers={peers}
+        me={me}
+        canEdit={canEdit}
+        roomId={roomId}
+        onThemeChange={(t) => actions.setTheme(t)}
+        onTitleChange={(t) => actions.setTitle(t)}
         onNewBlank={() => newMap(false)}
         onNewFromTemplate={() => newMap(true)}
         onExportJson={exportJson}
         onImport={() => jsonInputRef.current?.click()}
         onExportPng={exportPng}
         onPresent={() => setPresenting(true)}
+        onShare={() => setShareOpen(true)}
+        onToggleComments={() => setCommentsOpen((v) => !v)}
+        commentsCount={comments.filter((c) => !c.resolved).length}
         onZoomIn={zoomIn}
         onZoomOut={zoomOut}
         onZoomReset={resetZoom}
         scale={viewport.scale}
       />
-      {selectedNode && (
+      {selectedNode && canEdit && (
         <ContextBar
           node={selectedNode}
-          themeNodeText={theme.nodeText}
           onPickIcon={openIconPicker}
           onAttachImage={attachImage}
           onRemoveImage={removeImage}
         />
+      )}
+      {!canEdit && (
+        <div className="px-4 py-1.5 bg-slate-100 border-b border-slate-200 text-xs text-slate-700 text-center">
+          👁 閲覧モード - 編集は無効化されています
+        </div>
       )}
       <input
         ref={jsonInputRef}
@@ -415,8 +464,16 @@ export default function MindMap() {
                 resolveNodeColor(data, n.id, theme.branchPalette) ?? theme.edge;
               const fill = isRoot ? theme.rootBg : theme.nodeBg;
               const textColor = isRoot ? theme.rootText : theme.nodeText;
-              const stroke = isSelected ? "#f59e0b" : isRoot ? theme.rootBg : branchColor;
-              const strokeW = isSelected ? 3 : 2;
+              const peerSelecting = peers.find((p) => p.selectedId === n.id);
+              const stroke = isSelected
+                ? "#f59e0b"
+                : peerSelecting
+                  ? peerSelecting.color
+                  : isRoot
+                    ? theme.rootBg
+                    : branchColor;
+              const strokeW = isSelected || peerSelecting ? 3 : 2;
+              const nComments = commentCountByNode.get(n.id) ?? 0;
 
               return (
                 <g
@@ -424,7 +481,7 @@ export default function MindMap() {
                   transform={`translate(${n.x - NODE_WIDTH / 2} ${n.y - h / 2})`}
                   onMouseDown={(e) => onNodeMouseDown(e, n)}
                   onDoubleClick={() => onNodeDoubleClick(n)}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: canEdit ? "pointer" : "default" }}
                 >
                   <rect
                     width={NODE_WIDTH}
@@ -442,7 +499,6 @@ export default function MindMap() {
                       width={NODE_WIDTH - IMAGE_PADDING * 2}
                       height={IMAGE_HEIGHT}
                       preserveAspectRatio="xMidYMid slice"
-                      clipPath={`inset(0 round 6px)`}
                     />
                   )}
                   {isEditing ? (
@@ -492,6 +548,43 @@ export default function MindMap() {
                       </text>
                     </>
                   )}
+                  {peerSelecting && (
+                    <g>
+                      <rect
+                        x={NODE_WIDTH - 6}
+                        y={-10}
+                        width={peerSelecting.name.length * 7 + 14}
+                        height={18}
+                        rx={9}
+                        fill={peerSelecting.color}
+                      />
+                      <text
+                        x={NODE_WIDTH + 1}
+                        y={-1}
+                        fontSize={10}
+                        fill="#ffffff"
+                        fontWeight={500}
+                      >
+                        {peerSelecting.name}
+                      </text>
+                    </g>
+                  )}
+                  {nComments > 0 && (
+                    <g>
+                      <circle cx={NODE_WIDTH - 10} cy={h - 10} r={9} fill="#f59e0b" />
+                      <text
+                        x={NODE_WIDTH - 10}
+                        y={h - 10}
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                        fontSize={10}
+                        fill="#ffffff"
+                        fontWeight={600}
+                      >
+                        {nComments}
+                      </text>
+                    </g>
+                  )}
                 </g>
               );
             })}
@@ -504,6 +597,20 @@ export default function MindMap() {
             value={selectedNode?.icon}
             onPick={setIcon}
             onClose={() => setIconPickerPos(null)}
+          />
+        )}
+
+        {commentsOpen && (
+          <CommentsPanel
+            comments={comments}
+            nodeId={selectedId}
+            data={data}
+            canEdit={canEdit}
+            onAdd={actions.addComment}
+            onRemove={actions.removeComment}
+            onResolve={actions.resolveComment}
+            onJumpToNode={jumpToNode}
+            onClose={() => setCommentsOpen(false)}
           />
         )}
 
@@ -520,6 +627,15 @@ export default function MindMap() {
       {presenting && (
         <PresentationMode data={data} onClose={() => setPresenting(false)} />
       )}
+
+      {shareOpen && (
+        <ShareDialog
+          currentRoomId={roomId}
+          me={me}
+          onUpdateMe={actions.updateMe}
+          onClose={() => setShareOpen(false)}
+        />
+      )}
     </div>
   );
 }
@@ -534,16 +650,13 @@ function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n) + "…" : s;
 }
 
-function migrate(d: MindMapData): MindMapData {
-  if (!d.themeId) {
-    return { ...d, version: 2, themeId: "default" };
-  }
-  return d;
-}
-
 function Toolbar({
   title,
   theme,
+  peers,
+  me,
+  canEdit,
+  roomId,
   onThemeChange,
   onTitleChange,
   onNewBlank,
@@ -552,6 +665,9 @@ function Toolbar({
   onImport,
   onExportPng,
   onPresent,
+  onShare,
+  onToggleComments,
+  commentsCount,
   onZoomIn,
   onZoomOut,
   onZoomReset,
@@ -559,6 +675,10 @@ function Toolbar({
 }: {
   title: string;
   theme: ThemeId;
+  peers: CollabUser[];
+  me: CollabUser;
+  canEdit: boolean;
+  roomId: string | null;
   onThemeChange: (t: ThemeId) => void;
   onTitleChange: (t: string) => void;
   onNewBlank: () => void;
@@ -567,6 +687,9 @@ function Toolbar({
   onImport: () => void;
   onExportPng: () => void;
   onPresent: () => void;
+  onShare: () => void;
+  onToggleComments: () => void;
+  commentsCount: number;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onZoomReset: () => void;
@@ -578,20 +701,32 @@ function Toolbar({
       <input
         value={title}
         onChange={(e) => onTitleChange(e.target.value)}
-        className="px-2 py-1 border border-gray-200 rounded text-sm w-64 focus:outline-none focus:border-blue-400"
+        disabled={!canEdit}
+        className="px-2 py-1 border border-gray-200 rounded text-sm w-64 focus:outline-none focus:border-blue-400 disabled:bg-gray-50 disabled:text-gray-400"
       />
       <div className="w-px h-6 bg-gray-200 mx-1" />
-      <ToolbarButton onClick={onNewFromTemplate}>テンプレート</ToolbarButton>
-      <ToolbarButton onClick={onNewBlank}>新規</ToolbarButton>
-      <ToolbarButton onClick={onImport}>読み込み</ToolbarButton>
+      {canEdit && (
+        <>
+          <ToolbarButton onClick={onNewFromTemplate}>テンプレート</ToolbarButton>
+          <ToolbarButton onClick={onNewBlank}>新規</ToolbarButton>
+          <ToolbarButton onClick={onImport}>読み込み</ToolbarButton>
+        </>
+      )}
       <ToolbarButton onClick={onExportJson}>JSON</ToolbarButton>
       <ToolbarButton onClick={onExportPng}>PNG</ToolbarButton>
       <ToolbarButton onClick={onPresent}>▶ 発表</ToolbarButton>
+      <ToolbarButton onClick={onShare}>
+        {roomId ? "🔗 共有中" : "共有"}
+      </ToolbarButton>
+      <ToolbarButton onClick={onToggleComments}>
+        💬 {commentsCount > 0 ? commentsCount : ""}
+      </ToolbarButton>
       <div className="w-px h-6 bg-gray-200 mx-1" />
       <select
         value={theme}
         onChange={(e) => onThemeChange(e.target.value as ThemeId)}
-        className="text-sm border border-gray-200 rounded px-2 py-1 bg-white"
+        disabled={!canEdit}
+        className="text-sm border border-gray-200 rounded px-2 py-1 bg-white disabled:bg-gray-50 disabled:text-gray-400"
       >
         {Object.values(THEMES).map((t) => (
           <option key={t.id} value={t.id}>
@@ -600,6 +735,14 @@ function Toolbar({
         ))}
       </select>
       <div className="flex-1" />
+      {roomId && (
+        <div className="flex items-center gap-1 mr-2">
+          <PeerBadge user={me} isMe />
+          {peers.map((p) => (
+            <PeerBadge key={p.id} user={p} />
+          ))}
+        </div>
+      )}
       <ToolbarButton onClick={onZoomOut}>－</ToolbarButton>
       <button
         onClick={onZoomReset}
@@ -612,15 +755,29 @@ function Toolbar({
   );
 }
 
+function PeerBadge({ user, isMe }: { user: CollabUser; isMe?: boolean }) {
+  const initial = user.name.charAt(0).toUpperCase() || "?";
+  return (
+    <div
+      title={isMe ? `${user.name} (あなた)` : user.name}
+      className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white ring-2"
+      style={{
+        background: user.color,
+        boxShadow: isMe ? "0 0 0 1px white, 0 0 0 2px #3b82f6" : undefined,
+      }}
+    >
+      {initial}
+    </div>
+  );
+}
+
 function ContextBar({
   node,
-  themeNodeText,
   onPickIcon,
   onAttachImage,
   onRemoveImage,
 }: {
   node: MindNode;
-  themeNodeText: string;
   onPickIcon: () => void;
   onAttachImage: () => void;
   onRemoveImage: () => void;
